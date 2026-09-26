@@ -277,6 +277,41 @@ details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px;
 .callout{border-left:3px solid var(--accent); background:var(--accent-soft); padding:8px 11px; border-radius:6px; font-size:12.5px; margin:0 0 10px}
 .wx{display:grid; gap:5px}
 .wx .row{display:grid; grid-template-columns:130px minmax(0,1fr) 48px; gap:8px; align-items:center; font-size:12.5px}
+
+/* progression tiers */
+.tierp{display:inline-block; font-size:11px; white-space:nowrap; padding:1px 7px; border-radius:999px; background:var(--surface-3); color:var(--muted)}
+.tierp.now{background:var(--accent); color:var(--accent-ink)}
+.tierp.done{opacity:.75}
+.path{display:grid; gap:6px}
+.path .step{display:grid; grid-template-columns:104px minmax(0,1fr); gap:8px; align-items:start}
+.path .step > .tierp{justify-self:start; margin-top:4px}
+.path .gi.me{border-color:var(--accent); background:var(--accent-soft)}
+/* class guides */
+.cgrid{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px}
+.ccard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; display:grid; gap:8px; align-content:start}
+.ccard h2{font-family:var(--serif); font-size:19px; margin:0}
+.ccard .w{color:var(--muted); font-size:12.5px}
+.perks{display:grid; gap:6px; margin:0; padding:0; list-style:none; font-size:12.5px}
+.perks li{display:grid; grid-template-columns:44px minmax(0,1fr); gap:8px}
+.perks .lv{font-family:var(--mono); color:var(--accent); font-size:11.5px; padding-top:1px}
+.stage{background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.stage.now{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft)}
+.stage-h{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:12px 16px; cursor:pointer; user-select:none}
+.stage-h h3{font-family:var(--serif); font-size:18px; margin:0; text-wrap:balance}
+.stage-h .chev{transition:transform .15s ease; color:var(--muted)}
+.stage.closed .chev{transform:rotate(-90deg)}
+.stage.closed .stage-b{display:none}
+.stage-b{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px 20px; padding:0 16px 16px}
+.stage-b .blk h4{font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.stage-b .blk p{margin:0 0 6px; font-size:12.5px}
+.done-mark{color:var(--good); font-size:12px}
+/* comfort planner */
+.cplan{display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:10px}
+.cplan label{display:grid; gap:4px; font-size:12px; color:var(--muted)}
+.cplan select{font:inherit; font-size:12.5px; color:var(--text); background:var(--surface-2); border:1px solid var(--line); border-radius:7px; padding:5px 7px; max-width:100%}
+.cplan .chk{display:flex; gap:6px; align-items:center; color:var(--text)}
+.ctotal{display:flex; flex-wrap:wrap; gap:14px 28px; align-items:baseline; margin-top:12px}
+.ctotal b{font-family:var(--mono); font-size:26px; color:var(--accent)}
 </style>
 
 <div class="wrap">
@@ -326,7 +361,9 @@ let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, G
 const S = {q:"", group:"weapons", cls:null, mod:"", nosrc:false, sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}};
 // World settings the numbers are shown under. Starts as the exported world; the World tab changes it.
 const W = {opt:{}, base:{}, players:1, night:false};
-const WORLD_GROUPS = ["creatures","bosses","events","locations","biomes","world"];
+const WORLD_GROUPS = ["creatures","bosses","events","locations","biomes","classes","world"];
+const COMFORT_NAMES = {Fire:"Fires", Bed:"Beds", Chair:"Seating", Table:"Tables", Banner:"Banners", Carpet:"Rugs & carpets", Lantern:"Lanterns", Garland:"Garlands", Decor:"Decor", Display:"Displays", Leisure:"Leisure", None:"Unique pieces"};
+const CLASS_STYLE = {Wizard:"caster", Warlock:"caster", Assassin:"light", Archer:"light", Brawler:"light"};
 const BIOME_ORDER = ["Meadows","BlackForest","Swamp","Mountain","Plains","Mistlands","AshLands","DeepNorth","Ocean"];
 const PROGRESSION = ["defeated_eikthyr","defeated_gdking","defeated_bonemass","defeated_dragon","defeated_goblinking","defeated_queen","defeated_fader","defeated_frozenking"];
 const THEME_NAMES = {Crypt:"Crypt",SunkenCrypt:"Sunken crypt",Cave:"Frost cave",ForestCrypt:"Burial chambers",GoblinCamp:"Fuling village",MeadowsVillage:"Village",MeadowsFarm:"Farm",DvergerTown:"Infested mine",DvergerBoss:"Infested citadel",ForestCryptHildir:"Smouldering tomb",CaveHildir:"Howling cavern",PlainsFortHildir:"Sealed tower",AshlandRuins:"Ashlands ruins",FortressRuins:"Fortress ruins",Hole:"The hole",NorthVillage:"Northern village",MorkHalla:"Morkhalla"};
@@ -380,6 +417,35 @@ function crIcon(id, size = ""){
   const t = c && (c.dr || []).map(d => d[0]).find(x => D.items[x] && D.items[x].c === "trophies");
   if (!t) return glyph("drop", size || 28);
   return icon(D.items[t].i, size, c ? c.n : id);
+}
+// ---------- progression tiers (0 = Meadows ... 7 = Deep North)
+const tierName = t => t == null ? "" : (BIOME[(D.stages || {}).biomes[t]] || prettify((D.stages || {}).biomes[t]));
+function worldStage(){
+  const k = worldKeys();
+  let n = 0;
+  for (const key of PROGRESSION){ if (k.has(key)) n++; else break; }
+  return Math.min(n, 7);
+}
+function tierPill(t){
+  if (t == null) return dash;
+  const now = worldStage();
+  return `<span class="tierp${t === now ? " now" : t < now ? " done" : ""}" title="${t === now ? "Your world is here" : t < now ? "Earlier than your world" : "Ahead of your world"}">${esc(tierName(t))}</span>`;
+}
+function keyStat(o){
+  const q = o.q && o.q[o.q.length - 1];
+  if (!q) return o.food ? (o.food.hp || 0) + (o.food.stam || 0) + (o.food.eitr || 0) : 0;
+  return q.arm || (q.dmg ? dsum(q.dmg) : 0) || q.blk || 0;
+}
+const statLabel = o => { const q = o.q && o.q[o.q.length - 1] || {}; return q.arm ? "armor" : q.dmg && dsum(q.dmg) ? "damage" : q.blk ? "block" : ""; };
+// Craftable items of one class, in progression order.
+const PROG_CACHE = {};
+function progressionOf(cls){
+  if (PROG_CACHE[cls]) return PROG_CACHE[cls];
+  const all = Object.entries(D.items).filter(([id, o]) => o.c === cls && o.tier != null && !o.ns && RBI[id] && keyStat(o) > 2);
+  // Drop novelty pieces (tankards, drinking horns...) that are far weaker than the rest of their type.
+  const stats = all.map(x => keyStat(x[1])).sort((a, b) => a - b);
+  const median = stats.length ? stats[Math.floor(stats.length / 2)] : 0;
+  return PROG_CACHE[cls] = all.filter(x => keyStat(x[1]) >= median * 0.2).sort((a, b) => a[1].tier - b[1].tier || keyStat(b[1]) - keyStat(a[1]));
 }
 const crName = p => (D.creatures[p] && D.creatures[p].n) || prettify(p);
 const dash = `<span class="dim">—</span>`;
@@ -663,6 +729,7 @@ function classMatch(e, cls){
   const m = /^(cr|lo|bo)\|(.+)$/.exec(cls);
   if (m && m[2] !== "boss" && e.multi) return e.multi.includes(m[2]);
   if (cls === "cr|boss" && e.k === "creature") return !!e.o.boss;
+  if (cls === "b|comfort") return e.g === "building" && e.o.cf > 0 && !e.dup;
   return false;
 }
 
@@ -847,14 +914,19 @@ col.chp.h = "Health";
 col.chp.cell = e => fmt(e.o.hp * hpScale(), 0);
 col.cmmo = {h:"MMO lvl", n:1, cell:e => D.mmo && D.mmo[e.id] ? D.mmo[e.id][0] : dash, sv:e => D.mmo && D.mmo[e.id] ? D.mmo[e.id][0] : 0};
 col.drops.cell = e => matsCell((e.o.dr || []).map(d => [d[0], scaleAmt([d[1], d[2]], d[0])]));
+col.tierc = {h:"Tier", cell:e => tierPill(e.o.tier), sv:e => (e.o.tier ?? 9) * 1e6 + keyStat(e.o)};
+col.cfv = {h:"Comfort", n:1, cell:e => `<b class="mono">+${e.o.cf}</b>`, sv:e => e.o.cf || 0};
+col.cfg = {h:"Group", cell:e => esc(COMFORT_NAMES[e.o.cfg || "None"] || e.o.cfg), sv:e => e.o.cfg || ""};
+col.ptier = {h:"Tier", cell:e => tierPill(e.o.tier), sv:e => e.o.tier ?? 9};
 const COLS = {
-  weapons:["item","station","mats","dmg","block","dur","wt"],
-  ammo:["item","station","mats","dmg","wt"],
-  shields:["item","station","mats","block","parry","dur","move","wt"],
-  armor:["item","station","mats","armor","dur","move","eff","wt"],
-  tools:["item","station","mats","tier","tooldmg","dmg","dur","wt"],
-  food:["item","station","mats","hp","stam","eitr","ftime","regen"],
-  meads:["item","station","mats","effect"],
+  weapons:["item","tierc","station","mats","dmg","block","dur","wt"],
+  ammo:["item","tierc","station","mats","dmg","wt"],
+  shields:["item","tierc","station","mats","block","parry","dur","move","wt"],
+  armor:["item","tierc","station","mats","armor","dur","move","eff","wt"],
+  tools:["item","tierc","station","mats","tier","tooldmg","dmg","dur","wt"],
+  food:["item","tierc","station","mats","hp","stam","eitr","ftime","regen"],
+  meads:["item","tierc","station","mats","effect"],
+  comfort:["piece","cfv","cfg","pmats","needs","ptier"],
   materials:["item","src","used","stack","wt"],
   other:["item","src","used","wt"],
   building:["piece","pmats","needs","comfort","php"],
@@ -866,7 +938,7 @@ const COLS = {
   locations:["locn","locq","locwhat","locmob","locloot"],
   biomes:["bion","biocap","biomob","bioweather"],
 };
-const DEFAULT_SORT = {weapons:["dmg",1], ammo:["dmg",1], shields:["block",1], armor:["armor",1], tools:["tier",1], food:["hp",1], meads:["item",1],
+const DEFAULT_SORT = {weapons:["tierc",1], ammo:["tierc",1], shields:["tierc",1], armor:["tierc",1], tools:["tier",1], food:["tierc",1], meads:["tierc",1], comfort:["cfv",-1],
   materials:["item",1], other:["item",1], building:["piece",1], stations:["crafts",-1], processing:["cst",1], creatures:["chp",1],
   bosses:["bossn",1], events:["evn",1], locations:["locn",1], biomes:["bion",1]};
 
@@ -915,6 +987,7 @@ function counts(){
     if (qC && (e.dup || !score(e, qN, qC, toks))) continue;
     if (!e.dup){ g[e.g] = (g[e.g] || 0) + 1; g.all++; }
     else g[e.g] = (g[e.g] || 0) + 1;
+    if (e.g === S.group && e.g === "building" && e.o.cf > 0 && !e.dup) c["b|comfort"] = (c["b|comfort"] || 0) + 1;
     if (e.g === S.group){
       const pre = e.k === "creature" ? "cr|" : e.k === "loc" ? "lo|" : e.k === "boss" ? "bo|" : null;
       if (pre && e.multi){ for (const b of e.multi) c[pre + b] = (c[pre + b] || 0) + 1; if (e.k === "creature" && e.o.boss) c["cr|boss"] = (c["cr|boss"] || 0) + 1; }
@@ -925,8 +998,8 @@ function counts(){
 }
 function renderChips(ct){
   const gs = [{k:"all", n:"Everything"}].concat(D.groups);
-  const chip = g => `<button class="chip" data-group="${g.k}" aria-pressed="${S.group === g.k}">${esc(g.n)}${g.k === "world" ? "" : ` <span class="ct">${(ct.g[g.k] || 0).toLocaleString()}</span>`}</button>`;
-  const show = g => g.k === "all" || ct.g[g.k] || (g.k === "world" && !S.q);
+  const chip = g => `<button class="chip" data-group="${g.k}" aria-pressed="${S.group === g.k}">${esc(g.n)}${g.k === "world" || g.k === "classes" ? "" : ` <span class="ct">${(ct.g[g.k] || 0).toLocaleString()}</span>`}</button>`;
+  const show = g => g.k === "all" || ct.g[g.k] || ((g.k === "world" || (g.k === "classes" && D.playerClasses)) && !S.q);
   $("#groups").innerHTML = gs.filter(g => show(g) && !WORLD_GROUPS.includes(g.k)).map(chip).join("") +
     `<span class="groups-sep">World</span>` + gs.filter(g => show(g) && WORLD_GROUPS.includes(g.k)).map(chip).join("");
   let subs = [];
@@ -938,19 +1011,22 @@ function renderChips(ct){
       const na = iname(ta), nb = iname(tb);
       return toolOrder(na) - toolOrder(nb) || na.localeCompare(nb) || (CAT_ORDER.indexOf(ca) + 1 || 99) - (CAT_ORDER.indexOf(cb) + 1 || 99) || ca.localeCompare(cb);
     });
-    subs = keys.map(k => { const [, t, c] = k.split("|"); const tn = t ? iname(t) : "Other"; return {k, n:tn === "Hammer" ? c : `${tn} · ${c}`}; });
+    subs = keys.filter(k => k !== "b|comfort").map(k => { const [, t, c] = k.split("|"); const tn = t ? iname(t) : "Other"; return {k, n:tn === "Hammer" ? c : `${tn} · ${c}`}; });
+    if (ct.c["b|comfort"]) subs.unshift({k:"b|comfort", n:"Comfort"});
   } else if (S.group === "processing"){
     subs = Object.keys(ct.c).map(k => ({k, n:k.slice(2)})).sort((a, b) => a.n.localeCompare(b.n));
   } else if (["creatures","locations","bosses"].includes(S.group)){
     const order = BIOME_ORDER;
     subs = Object.keys(ct.c).map(k => ({k, n:k === "cr|boss" ? "Bosses" : (BIOME[k.slice(3)] || (k.slice(3) === "None" ? "Anywhere" : prettify(k.slice(3))))}))
       .sort((a, b) => (a.k === "cr|boss" ? -1 : b.k === "cr|boss" ? 1 : (order.indexOf(a.k.slice(3)) + 1 || 99) - (order.indexOf(b.k.slice(3)) + 1 || 99)));
-  } else if (!["all","stations","events","biomes","world"].includes(S.group)){
+  } else if (S.group === "classes" && D.playerClasses){
+    subs = D.playerClasses.classes.map(c => ({k:c.id, n:c.n}));
+  } else if (!["all","stations","events","biomes","world","classes"].includes(S.group)){
     subs = D.classes.filter(c => c.g === S.group && ct.c[c.k]).map(c => ({k:c.k, n:c.n}));
   }
   $("#classes").hidden = subs.length < 2;
   $("#classes").innerHTML = subs.length < 2 ? "" : [`<button class="chip" data-cls="" aria-pressed="${!S.cls}">All</button>`].concat(subs.map(s =>
-    `<button class="chip" data-cls="${esc(s.k)}" aria-pressed="${S.cls === s.k}">${esc(s.n)} <span class="ct">${ct.c[s.k]}</span></button>`)).join("");
+    `<button class="chip" data-cls="${esc(s.k)}" aria-pressed="${S.cls === s.k}">${esc(s.n)}${ct.c[s.k] != null ? ` <span class="ct">${ct.c[s.k]}</span>` : ""}</button>`)).join("");
 }
 
 // ---------- render: results
@@ -986,6 +1062,14 @@ function render(){
   const ents = res.map(x => x[1]);
   $("#count").textContent = S.q ? `${ents.filter(e => !e.dup).length.toLocaleString()} matches for “${S.q}”` : "";
   let html = "";
+  if (S.group === "classes" && !S.q){
+    $("#results").innerHTML = S.cls ? classGuide(S.cls) : classOverview();
+    return;
+  }
+  if (S.group === "building" && S.cls === "b|comfort" && !S.q){
+    $("#results").innerHTML = comfortPanel(ents);
+    return;
+  }
   if (S.group === "world" && !S.q){
     $("#results").innerHTML = worldPanel();
     return;
@@ -1222,6 +1306,8 @@ function itemDetail(id){
       <div class="grid-items" style="margin-top:8px">${[id].concat(members).map(p => `<button class="gi" data-go="item:${esc(p)}">${iicon(p, "s22")}${esc(iname(p))}</button>`).join("")}</div></div>`;
   }
 
+  h += pathCard(id, o);
+
   // where to get
   const prod = PROD[id] || [], srcs = D.sources[id] || [];
   if (prod.length || srcs.length){
@@ -1275,7 +1361,8 @@ function pieceDetail(id){
   let h = `<div class="inner">` + dhead(p.i, p.n, [p.tool ? tag(iname(p.tool)) : "", tag(p.cat), p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla")], p.d);
   h += `<div class="card"><h3>Build cost</h3>${reqGrid(p.r)}${p.s ? `<div class="recipe-line" style="margin:10px 0 0"><span class="dim">Must be in range of</span><button class="gi" data-go="station:${esc(p.s)}">${stIcon(p.s)}${esc(stName(p.s))}</button></div>` : ""}</div>`;
   const kv = [];
-  if (p.cf) kv.push(`<div><span>Comfort</span><b>+${p.cf}</b>${p.cfg ? `<small class="dim"> ${esc(p.cfg)} group</small>` : ""}</div>`);
+  if (p.cf) kv.push(`<div style="grid-column:span 2"><span>Comfort</span><b>+${p.cf}</b> <small class="dim">${p.cfg ? "only your best " + esc((COMFORT_NAMES[p.cfg] || p.cfg).toLowerCase()) + " piece within 10 m counts" : "counts once, on top of every group"}</small> <button class="lnk" data-comfort-view>Comfort planner</button></div>`);
+  if (p.tier != null) kv.push(`<div><span>Tier</span><b style="font-family:var(--sans);font-size:13px">${tierPill(p.tier)}</b></div>`);
   if (p.hp) kv.push(`<div><span>Health</span><b>${fmt(p.hp, 0)}</b></div>`);
   if (p.mat) kv.push(`<div><span>Material</span><b style="font-family:var(--sans)">${esc(p.mat)}</b></div>`);
   if (p.box) kv.push(`<div><span>Storage</span><b>${p.box[0] * p.box[1]}</b> <small class="dim">slots (${p.box[0]}×${p.box[1]})</small></div>`);
@@ -1628,6 +1715,166 @@ function worldPanel(){
     <li>World options are read from your world's save. Your server may use its own StarLevelSystem config; the one here is from your profile.</li></ul></div>`;
   return h + `</div>`;
 }
+function pathCard(id, o){
+  const cl = CLS[o.c];
+  if (!cl || !["weapons","shields","armor","ammo","tools"].includes(cl.g) || o.tier == null || !RBI[id]) return "";
+  const path = progressionOf(o.c);
+  if (path.length < 2) return "";
+  const byT = {};
+  for (const [pid, po] of path) (byT[po.tier] ||= []).push([pid, po]);
+  const tiers = Object.keys(byT).map(Number).sort((a, b) => a - b);
+  const mine = keyStat(o), label = statLabel(o);
+  const next = path.filter(([pid, po]) => po.tier > o.tier).sort((a, b) => a[1].tier - b[1].tier || keyStat(b[1]) - keyStat(a[1]))[0];
+  const better = path.filter(([pid, po]) => po.tier === o.tier && keyStat(po) > mine).sort((a, b) => keyStat(b[1]) - keyStat(a[1]))[0];
+  let tip = "";
+  if (better) tip += `<p class="note" style="margin:0 0 8px">Same tier, more ${label}: <button class="lnk" data-go="item:${esc(better[0])}">${esc(better[1].n)}</button> (${fmt(keyStat(better[1]), 0)} vs ${fmt(mine, 0)}).</p>`;
+  if (next) tip += `<p style="margin:0 0 10px">Next up: <button class="lnk" data-go="item:${esc(next[0])}">${esc(next[1].n)}</button> in the ${esc(tierName(next[1].tier))} tier, ${fmt(keyStat(next[1]), 0)} ${label}${mine ? ` (${keyStat(next[1]) >= mine ? "+" : ""}${fmt((keyStat(next[1]) / mine - 1) * 100, 0)}%)` : ""} at max level.</p>`;
+  else tip += `<p class="note" style="margin:0 0 10px">This is the top tier for ${esc(cl.n.toLowerCase())}.</p>`;
+  const rows = tiers.map(t => `<div class="step">${tierPill(t)}<div class="grid-items">${byT[t].slice(0, 4).map(([pid, po]) => `<button class="gi${pid === id ? " me" : ""}" data-go="item:${esc(pid)}">${icon(po.i, "s22", po.n)}${esc(po.n)}<span class="x">${fmt(keyStat(po), 0)}</span></button>`).join("")}${byT[t].length > 4 ? `<span class="dim" style="font-size:12px">+${byT[t].length - 4}</span>` : ""}</div></div>`).join("");
+  return `<div class="card"><h3>Upgrade path <span class="aside">${esc(cl.n)} by tier · ${label} at max level</span></h3>${tip}<div class="path">${rows}</div></div>`;
+}
+
+// ---------- comfort
+function comfortPanel(ents){
+  const R = (D.world && D.world.rested) || {base:480, per:60, radius:10};
+  const pieces = ents.filter(e => e.o.cf > 0);
+  const groups = {};
+  for (const e of pieces) (groups[e.o.cfg || "None"] ||= []).push(e);
+  const order = Object.keys(groups).sort((a, b) => (a === "None") - (b === "None") || Math.max(...groups[b].map(e => e.o.cf)) - Math.max(...groups[a].map(e => e.o.cf)));
+  const saved = S.comfortPick || {};
+  let plan = "";
+  for (const g of order){
+    if (g === "None") continue;
+    const list = groups[g].slice().sort((a, b) => b.o.cf - a.o.cf || a.name.localeCompare(b.name));
+    const pick = saved[g] ?? list[0].id;
+    plan += `<label>${esc(COMFORT_NAMES[g] || g)}<select data-comfort="${esc(g)}"><option value="">None (+0)</option>${list.map(e => `<option value="${esc(e.id)}"${e.id === pick ? " selected" : ""}>${esc(e.name)} (+${e.o.cf})</option>`).join("")}</select></label>`;
+  }
+  const uniq = (groups.None || []).slice().sort((a, b) => b.o.cf - a.o.cf);
+  if (uniq.length) plan += `<div class="cplan-u" style="display:grid;gap:4px;font-size:12px;color:var(--muted)">Unique pieces${uniq.map(e => `<label class="chk"><input type="checkbox" data-comfort-u="${esc(e.id)}"${(saved["u:" + e.id] ?? true) ? " checked" : ""}> ${esc(e.name)} (+${e.o.cf})</label>`).join("")}</div>`;
+  let h = `<div class="wpanel"><div class="wcard"><h2>Comfort</h2><p class="tip">Comfort decides how long the Rested buff lasts: ${fmt(R.base / 60, 0)} min, plus ${fmt(R.per / 60, 0)} min for every point above 1. You start at 1, get +1 under a roof, and then each comfort piece within ${R.radius} m adds its value while you're sheltered. Within a group only your single best piece counts, so a second chair adds nothing. Unique pieces each count once.</p>
+    <div class="cplan">${plan}</div>
+    <div class="ctotal"><label class="chk" style="font-size:13px"><input type="checkbox" id="comfort-roof"${S.comfortRoof === false ? "" : " checked"}> Under a roof</label><span>Comfort <b id="comfort-total">–</b></span><span>Rested lasts <b id="comfort-time">–</b></span></div>
+    <p class="note">The planner starts with the best piece of every group. Each group below is sorted by comfort.</p></div>`;
+  for (const g of order){
+    h += sectionHTML("comfort:" + g, COMFORT_NAMES[g] || g, groups[g], "comfort", g === "None" ? "Each different piece adds its comfort." : "Only the best one near you counts.");
+  }
+  setTimeout(updateComfort, 0);
+  return h + `</div>`;
+}
+function updateComfort(){
+  const R = (D.world && D.world.rested) || {base:480, per:60};
+  const roof = $("#comfort-roof");
+  if (!roof) return;
+  S.comfortRoof = roof.checked;
+  S.comfortPick = S.comfortPick || {};
+  let total = 1;
+  if (roof.checked){
+    total += 1;
+    document.querySelectorAll("[data-comfort]").forEach(sel => { S.comfortPick[sel.dataset.comfort] = sel.value; const p = D.pieces[sel.value]; if (p) total += p.cf; });
+    document.querySelectorAll("[data-comfort-u]").forEach(cb => { S.comfortPick["u:" + cb.dataset.comfortU] = cb.checked; const p = D.pieces[cb.dataset.comfortU]; if (p && cb.checked) total += p.cf; });
+  }
+  $("#comfort-total").textContent = total;
+  $("#comfort-time").textContent = dur(R.base + (total - 1) * R.per);
+}
+
+// ---------- class guides
+const classById = id => D.playerClasses && D.playerClasses.classes.find(c => c.id === id);
+function classOverview(){
+  const P = D.playerClasses;
+  if (!P) return `<div class="empty">No class data in this export.</div>`;
+  const cards = P.classes.map(c => {
+    const now = worldStage();
+    const picks = c.classes.flatMap(k => progressionOf(k).filter(([id, o]) => o.tier === now)).sort((a, b) => keyStat(b[1]) - keyStat(a[1])).slice(0, 3);
+    return `<div class="ccard"><h2>${esc(c.n)}</h2><div class="w">${esc(c.w)}</div>
+      <ul class="perks">${c.perks.map(pk => `<li><span class="lv">Lv ${pk.lvl}</span><span><b>${esc(pk.n)}</b> <span class="dim">${esc(pk.d)}</span></span></li>`).join("")}</ul>
+      ${picks.length ? `<div class="lvlhead">Good right now (${esc(tierName(now))})</div><div class="grid-items">${picks.map(([id, o]) => `<button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}</button>`).join("")}</div>` : ""}
+      <div><button class="chip" data-cls="${esc(c.id)}">Open the ${esc(c.n)} guide</button></div></div>`;
+  }).join("");
+  return `<div class="wpanel"><div class="wcard"><h2>Class guides</h2><p class="tip">Your server runs ${esc(P.source)}: pick a class at the Class Obelisk and it gains ${esc(P.bonus)}, plus a perk every 10 levels. Each guide walks the boss order with the best gear for that class at every tier, picked from the atlas data. Your world is in the <b>${esc(tierName(worldStage()))}</b> tier.</p></div><div class="cgrid">${cards}</div></div>`;
+}
+function bestAt(classes, t, score, n){
+  const at = [], before = [];
+  for (const k of classes) for (const [id, o] of progressionOf(k)){ if (o.tier === t) at.push([id, o]); else if (o.tier < t) before.push([id, o]); }
+  const sc = score || (x => keyStat(x[1]));
+  at.sort((a, b) => sc(b) - sc(a));
+  if (at.length) return {list:at.slice(0, n || 3), carried:false};
+  before.sort((a, b) => b[1].tier - a[1].tier || sc(b) - sc(a));
+  return {list:before.slice(0, 1), carried:true};
+}
+function armorPick(style, slot, t){
+  const score = ([id, o]) => { const arm = keyStat(o), x = o.x || {}; return style === "caster" ? (x.eitrRegen || 0) * 1000 + arm : style === "light" ? arm + (x.move || 0) * 300 : arm; };
+  const cand = Object.entries(D.items).filter(([id, o]) => o.c === slot && o.tier != null && o.tier <= t && !o.ns && RBI[id]);
+  cand.sort((a, b) => b[1].tier - a[1].tier || score(b) - score(a));
+  const top = cand.filter(x => x[1].tier === (cand[0] || [0, {tier:0}])[1].tier).sort((a, b) => score(b) - score(a));
+  return top[0];
+}
+function chipsOf(list, stat){
+  return list.map(([id, o]) => `<button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}${stat ? `<span class="x">${fmt(keyStat(o), 0)}</span>` : ""}</button>`).join("");
+}
+function classGuide(cid){
+  const c = classById(cid);
+  if (!c) return classOverview();
+  const style = CLASS_STYLE[c.id] || "heavy";
+  const now = worldStage();
+  const stages = D.stages;
+  let h = `<div class="wpanel"><div class="wcard"><h2>${esc(c.n)}</h2><p class="tip">${esc(c.w)}. ${esc(D.playerClasses.bonus)}.</p>
+    <ul class="perks">${c.perks.map(pk => `<li><span class="lv">Lv ${pk.lvl}</span><span><b>${esc(pk.n)}</b> <span class="dim">${esc(pk.d)}</span></span></li>`).join("")}</ul>
+    <p class="note">Picks are the strongest craftable gear of each tier by base stats at max level. Tiers come from where the materials are found.</p></div>`;
+  for (let t = 0; t < stages.biomes.length; t++){
+    const boss = stages.bosses[t], bc = boss && D.creatures[boss], bi = boss && D.bosses[boss];
+    const key = "stage:" + cid + ":" + t;
+    const closed = S.collapsed[key] ?? (t < now);
+    let body = "";
+    // weapons
+    let wpn = "";
+    if (c.id === "Bulwark"){
+      const sh = bestAt(c.classes, t, null, 3);
+      const one = bestAt(["swords","axes","maces","spears","knives"], t, null, 2);
+      wpn += `<p>${sh.carried ? "Keep your " : ""}Shield:</p><div class="grid-items">${chipsOf(sh.list, true)}</div><p style="margin-top:8px">With a one-handed weapon:</p><div class="grid-items">${chipsOf(one.list, true)}</div>`;
+    } else {
+      for (const k of c.classes){
+        const b = bestAt([k], t, null, 2);
+        if (!b.list.length) continue;
+        wpn += `<p>${esc((CLS[k] || {}).n || k)}${b.carried ? ` <span class="dim">· nothing new here, keep</span>` : ""}</p><div class="grid-items" style="margin-bottom:6px">${chipsOf(b.list, true)}</div>`;
+      }
+      if (c.id === "Archer"){
+        const ammo = bestAt(["arrows","bolts"], t, null, 2);
+        if (ammo.list.length) wpn += `<p>Ammo</p><div class="grid-items">${chipsOf(ammo.list, true)}</div>`;
+      }
+      if (!wpn) wpn = `<p class="dim">No ${esc(c.w.toLowerCase())} to craft yet. Level another weapon until the next tier.</p>`;
+    }
+    body += `<div class="blk"><h4>Weapons</h4>${wpn}</div>`;
+    // armor
+    const arm = ["helmets","chest","legs","capes"].map(sl => armorPick(style, sl, t)).filter(Boolean);
+    const sets = {};
+    for (const [id, o] of arm) if (o.set) sets[o.set] = (sets[o.set] || 0) + 1;
+    const setNote = Object.entries(sets).filter(([k, n]) => n >= 2).map(([k]) => { const any = arm.find(x => x[1].set === k)[1]; return setLabel(any); });
+    body += `<div class="blk"><h4>Armor${style === "caster" ? " · eitr first" : style === "light" ? " · light" : ""}</h4><div class="grid-items">${chipsOf(arm, true)}</div>${setNote.length ? `<p class="note">${esc(setNote.join(", "))} bonus with these pieces.</p>` : ""}</div>`;
+    // food
+    const fsc = ([id, o]) => { const f = o.food || {}; return style === "caster" ? (f.eitr || 0) * 2 + (f.hp || 0) : (f.hp || 0) + (f.stam || 0); };
+    const foods = Object.entries(D.items).filter(([id, o]) => o.c === "food" && o.tier != null && o.tier <= t && !o.ns && (RBI[id] || PROD[id])).sort((a, b) => fsc(b) - fsc(a)).slice(0, 3);
+    if (foods.length) body += `<div class="blk"><h4>Food</h4><div class="grid-items">${foods.map(([id, o]) => `<button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}<span class="x">${fmt(o.food.hp || 0, 0)}/${fmt(o.food.stam || 0, 0)}${o.food.eitr ? "/" + fmt(o.food.eitr, 0) : ""}</span></button>`).join("")}</div><p class="note">Health / stamina${style === "caster" ? " / eitr" : ""}.</p></div>`;
+    // boss
+    if (bc){
+      const types = [...new Set((bc.atk || []).map(a => a[2]).filter(x => ["fire","frost","poison","lightning","spirit"].includes(x)))];
+      const meads = Object.entries(D.items).filter(([id, o]) => o.c === "meads" && o.tier != null && o.tier <= t && o.cons && D.ses[o.cons] && types.some(ty => new RegExp(DNAME[ty] + "[^\\n]*resist|resist[^\\n]*" + DNAME[ty], "i").test(D.ses[o.cons].t + " " + D.ses[o.cons].n))).slice(0, 2);
+      const heal = Object.entries(D.items).filter(([id, o]) => o.c === "meads" && o.tier != null && o.tier <= t && o.cons && D.ses[o.cons] && /heal/i.test(D.ses[o.cons].n + D.ses[o.cons].t)).sort((a, b) => b[1].tier - a[1].tier)[0];
+      const weak = Object.entries(bc.wk || {}).filter(([k, v]) => /Weak/.test(v)).map(([k]) => DNAME[k] || prettify(k));
+      let bb = `<p><button class="lnk" data-go="boss:${esc(boss)}">${esc(bc.n)}</button>${bi && bi.summon && bi.summon.item ? `, summoned with ${bi.summon.n} × <button class="lnk" data-go="item:${esc(bi.summon.item)}">${esc(iname(bi.summon.item))}</button>` : bi && bi.door ? `, behind a door opened by the <button class="lnk" data-go="item:${esc(bi.door)}">${esc(iname(bi.door))}</button>` : ""}.</p>`;
+      if (weak.length) bb += `<p>Weak to <b>${esc(weak.join(", "))}</b>.</p>`;
+      if (types.length) bb += `<p>Hits with ${esc(types.map(x => DNAME[x]).join(", ").toLowerCase())} damage.</p>`;
+      const bring = meads.concat(heal ? [heal] : []);
+      if (bring.length) bb += `<div class="grid-items">${chipsOf(bring, false)}</div>`;
+      body += `<div class="blk"><h4>Boss</h4>${bb}</div>`;
+      const rewards = (bc.dr || []).map(d => d[0]).filter(x => D.items[x] && D.items[x].c !== "trophies" && x !== "Coins");
+      const unlocks = [...new Set(rewards.flatMap(x => (USED[x] || []).filter(u => u.t === "recipe").map(u => u.r.it)))].slice(0, 4);
+      if (rewards.length) body += `<div class="blk"><h4>What it unlocks</h4><div class="grid-items">${rewards.slice(0, 3).map(x => `<button class="gi" data-go="item:${esc(x)}">${iicon(x, "s22")}${esc(iname(x))}</button>`).join("")}</div>${unlocks.length ? `<p class="note">Used to craft ${unlocks.map(x => `<button class="lnk" data-go="item:${esc(x)}">${esc(iname(x))}</button>`).join(", ")}.</p>` : ""}${t + 1 < stages.biomes.length ? `<p class="note">Then head to the ${esc(tierName(t + 1))}.</p>` : ""}</div>`;
+    }
+    h += `<section class="stage${t === now ? " now" : ""}${closed ? " closed" : ""}" data-sec-key="${esc(key)}"><div class="stage-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}"><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M6 9l6 6 6-6"/></svg></span>${tierPill(t)}<h3>${esc(tierName(t))}${bc ? " → " + esc(bc.n) : ""}</h3>${t < now ? `<span class="done-mark">done in your world</span>` : t === now ? `<span class="done-mark" style="color:var(--accent)">you are here</span>` : ""}</div><div class="stage-b">${body}</div></section>`;
+  }
+  return h + `</div>`;
+}
+
 function helpDetail(){
   const n = Object.keys(D.items).length;
   return `<div class="inner help"><div class="dhead"><span></span><div><h2>How to read the atlas</h2></div><div class="ctl"><button class="iconbtn sheet-close" data-close aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>
@@ -1683,7 +1930,7 @@ function wire(){
   $("#mod").addEventListener("change", e => { S.mod = e.target.value; render(); });
   $("#nosrc").addEventListener("change", e => { S.nosrc = e.target.checked; render(); });
   document.addEventListener("click", e => {
-    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night],[data-help]");
+    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night],[data-help],[data-comfort-view]");
     if (!el) return;
     if (el.dataset.toggle){ toggleSection(el.dataset.toggle); return; }
     if (el.dataset.collapse){
@@ -1709,6 +1956,7 @@ function wire(){
     if (el.hasAttribute("data-back")){ const p = S.hist.pop(); if (p) select(p.k, p.id, "back"); return; }
     if (el.hasAttribute("data-close")){ closeDetail(); return; }
     if (el.hasAttribute("data-help")){ showHelp(); return; }
+    if (el.hasAttribute("data-comfort-view")){ S.group = "building"; S.cls = "b|comfort"; S.q = ""; $("#q").value = ""; closeDetail(); render(); window.scrollTo(0, 0); return; }
     if (el.dataset.go){
       e.preventDefault();
       const i = el.dataset.go.indexOf(":");
@@ -1716,6 +1964,9 @@ function wire(){
     }
   });
   window.addEventListener("hashchange", fromHash);
+  document.addEventListener("change", e => {
+    if (e.target.matches && e.target.matches("[data-comfort],[data-comfort-u],#comfort-roof")) updateComfort();
+  });
   document.addEventListener("input", e => {
     if (e.target.id === "w-players"){ W.players = +e.target.value; store("atlas.players", String(W.players)); worldChanged(); }
   });
@@ -1727,9 +1978,10 @@ function wire(){
 }
 function saveCollapsed(){ store("atlas.collapsed", JSON.stringify(S.collapsed)); }
 function toggleSection(key){
-  S.collapsed[key] = !S.collapsed[key];
-  if (!S.collapsed[key]) delete S.collapsed[key];
-  const sec = [...document.querySelectorAll("#results .sec[data-sec-key]")].find(x => x.dataset.secKey === key);
+  const secEl = [...document.querySelectorAll("#results [data-sec-key]")].find(x => x.dataset.secKey === key);
+  const wasClosed = secEl ? secEl.classList.contains("closed") : !!S.collapsed[key];
+  S.collapsed[key] = !wasClosed;
+  const sec = [...document.querySelectorAll("#results [data-sec-key]")].find(x => x.dataset.secKey === key);
   if (sec){ sec.classList.toggle("closed", !!S.collapsed[key]); sec.querySelector(".sec-h").setAttribute("aria-expanded", String(!S.collapsed[key])); }
   saveCollapsed();
 }
