@@ -212,11 +212,12 @@ details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px;
 .help h2{font-family:var(--serif); margin:0 0 10px; font-size:21px}
 .empty{padding:40px 16px; text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:12px}
 .empty b{color:var(--text)}
-.sheet-close{display:none}
+.layout.nodetail{grid-template-columns:minmax(0,1fr)}
+.layout.nodetail .detail{display:none}
 @media (max-width:1100px){
   .detail{position:fixed; inset:auto 0 0 0; top:auto; max-height:88dvh; border-radius:16px 16px 0 0; z-index:20; transform:translateY(105%); transition:transform .22s ease; padding-bottom:env(safe-area-inset-bottom, 0px)}
   .detail.open{transform:none}
-  .sheet-close{display:grid}
+  .layout.nodetail .detail{display:block}
   .scrim{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:19}
 }
 @media (prefers-reduced-motion: reduce){ .detail{transition:none} }
@@ -299,6 +300,7 @@ details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px;
     <span class="world-now" id="worldnow"></span>
     <button class="lnk" data-collapse="1">Collapse all</button>
     <button class="lnk" data-collapse="0">Expand all</button>
+    <button class="lnk" data-help>How to read this</button>
     <span id="count"></span>
   </div>
   <div class="layout">
@@ -1055,6 +1057,23 @@ function select(k, id, mode = "link"){
   document.querySelectorAll(`#results tr[data-go="${CSS.escape(k + ":" + id)}"]`).forEach(tr => tr.classList.add("on"));
   const hk = {item:"i", piece:"p", station:"s", creature:"c", boss:"b", event:"e", loc:"l", biome:"m"}[k];
   if (hk && /^[A-Za-z0-9._~-]+$/.test(id)) { try{ history.replaceState(null, "", "#" + hk + "." + id); }catch(e){} }
+  $(".layout").classList.remove("nodetail");
+  openSheet(true);
+}
+// Hide the side panel and forget the selection, so a new category starts clean.
+function closeDetail(){
+  S.sel = null;
+  S.hist = [];
+  document.querySelectorAll("#results tr.on").forEach(tr => tr.classList.remove("on"));
+  if (location.hash){ try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){} }
+  $(".layout").classList.add("nodetail");
+  openSheet(false);
+}
+function showHelp(){
+  S.sel = null;
+  S.hist = [];
+  renderDetail();
+  $(".layout").classList.remove("nodetail");
   openSheet(true);
 }
 function openSheet(on){
@@ -1656,15 +1675,15 @@ function wire(){
   document.addEventListener("keydown", e => {
     if (e.key === "/" && document.activeElement !== q && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){ e.preventDefault(); q.focus(); q.select(); }
     if (e.key === "Escape"){
-      if ($("#detail").classList.contains("open") && matchMedia("(max-width:1100px)").matches) openSheet(false);
-      else if (document.activeElement === q && q.value){ q.value = ""; q.dispatchEvent(new Event("input")); }
+      if (document.activeElement === q && q.value){ q.value = ""; q.dispatchEvent(new Event("input")); }
+      else if (!$(".layout").classList.contains("nodetail")) closeDetail();
     }
     if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[role=button][data-go]")){ e.preventDefault(); e.target.click(); }
   });
   $("#mod").addEventListener("change", e => { S.mod = e.target.value; render(); });
   $("#nosrc").addEventListener("change", e => { S.nosrc = e.target.checked; render(); });
   document.addEventListener("click", e => {
-    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night]");
+    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night],[data-help]");
     if (!el) return;
     if (el.dataset.toggle){ toggleSection(el.dataset.toggle); return; }
     if (el.dataset.collapse){
@@ -1675,8 +1694,8 @@ function wire(){
     if (el.dataset.wMod){ W.opt[el.dataset.wMod] = el.dataset.wOpt; worldChanged(); return; }
     if (el.hasAttribute("data-w-reset")){ Object.assign(W.opt, W.base); worldChanged(); return; }
     if (el.dataset.wNight){ W.night = el.dataset.wNight === "1"; worldChanged(); return; }
-    if (el.dataset.group){ S.group = el.dataset.group; S.cls = null; S.open = {}; if (S.group !== "all") store("atlas.group", S.group); render(); return; }
-    if (el.dataset.cls !== undefined){ S.cls = el.dataset.cls || null; S.open = {}; render(); return; }
+    if (el.dataset.group){ S.group = el.dataset.group; S.cls = null; S.open = {}; if (S.group !== "all") store("atlas.group", S.group); closeDetail(); render(); return; }
+    if (el.dataset.cls !== undefined){ S.cls = el.dataset.cls || null; S.open = {}; closeDetail(); render(); return; }
     if (el.dataset.sort){
       const key = el.dataset.sec, c = el.dataset.sort;
       const g = key.split(":")[1];
@@ -1688,7 +1707,8 @@ function wire(){
     if (el.dataset.more){ S.open[el.dataset.more] = true; if (el.closest("#detail")) renderDetail(); else render(); return; }
     if (el.dataset.lvl){ S.lvl = +el.dataset.lvl; const sc = $("#detail").scrollTop; renderDetail(); $("#detail").scrollTop = sc; return; }
     if (el.hasAttribute("data-back")){ const p = S.hist.pop(); if (p) select(p.k, p.id, "back"); return; }
-    if (el.hasAttribute("data-close")){ openSheet(false); return; }
+    if (el.hasAttribute("data-close")){ closeDetail(); return; }
+    if (el.hasAttribute("data-help")){ showHelp(); return; }
     if (el.dataset.go){
       e.preventDefault();
       const i = el.dataset.go.indexOf(":");
