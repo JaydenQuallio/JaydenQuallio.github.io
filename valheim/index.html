@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="description" content="Searchable Valheim crafting atlas: recipes, upgrade costs, stats, building pieces, stations and material sources for a modded profile."></head><body>
+<title>Valheim Crafting Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averia+Sans+Libre:wght@400;700&family=Averia+Serif+Libre:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#13110e; --surface:#1c1814; --surface-2:#241f19; --surface-3:#2d271f;
+  --line:#3b3229; --line-soft:#2b251e;
+  --text:#ede1c9; --muted:#a8977c; --faint:#77695a;
+  --accent:#eea43f; --accent-soft:rgba(238,164,63,.14); --accent-ink:#1b1207; --link:#f3b865;
+  --frost:#86c3dc; --good:#9cc46a; --bad:#e56a4c; --warn:#e4c25a;
+  --d-slash:#cfd3d8; --d-pierce:#c4ad84; --d-blunt:#a8977c; --d-fire:#ea6f3c; --d-frost:#86c9ee; --d-lightning:#ecd54e;
+  --d-poison:#95c955; --d-spirit:#c8b6ff; --d-damage:#f1ece2; --d-chop:#b98246; --d-pickaxe:#8f96a3;
+  --shadow:0 18px 40px rgba(0,0,0,.45);
+  --serif:"Averia Serif Libre", Georgia, "Times New Roman", serif;
+  --sans:"Averia Sans Libre", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme: light;
+    --bg:#e8e6e1; --surface:#f6f5f1; --surface-2:#eeebe5; --surface-3:#e4e0d8;
+    --line:#cdc6b8; --line-soft:#dfd9ce;
+    --text:#221c15; --muted:#6a5f4e; --faint:#958a78;
+    --accent:#b2630d; --accent-soft:rgba(178,99,13,.12); --accent-ink:#fff8ee; --link:#9a5208;
+    --frost:#2c6c88; --good:#4e7c1f; --bad:#b33b21; --warn:#8a6a08;
+    --d-slash:#5d646e; --d-pierce:#8a6d3b; --d-blunt:#6f604b; --d-fire:#c9471a; --d-frost:#2f86b3; --d-lightning:#a88d0a;
+    --d-poison:#4f8a1c; --d-spirit:#6f55c9; --d-damage:#3b342b; --d-chop:#8a5a26; --d-pickaxe:#5b6270;
+    --shadow:0 18px 40px rgba(40,30,15,.18);
+  }
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --bg:#e8e6e1; --surface:#f6f5f1; --surface-2:#eeebe5; --surface-3:#e4e0d8;
+  --line:#cdc6b8; --line-soft:#dfd9ce;
+  --text:#221c15; --muted:#6a5f4e; --faint:#958a78;
+  --accent:#b2630d; --accent-soft:rgba(178,99,13,.12); --accent-ink:#fff8ee; --link:#9a5208;
+  --frost:#2c6c88; --good:#4e7c1f; --bad:#b33b21; --warn:#8a6a08;
+  --d-slash:#5d646e; --d-pierce:#8a6d3b; --d-blunt:#6f604b; --d-fire:#c9471a; --d-frost:#2f86b3; --d-lightning:#a88d0a;
+  --d-poison:#4f8a1c; --d-spirit:#6f55c9; --d-damage:#3b342b; --d-chop:#8a5a26; --d-pickaxe:#5b6270;
+  --shadow:0 18px 40px rgba(40,30,15,.18);
+}
+:root[data-theme="dark"]{ color-scheme: dark; }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{margin:0; color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.45; padding-inline:16px; padding-block:0 40px}
+button{font:inherit; color:inherit}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+.wrap{max-width:1500px; margin:0 auto}
+
+/* header */
+.top{display:grid; grid-template-columns:auto minmax(0,1fr); gap:14px 28px; align-items:center; padding-block:22px 14px}
+.brand{display:flex; gap:12px; align-items:center; min-width:0}
+.brand svg{flex:none; color:var(--accent)}
+.brand h1{font-family:var(--serif); font-weight:700; font-size:26px; line-height:1.05; margin:0; letter-spacing:.01em; text-wrap:balance}
+.brand p{margin:3px 0 0; color:var(--muted); font-size:12.5px}
+.search{position:relative; display:flex; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding-inline:12px; min-height:46px}
+.search:focus-within{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.search svg{flex:none; color:var(--muted)}
+.search input{flex:1; min-width:0; border:0; background:transparent; color:var(--text); font:inherit; font-size:16px; padding:10px 10px; outline:none}
+.search input::placeholder{color:var(--faint)}
+.search kbd{font-family:var(--mono); font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:5px; padding:1px 6px}
+@media (max-width:760px){ .top{grid-template-columns:1fr} .search kbd{display:none} }
+
+/* chip rows */
+.chips{display:flex; flex-wrap:wrap; gap:6px; padding-block:4px}
+.chip{border:1px solid var(--line); background:var(--surface); color:var(--text); border-radius:999px; padding:5px 12px; cursor:pointer; font-size:13px; display:inline-flex; gap:6px; align-items:center; white-space:nowrap}
+.chip:hover{border-color:var(--accent)}
+.chip .ct{font-family:var(--mono); font-size:11px; color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.chip[aria-pressed="true"] .ct{color:var(--accent-ink); opacity:.8}
+.chips.sub .chip{font-size:12.5px; padding:4px 10px; background:transparent}
+.chips.sub .chip[aria-pressed="true"]{background:var(--accent-soft); color:var(--text); border-color:var(--accent)}
+.chips.sub .chip[aria-pressed="true"] .ct{color:var(--muted)}
+.bar-row{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; padding-block:8px 12px; color:var(--muted); font-size:12.5px; border-bottom:1px solid var(--line-soft); margin-bottom:14px}
+.bar-row label{display:inline-flex; gap:6px; align-items:center; cursor:pointer}
+.bar-row select{font:inherit; color:var(--text); background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:4px 8px}
+.bar-row .spacer{flex:1}
+
+/* layout */
+.layout{display:grid; grid-template-columns:minmax(0,1fr) minmax(340px,420px); gap:20px; align-items:start}
+@media (max-width:1100px){ .layout{grid-template-columns:minmax(0,1fr)} }
+
+/* sections & tables */
+.sec{margin-bottom:26px}
+.sec-h{display:flex; align-items:baseline; gap:10px; margin:0 0 8px}
+.sec-h h2{font-family:var(--serif); font-size:19px; margin:0; font-weight:700; text-wrap:balance}
+.sec-h .ct{font-family:var(--mono); color:var(--muted); font-size:12px}
+.sec-h .note{color:var(--faint); font-size:12px}
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:13px}
+th{position:sticky; top:0; background:var(--surface-2); text-align:left; font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding:8px 8px; border-bottom:1px solid var(--line); white-space:nowrap; cursor:pointer; user-select:none}
+th:hover{color:var(--text)}
+th .sa{opacity:.9; color:var(--accent)}
+th.num, td.num{text-align:right}
+td{padding:7px 8px; border-bottom:1px solid var(--line-soft); vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--surface-2)}
+tbody tr.on td{background:var(--accent-soft)}
+td.num, .mono{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12.5px}
+.more{display:block; width:100%; text-align:center; padding:8px; background:var(--surface-2); border:0; border-top:1px solid var(--line-soft); color:var(--link); cursor:pointer; font-size:12.5px; border-radius:0 0 10px 10px}
+.more:hover{background:var(--surface-3)}
+
+.nm{display:flex; gap:10px; align-items:center; min-width:180px}
+.nm b{font-family:var(--serif); font-weight:700; font-size:14px; display:block; line-height:1.2}
+.nm small{color:var(--muted); font-size:11.5px; display:block}
+.tag{display:inline-block; font-size:10.5px; letter-spacing:.04em; padding:0 6px; border-radius:4px; border:1px solid var(--line); color:var(--muted); line-height:16px; vertical-align:1px}
+.tag.mod{border-color:transparent; background:var(--surface-3)}
+.tag.boss{background:var(--bad); color:#fff; border-color:transparent}
+.tag.warn{color:var(--warn); border-color:currentColor}
+
+/* icons */
+.ic{--s:28px; flex:none; display:inline-block; width:var(--s); height:var(--s); background-image:var(--icons); background-repeat:no-repeat;
+  background-size:calc(var(--cols) * var(--s)) auto; background-position:calc(var(--x) * var(--s) * -1) calc(var(--y) * var(--s) * -1)}
+.ic.none{background:var(--surface-3); border-radius:6px; display:inline-grid; place-items:center; color:var(--faint); font-family:var(--serif); font-size:calc(var(--s) * .5)}
+.glyph{flex:none; display:inline-grid; place-items:center; width:var(--g); height:var(--g); border-radius:6px; background:var(--surface-3); color:var(--muted)}
+.glyph svg{width:62%; height:62%}
+.ic.s18{--s:18px} .ic.s22{--s:22px} .ic.s36{--s:36px} .ic.s56{--s:56px}
+
+.st{display:inline-flex; align-items:center; gap:6px; white-space:nowrap}
+.st em{font-style:normal; font-family:var(--mono); font-size:11.5px; color:var(--accent); border:1px solid var(--accent-soft); background:var(--accent-soft); border-radius:4px; padding:0 5px}
+.st.hand{color:var(--muted)}
+.dim{color:var(--faint)}
+.mats{display:flex; flex-wrap:wrap; gap:3px 6px; min-width:110px; max-width:230px}
+.mat{display:inline-flex; align-items:center; gap:2px; border:0; background:none; padding:0; cursor:pointer; color:var(--text)}
+.mat b{font-family:var(--mono); font-weight:500; font-size:11.5px}
+.mat:hover b{color:var(--link)}
+
+.dmg{display:grid; grid-template-columns:auto; gap:3px; justify-items:end; min-width:96px}
+.dmg .nums{white-space:nowrap}
+.dmg .nums .arr{color:var(--faint); margin:0 3px}
+.dmg .nums .mx{color:var(--text); font-weight:500}
+.dbar{display:flex; height:6px; width:100%; max-width:150px; border-radius:3px; overflow:hidden; background:var(--surface-3)}
+.dbar i{display:block; height:100%}
+.d-slash{background:var(--d-slash)} .d-pierce{background:var(--d-pierce)} .d-blunt{background:var(--d-blunt)} .d-fire{background:var(--d-fire)}
+.d-frost{background:var(--d-frost)} .d-lightning{background:var(--d-lightning)} .d-poison{background:var(--d-poison)} .d-spirit{background:var(--d-spirit)}
+.d-damage{background:var(--d-damage)} .d-chop{background:var(--d-chop)} .d-pickaxe{background:var(--d-pickaxe)}
+.dt{display:inline-flex; align-items:center; gap:5px; white-space:nowrap}
+.dt::before{content:""; width:8px; height:8px; border-radius:2px; background:var(--c, var(--muted))}
+.up{color:var(--good); font-size:11px; margin-left:4px}
+.down{color:var(--bad); font-size:11px; margin-left:4px}
+
+/* detail panel */
+.detail{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 12px); max-height:calc(100dvh - 24px); overflow:auto; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow)}
+.detail .inner{padding:18px 18px 22px}
+.dhead{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:14px; align-items:start}
+.dhead h2{font-family:var(--serif); font-size:24px; line-height:1.1; margin:2px 0 4px; text-wrap:balance}
+.dhead .meta{display:flex; flex-wrap:wrap; gap:5px; align-items:center; color:var(--muted); font-size:12px}
+.dhead .ctl{display:flex; gap:4px}
+.iconbtn{border:1px solid var(--line); background:var(--surface-2); border-radius:8px; width:32px; height:32px; display:grid; place-items:center; cursor:pointer; color:var(--muted)}
+.iconbtn:hover{color:var(--text); border-color:var(--accent)}
+.desc{color:var(--muted); font-size:13px; margin:10px 0 0; white-space:pre-line}
+.card{border-top:1px solid var(--line-soft); margin-top:16px; padding-top:14px}
+.card h3{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:0 0 10px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:8px}
+.card h3 .aside{letter-spacing:0; text-transform:none; font-weight:400; color:var(--faint)}
+.recipe-line{display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin-bottom:10px}
+.reqs{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:6px}
+.req{display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--line-soft); border-radius:8px; padding:5px 8px; cursor:pointer; text-align:left; min-width:0}
+.req:hover{border-color:var(--accent)}
+.req .q{font-family:var(--mono); font-weight:500; color:var(--accent); font-size:13px}
+.req .rn{font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.levels{display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.levels button{border:0; background:transparent; padding:4px 10px; cursor:pointer; font-family:var(--mono); font-size:12px; color:var(--muted)}
+.levels button + button{border-left:1px solid var(--line)}
+.levels button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+.kv{display:grid; grid-template-columns:repeat(auto-fill, minmax(135px,1fr)); gap:8px}
+.kv div{background:var(--surface-2); border-radius:8px; padding:7px 9px; min-width:0}
+.kv span{display:block; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.kv b{font-family:var(--mono); font-weight:500; font-size:15px}
+.kv b small{font-size:11px; color:var(--muted); font-weight:400}
+.dtable{width:100%; font-size:12.5px; border-collapse:collapse}
+.dtable th{position:static; background:none; padding:4px 6px; font-size:10.5px; cursor:default; border-bottom:1px solid var(--line)}
+.dtable td{padding:6px 6px; border-bottom:1px solid var(--line-soft); cursor:default}
+.dtable tr:hover td{background:none}
+.dtable .lvl{font-family:var(--mono); color:var(--accent); white-space:nowrap}
+.dbreak{display:grid; gap:6px}
+.dbreak .row{display:grid; grid-template-columns:86px minmax(0,1fr) 52px; gap:8px; align-items:center; font-size:12.5px}
+.dbreak .track{height:8px; background:var(--surface-3); border-radius:4px; overflow:hidden}
+.dbreak .track i{display:block; height:100%; border-radius:4px}
+.dbreak .v{font-family:var(--mono); text-align:right}
+.src{display:grid; gap:6px}
+.src .it{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:10px; align-items:center; background:var(--surface-2); border:1px solid var(--line-soft); border-radius:8px; padding:6px 9px; cursor:pointer; text-align:left}
+.src .it:hover{border-color:var(--accent)}
+.src .it .t{font-size:12.5px; min-width:0}
+.src .it .t small{display:block; color:var(--muted); font-size:11.5px}
+.src .it .r{font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right; white-space:nowrap}
+.src .k{font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--faint); margin:6px 0 0}
+.flow{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.flow .arrow{color:var(--faint)}
+.se{background:var(--surface-2); border-radius:8px; padding:9px 11px; font-size:12.5px; white-space:pre-line; border-left:3px solid var(--frost)}
+.se b{font-family:var(--serif); display:block; font-size:13.5px; margin-bottom:2px}
+.pillset{display:flex; flex-wrap:wrap; gap:5px}
+.pill{font-size:11.5px; border-radius:999px; padding:2px 9px; background:var(--surface-3); white-space:nowrap}
+.pill.good{background:color-mix(in srgb, var(--good) 20%, transparent); color:var(--good)}
+.pill.bad{background:color-mix(in srgb, var(--bad) 18%, transparent); color:var(--bad)}
+details.tip summary{cursor:pointer; color:var(--muted); font-size:12px}
+details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px; background:var(--surface-2); padding:10px; border-radius:8px; margin:8px 0 0; color:var(--text)}
+.grid-items{display:flex; flex-wrap:wrap; gap:5px}
+.gi{display:inline-flex; align-items:center; gap:5px; border:1px solid var(--line-soft); background:var(--surface-2); border-radius:7px; padding:3px 8px 3px 4px; font-size:12px; cursor:pointer; max-width:100%}
+.gi:hover{border-color:var(--accent)}
+.gi span.x{font-family:var(--mono); font-size:11px; color:var(--accent)}
+.lvlhead{font-family:var(--mono); font-size:11.5px; color:var(--accent); margin:10px 0 6px}
+.help p{margin:0 0 10px; color:var(--muted); font-size:13px}
+.help p b{color:var(--text)}
+.help h2{font-family:var(--serif); margin:0 0 10px; font-size:21px}
+.empty{padding:40px 16px; text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:12px}
+.empty b{color:var(--text)}
+.sheet-close{display:none}
+@media (max-width:1100px){
+  .detail{position:fixed; inset:auto 0 0 0; top:auto; max-height:88dvh; border-radius:16px 16px 0 0; z-index:20; transform:translateY(105%); transition:transform .22s ease; padding-bottom:env(safe-area-inset-bottom, 0px)}
+  .detail.open{transform:none}
+  .sheet-close{display:grid}
+  .scrim{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:19}
+}
+@media (prefers-reduced-motion: reduce){ .detail{transition:none} }
+.foot{color:var(--faint); font-size:12px; margin-top:30px; border-top:1px solid var(--line-soft); padding-top:14px}
+.loading{padding:80px 0; text-align:center; color:var(--muted); font-family:var(--serif); font-size:18px}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path fill="currentColor" d="M6 12h22c0 3.5 2.3 5 6 5v3c-4.2 0-7-1.2-8.5-3.6L24 18v4h-3v6h6v4H11v-4h6v-6h-3v-4c-4.4 0-8-2.4-8-6Z"/><path fill="currentColor" opacity=".45" d="M5 34h30v2H5z"/></svg>
+      <div><h1>Valheim Crafting Atlas</h1><p id="meta">Loading game data…</p></div>
+    </div>
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="m21 21-4.8-4.8M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/></svg>
+      <input id="q" type="search" placeholder="Search anything: greatsword, iron, forge, mead, troll…" autocomplete="off" spellcheck="false" aria-label="Search items, building pieces, stations and creatures">
+      <kbd>/</kbd>
+    </label>
+  </header>
+  <nav class="chips" id="groups" aria-label="Categories"></nav>
+  <nav class="chips sub" id="classes" aria-label="Sub-categories"></nav>
+  <div class="bar-row">
+    <label for="mod">Mod <select id="mod"><option value="">All mods</option></select></label>
+    <label><input type="checkbox" id="nosrc"> Show items with no known source</label>
+    <span class="spacer"></span>
+    <span id="count"></span>
+  </div>
+  <div class="layout">
+    <section id="results" aria-live="polite"><div class="loading">Unpacking the forge…</div></section>
+    <aside class="detail" id="detail" aria-label="Details"></aside>
+  </div>
+  <p class="foot" id="foot"></p>
+</div>
+<script>
+(() => {
+"use strict";
+const COMBAT = ["slash","pierce","blunt","fire","frost","lightning","poison","spirit","damage"];
+const DNAME = {slash:"Slash",pierce:"Pierce",blunt:"Blunt",fire:"Fire",frost:"Frost",lightning:"Lightning",poison:"Poison",spirit:"Spirit",damage:"True",chop:"Chop",pickaxe:"Pickaxe"};
+const STATION_ORDER = ["piece_workbench","forge","piece_cauldron","piece_stonecutter","piece_artisanstation","blackforge","piece_magetable","piece_preptable","piece_MeadCauldron"];
+const BIOME = {Meadows:"Meadows",BlackForest:"Black Forest",Swamp:"Swamp",Mountain:"Mountains",Plains:"Plains",Mistlands:"Mistlands",AshLands:"Ashlands",DeepNorth:"Deep North",Ocean:"Ocean"};
+const MODNAME = {VeryWeak:"Very weak",Weak:"Weak",SlightlyWeak:"Slightly weak",SlightlyResistant:"Slightly resistant",Resistant:"Resistant",VeryResistant:"Very resistant",Immune:"Immune",Ignore:"Immune"};
+const BOSSKEY = {defeated_eikthyr:"Eikthyr",defeated_gdking:"The Elder",defeated_bonemass:"Bonemass",defeated_dragon:"Moder",defeated_goblinking:"Yagluth",defeated_queen:"The Queen",defeated_fader:"Fader"};
+const SRCK = {drop:"Dropped by",mine:"Mined from",chop:"Chopped from",break:"Found by breaking",chest:"Found in",pick:"Picked from",fish:"Caught",trade:"Sold by",other:"From"};
+const CONVK = {smelter:"Smelted",cooking:"Cooked",fermenter:"Fermented",incinerator:"Obliterated",incineratorDefault:"Obliterated",beehive:"Produced",sap:"Collected",plant:"Grown"};
+const CAT_ORDER = ["Misc","Crafting","Building","Heavy building","Furniture"];
+
+let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {};
+const S = {q:"", group:"weapons", cls:null, mod:"", nosrc:false, sel:null, hist:[], lvl:1, sort:{}, open:{}};
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+const compact = s => norm(s).replace(/ /g, "");
+const sing = w => w.length > 3 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w;
+const fmt = (v, d = 1) => v == null || v === "" ? "" : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("en-US");
+const pct = v => (v > 0 ? "+" : "") + Math.round(v * 100) + "%";
+
+function store(k, v){ try{ if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
+
+// ---------- icons
+function icon(i, size = "", name = ""){
+  const cls = size ? " " + size : "";
+  if (i == null || i < 0 || !D.icons) return `<span class="ic none${cls}" aria-hidden="true">${esc((name || "?").trim()[0] || "?")}</span>`;
+  const c = D.icons.cols;
+  return `<span class="ic${cls}" style="--x:${i % c};--y:${Math.floor(i / c)}" aria-hidden="true"></span>`;
+}
+const item = id => D.items[id];
+const iname = id => (D.items[id] && D.items[id].n) || (D.pieces[id] && D.pieces[id].n) || prettify(id);
+const iicon = (id, size) => { const o = D.items[id] || D.pieces[id]; return icon(o ? o.i : -1, size, iname(id)); };
+function prettify(p){ return String(p || "").replace(/_/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\s+/g, " ").trim(); }
+const stName = s => s ? ((D.stations[s] && D.stations[s].n) || (D.pieces[s] && D.pieces[s].n) || prettify(s)) : "By hand";
+const stIcon = (s, size = "s22") => s ? icon(D.stations[s] ? D.stations[s].i : (D.pieces[s] ? D.pieces[s].i : -1), size, stName(s)) : "";
+const biomes = arr => (arr || []).map(b => BIOME[b] || prettify(b)).join(", ");
+const GLYPH = {
+  mine:'<path d="M2.5 13.5l7-7M5 4.2c3-2 6.8-1.8 9 1.3-3-1-5.8-.8-7.8 1z"/>',
+  chop:'<path d="M2.5 13.5l8-8M8.6 3.2l4.2 4.2-2.6 2.6c-2.1-.8-3.4-2.1-4.2-4.2z"/>',
+  drop:'<path d="M4 3c1.8 3 1.8 7 0 10M8 2c2 4 2 8 0 12M12 3c1.8 3 1.8 7 0 10"/>',
+  break:'<path d="M8 2v3.5M8 10.5V14M2 8h3.5M10.5 8H14M3.8 3.8l2.4 2.4M9.8 9.8l2.4 2.4M12.2 3.8 9.8 6.2M3.8 12.2l2.4-2.4"/>',
+  chest:'<path d="M2 7h12v6H2zM2 7c0-2.8 2-4 6-4s6 1.2 6 4M7 8.2h2V10H7z"/>',
+  pick:'<path d="M8 14V7.5M8 7.5C5 7.5 3 5.4 3 2.5c3 0 5 2 5 5zM8 10c1.6-1.4 3.6-1.6 5.2.2-1.8 1.4-3.6 1.4-5.2-.2z"/>',
+  fish:'<path d="M2 8c3-4 7-4 10 0-3 4-7 4-10 0zM12 8l2.6-2.6v5.2z"/>',
+  trade:'<circle cx="8" cy="8" r="5.6"/><path d="M8 4.8v6.4M9.8 6.3H7.4a1 1 0 0 0 0 2h1.2a1 1 0 0 1 0 2H6.2"/>',
+  other:'<circle cx="8" cy="8" r="5"/>'
+};
+function glyph(k, size = 22){
+  return `<span class="glyph" style="--g:${size}px" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${GLYPH[k] || GLYPH.other}</svg></span>`;
+}
+function crIcon(id, size = ""){
+  const c = D.creatures[id];
+  const t = c && (c.dr || []).map(d => d[0]).find(x => D.items[x] && D.items[x].c === "trophies");
+  if (!t) return glyph("drop", size === "s56" ? 56 : size === "s22" ? 22 : 28);
+  return icon(D.items[t].i, size, c ? c.n : id);
+}
+const keyName = k => BOSSKEY[k] ? "after " + BOSSKEY[k] : prettify(String(k).replace(/^defeated_/, "after "));
+
+// ---------- recipe helpers
+function recipeAmount(r, req, q){
+  if (req[3] && req[3][q - 1] != null) return req[3][q - 1];
+  return q <= 1 ? req[1] : req[2] * (q - 1);
+}
+function stationLevel(r, q){
+  if (!r.s) return 0;
+  if (r.lv && r.lv[q - 1] != null) return r.lv[q - 1];
+  return Math.max(1, r.l) + q - 1;
+}
+const maxQ = o => (o.q ? o.q.length : 1);
+const qv = (o, q, k) => { const e = o.q && o.q[Math.min(q, o.q.length) - 1]; return e ? e[k] : undefined; };
+const dsum = (d, keys = COMBAT) => { let s = 0; if (d) for (const k of keys) s += d[k] || 0; return s; };
+const isTool = o => ["pickaxes"].includes(o.c) || (o.q && o.q[0] && o.q[0].dmg && !dsum(o.q[0].dmg) && (o.q[0].dmg.chop || o.q[0].dmg.pickaxe));
+
+// ---------- boot
+async function boot(){
+  try{
+    const inline = document.getElementById("atlas-data");
+    let iconUrl;
+    if (inline){
+      D = JSON.parse(inline.textContent);
+      // A multi-MB data: URI is too long for a CSS variable, so hand CSS a short blob: URL instead.
+      const m = /^data:([^;]+);base64,(.*)$/.exec(window.ATLAS_ICON_URL || "");
+      if (m){
+        const bin = atob(m[2]), bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        iconUrl = URL.createObjectURL(new Blob([bytes], {type:m[1]}));
+      }
+    }
+    else { const r = await fetch("data.json"); if (!r.ok) throw new Error("data.json returned " + r.status); D = await r.json(); iconUrl = "icons.webp"; }
+    if (D.icons){
+      document.documentElement.style.setProperty("--icons", `url("${iconUrl}")`);
+      document.documentElement.style.setProperty("--cols", D.icons.cols);
+    }
+  }catch(e){
+    $("#results").innerHTML = `<div class="empty"><b>Couldn't load the atlas data.</b><br>${esc(e.message)}. Reload the page to try again.</div>`;
+    return;
+  }
+  index();
+  const m = D.meta || {};
+  $("#meta").textContent = [m.profile, (m.mods || []).length + " mods", m.game ? "Valheim " + m.game : "", m.generated ? "exported " + new Date(m.generated).toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) : ""].filter(Boolean).join(" · ");
+  const sel = $("#mod");
+  for (const md of D.modsUsed) sel.insertAdjacentHTML("beforeend", `<option value="${esc(md)}">${esc(md)}</option>`);
+  $("#foot").innerHTML = `Read straight from your game (${esc(m.mode === "game" ? "in-world export, server settings applied" : "main-menu export")}): ${Object.keys(D.items).length.toLocaleString()} items, ${D.recipes.length.toLocaleString()} recipes, ${Object.keys(D.pieces).length.toLocaleString()} building pieces, ${D.conversions.length} processing recipes, ${Object.keys(D.creatures).length} creatures. Damage is base weapon damage; skill level and combat mods change what actually lands.`;
+  const saved = store("atlas.group");
+  if (saved && GRP[saved]) S.group = saved;
+  wire();
+  fromHash();
+  render();
+  if (!S.sel) renderDetail();
+}
+
+function index(){
+  D.recipes.forEach((r, i) => {
+    r.idx = i;
+    (RBI[r.it] ||= []).push(r);
+    (RBS[r.s || "_hand"] ||= []).push(r);
+    for (const q of r.r) (USED[q[0]] ||= []).push({t:"recipe", r, a:q[1]});
+  });
+  for (const [id, p] of Object.entries(D.pieces)){
+    for (const q of p.r) (USED[q[0]] ||= []).push({t:"piece", id, a:q[1]});
+    if (p.ext) (PIECE_EXT[p.ext] ||= []).push(id);
+  }
+  D.conversions.forEach((c, i) => {
+    c.idx = i;
+    for (const x of c.out) (PROD[x[0]] ||= []).push(c);
+    for (const x of c.in) (USED[x[0]] ||= []).push({t:"conv", c, a:x[1]});
+    if (c.fuel) (USED[c.fuel] ||= []).push({t:"fuel", c, a:c.fp || 1});
+    (CBS[c.st] ||= []).push(c);
+  });
+  for (const c of D.classes) CLS[c.k] = c;
+  for (const g of D.groups) GRP[g.k] = g;
+
+  // entities
+  for (const [id, o] of Object.entries(D.items)){
+    const cl = CLS[o.c] || {n:o.c, g:"other", a:""};
+    const d0 = o.q && o.q[o.q.length - 1] && o.q[o.q.length - 1].dmg;
+    const dtags = d0 ? Object.keys(d0).map(k => DNAME[k] || k).join(" ") : "";
+    ENT.push({k:"item", id, o, g:cl.g, c:o.c, mod:o.m, name:o.n, nameN:norm(o.n), nameC:compact(o.n),
+      tags:norm([cl.n, cl.a, GRP[cl.g] && GRP[cl.g].n, o.m, dtags, o.sk, o.set].join(" ")), ns:!!o.ns});
+  }
+  for (const [id, p] of Object.entries(D.pieces)){
+    const tool = p.tool ? iname(p.tool) : "Other";
+    const g = D.stations[id] ? "stations" : "building";
+    const c = g === "stations" ? "stations" : "b|" + (p.tool || "") + "|" + p.cat;
+    ENT.push({k:g === "stations" ? "station" : "piece", id, o:p, g, c, mod:p.m, name:p.n, nameN:norm(p.n), nameC:compact(p.n),
+      tags:norm([tool, p.cat, p.m, "build building piece", p.cfg || "", g === "stations" ? "station crafting" : ""].join(" ")), tool, cat:p.cat});
+    if (g === "stations"){
+      // stations are also buildable pieces
+      ENT.push({k:"piece", id, o:p, g:"building", c:"b|" + (p.tool || "") + "|" + p.cat, mod:p.m, name:p.n, nameN:norm(p.n), nameC:compact(p.n),
+        tags:norm([tool, p.cat, p.m, "build building piece station"].join(" ")), tool, cat:p.cat, dup:true});
+    }
+  }
+  for (const c of D.conversions){
+    const out = c.out[0] ? iname(c.out[0][0]) : "";
+    const inn = c.in.map(x => iname(x[0])).join(" ");
+    const st = D.pieces[c.st] ? D.pieces[c.st].n : prettify(c.st);
+    ENT.push({k:"conv", id:String(c.idx), o:c, g:"processing", c:"p|" + (c.k === "plant" ? "Planting" : st), mod:(D.pieces[c.st] || {}).m || "Valheim", name:out, nameN:norm(out), nameC:compact(out),
+      tags:norm([st, inn, CONVK[c.k] || c.k, "processing"].join(" ")), st});
+  }
+  for (const [id, cr] of Object.entries(D.creatures)){
+    ENT.push({k:"creature", id, o:cr, g:"creatures", c:cr.boss ? "cr|boss" : "cr|" + ((cr.b || ["Unknown"])[0]), mod:cr.m, name:cr.n, nameN:norm(cr.n), nameC:compact(cr.n),
+      tags:norm(["creature monster enemy", biomes(cr.b), cr.boss ? "boss" : "", cr.fac || "", cr.m].join(" ")), multi:(cr.b || [])});
+  }
+}
+
+// ---------- filtering & search
+function visible(e){
+  if (S.mod && e.mod !== S.mod) return false;
+  if (!S.nosrc && e.ns) return false;
+  return true;
+}
+function score(e, qN, qC, toks){
+  if (!qC) return 1;
+  const nC = e.nameC;
+  if (nC === qC || nC === sing(qC)) return 1000;
+  if (nC.startsWith(qC)) return 800;
+  if (nC.includes(qC) || nC.includes(sing(qC))) return 600;
+  const nameHit = toks.every(t => e.nameN.includes(t) || e.nameN.includes(sing(t)));
+  if (nameHit) return 500;
+  const words = e.tagW || (e.tagW = new Set(e.tags.split(" ").flatMap(w => [w, sing(w)])));
+  const tagC = e.tagsC || (e.tagsC = e.tags.replace(/ /g, ""));
+  if (words.has(qC) || words.has(sing(qC)) || (qC.length >= 6 && tagC.includes(sing(qC)))) return 380;
+  if (toks.every(t => e.nameN.includes(t) || words.has(t) || words.has(sing(t)))) return 300;
+  return 0;
+}
+function searchResults(){
+  const qN = norm(S.q), qC = qN.replace(/ /g, ""), toks = qN.split(" ").filter(Boolean);
+  const out = [];
+  for (const e of ENT){
+    if (e.dup && qC) continue;
+    if (!visible(e)) continue;
+    if (S.group !== "all" && e.g !== S.group) continue;
+    if (S.cls && !classMatch(e, S.cls)) continue;
+    const sc = score(e, qN, qC, toks);
+    if (sc > 0) out.push([sc, e]);
+  }
+  // fallback: ingredients
+  if (qC && out.length < 3){
+    const ids = new Set(Object.entries(D.items).filter(([id, o]) => compact(o.n) === qC || compact(o.n) === sing(qC)).map(([id]) => id));
+    if (ids.size){
+      for (const e of ENT){
+        if (!visible(e) || out.some(x => x[1] === e)) continue;
+        const reqs = e.k === "item" ? (RBI[e.id] || []).flatMap(r => r.r.map(x => x[0])) : e.k === "piece" ? e.o.r.map(x => x[0]) : [];
+        if (reqs.some(x => ids.has(x))) out.push([100, e]);
+      }
+    }
+  }
+  return out;
+}
+function classMatch(e, cls){
+  if (e.c === cls) return true;
+  if (e.k === "creature" && cls.startsWith("cr|") && cls !== "cr|boss") return (e.multi || []).includes(cls.slice(3));
+  return false;
+}
+
+// ---------- column definitions
+function nameCell(e, sub){
+  const o = e.o;
+  const tags = [];
+  if (e.k === "creature" && o.boss) tags.push(`<span class="tag boss">Boss</span>`);
+  if (o.m && o.m !== "Valheim") tags.push(`<span class="tag mod">${esc(o.m)}</span>`);
+  if (o.ns) tags.push(`<span class="tag warn">no known source</span>`);
+  const i = e.k === "conv" ? (D.items[o.out[0][0]] || {}).i : o.i;
+  return `<div class="nm">${e.k === "creature" ? crIcon(e.id) : icon(i, "", e.name)}<div><b>${esc(e.name)}</b><small>${sub || ""} ${tags.join(" ")}</small></div></div>`;
+}
+function itemSub(e){
+  const o = e.o, cl = CLS[o.c];
+  const bits = [cl ? cl.n : ""];
+  if (o.mq > 1) bits.push("★" + o.mq + " max");
+  return esc(bits.filter(Boolean).join(" · "));
+}
+function stationCell(id){
+  const r = (RBI[id] || [])[0];
+  if (!r){
+    const s = (D.sources[id] || [])[0], p = (PROD[id] || [])[0];
+    if (p) return `<span class="st">${stIcon(p.st)}${esc(stName(p.st))}</span>`;
+    if (s) return `<span class="st hand">${esc(SRCK[s.k] || "From")} ${esc(s.fn)}</span>`;
+    return `<span class="dim">Not craftable</span>`;
+  }
+  if (!r.s) return `<span class="st hand">By hand</span>`;
+  return `<span class="st">${stIcon(r.s)}${esc(stName(r.s))} <em>Lv ${stationLevel(r, 1)}</em></span>`;
+}
+function stationSort(id){
+  const r = (RBI[id] || [])[0];
+  if (!r) return 9999;
+  if (!r.s) return -1;
+  const i = STATION_ORDER.indexOf(r.s);
+  return (i < 0 ? 50 : i) * 20 + stationLevel(r, 1);
+}
+function matsCell(reqs, mult = 1){
+  if (!reqs || !reqs.length) return `<span class="dim">—</span>`;
+  const shown = reqs.slice(0, 7).map(q => `<button class="mat" data-go="item:${esc(q[0])}" title="${esc(iname(q[0]))} × ${q[1]}">${iicon(q[0], "s22")}<b>${q[1]}</b></button>`).join("");
+  return `<div class="mats">${shown}${reqs.length > 7 ? `<span class="dim">+${reqs.length - 7}</span>` : ""}</div>`;
+}
+function dmgBar(d, max, keys){
+  const tot = dsum(d, keys);
+  if (!tot || !max) return "";
+  const w = Math.max(4, Math.min(100, tot / max * 100));
+  const segs = keys.filter(k => d[k]).map(k => `<i class="d-${k}" style="width:${(d[k] / tot * 100).toFixed(2)}%" title="${DNAME[k]} ${fmt(d[k])}"></i>`).join("");
+  return `<span class="dbar" style="width:${w}%">${segs}</span>`;
+}
+function dmgCell(o, ctx, keys = COMBAT){
+  if (!o.q) return `<span class="dim">—</span>`;
+  const a = dsum(o.q[0].dmg, keys), b = dsum(o.q[o.q.length - 1].dmg, keys);
+  if (!a && !b) return `<span class="dim">—</span>`;
+  const nums = o.q.length > 1 && b !== a ? `${fmt(a)}<span class="arr">→</span><span class="mx">${fmt(b)}</span>` : `<span class="mx">${fmt(b)}</span>`;
+  return `<div class="dmg"><span class="nums">${nums}</span>${dmgBar(o.q[o.q.length - 1].dmg, ctx.max, keys)}</div>`;
+}
+function rangeCell(o, k, d = 0){
+  if (!o.q) return `<span class="dim">—</span>`;
+  const a = o.q[0][k], b = o.q[o.q.length - 1][k];
+  if (!a && !b) return `<span class="dim">—</span>`;
+  return a !== b && o.q.length > 1 ? `${fmt(a, d)}<span class="dim"> → </span>${fmt(b, d)}` : fmt(b, d);
+}
+const lastQ = (o, k) => (o.q ? (o.q[o.q.length - 1][k] || 0) : 0);
+const col = {
+  item: {h:"Item", cell:e => nameCell(e, itemSub(e)), sv:e => e.name},
+  station: {h:"Crafted at", cell:e => stationCell(e.id), sv:e => stationSort(e.id)},
+  mats: {h:"Materials", cell:e => { const r = (RBI[e.id] || [])[0]; return matsCell(r && r.r) + (r && r.a > 1 ? `<small class="dim"> makes ${r.a}</small>` : ""); }, sv:e => { const r = (RBI[e.id] || [])[0]; return r ? r.r.reduce((s, q) => s + q[1], 0) : 0; }},
+  dmg: {h:"Damage ★1 → max", n:1, cell:(e, ctx) => dmgCell(e.o, ctx), sv:e => lastQ(e.o, "dmg") ? dsum(lastQ(e.o, "dmg")) : 0},
+  tooldmg: {h:"Chop / Pick", n:1, cell:(e, ctx) => dmgCell(e.o, ctx, ["chop","pickaxe"]), sv:e => lastQ(e.o, "dmg") ? dsum(lastQ(e.o, "dmg"), ["chop","pickaxe"]) : 0},
+  tier: {h:"Tier", n:1, cell:e => e.o.x && e.o.x.tier != null ? fmt(e.o.x.tier, 0) : `<span class="dim">—</span>`, sv:e => (e.o.x && e.o.x.tier) || 0},
+  block: {h:"Block", n:1, cell:e => rangeCell(e.o, "blk"), sv:e => lastQ(e.o, "blk")},
+  armor: {h:"Armor ★1 → max", n:1, cell:e => rangeCell(e.o, "arm"), sv:e => lastQ(e.o, "arm")},
+  dur: {h:"Durability", n:1, cell:e => rangeCell(e.o, "dur"), sv:e => lastQ(e.o, "dur")},
+  parry: {h:"Parry", n:1, cell:e => e.o.x && e.o.x.parry ? "×" + fmt(e.o.x.parry, 2) : `<span class="dim">—</span>`, sv:e => (e.o.x && e.o.x.parry) || 0},
+  move: {h:"Move", n:1, cell:e => e.o.x && e.o.x.move ? `<span class="${e.o.x.move < 0 ? "down" : "up"}" style="margin:0">${pct(e.o.x.move)}</span>` : `<span class="dim">—</span>`, sv:e => (e.o.x && e.o.x.move) || 0},
+  wt: {h:"Weight", n:1, cell:e => fmt(e.o.w), sv:e => e.o.w || 0},
+  eff: {h:"Effects", cell:e => effectsCell(e.o), sv:e => (e.o.set ? 2 : 0) + (e.o.eq ? 1 : 0)},
+  hp: {h:"Health", n:1, cell:e => fmt(e.o.food && e.o.food.hp, 0), sv:e => (e.o.food && e.o.food.hp) || 0},
+  stam: {h:"Stamina", n:1, cell:e => fmt(e.o.food && e.o.food.stam, 0), sv:e => (e.o.food && e.o.food.stam) || 0},
+  eitr: {h:"Eitr", n:1, cell:e => e.o.food && e.o.food.eitr ? fmt(e.o.food.eitr, 0) : `<span class="dim">—</span>`, sv:e => (e.o.food && e.o.food.eitr) || 0},
+  ftime: {h:"Lasts", n:1, cell:e => e.o.food && e.o.food.time ? fmt(e.o.food.time / 60, 0) + " min" : "", sv:e => (e.o.food && e.o.food.time) || 0},
+  regen: {h:"Regen", n:1, cell:e => fmt(e.o.food && e.o.food.regen), sv:e => (e.o.food && e.o.food.regen) || 0},
+  effect: {h:"Effect", cell:e => { const s = D.ses[e.o.cons]; return s ? `<b>${esc(s.n)}</b><br><small class="dim">${esc(firstLine(s.t))}</small>` : `<span class="dim">—</span>`; }, sv:e => e.o.cons || ""},
+  src: {h:"How to get", cell:e => srcSummary(e.id), sv:e => (RBI[e.id] ? 0 : 1) + (D.sources[e.id] ? 0 : 2)},
+  used: {h:"Used in", n:1, cell:e => { const n = usedCount(e.id); return n ? n.toLocaleString() : `<span class="dim">—</span>`; }, sv:e => usedCount(e.id)},
+  stack: {h:"Stack", n:1, cell:e => fmt(e.o.st, 0), sv:e => e.o.st || 0},
+  piece: {h:"Piece", cell:e => nameCell(e, esc([e.tool, e.cat].filter(Boolean).join(" · "))), sv:e => e.name},
+  pmats: {h:"Materials", cell:e => matsCell(e.o.r), sv:e => e.o.r.reduce((s, q) => s + q[1], 0)},
+  needs: {h:"Needs nearby", cell:e => e.o.s ? `<span class="st">${stIcon(e.o.s, "s18")}${esc(stName(e.o.s))}</span>` : `<span class="dim">—</span>`, sv:e => e.o.s || ""},
+  comfort: {h:"Comfort", n:1, cell:e => e.o.cf ? `${e.o.cf}${e.o.cfg ? ` <small class="dim">${esc(e.o.cfg)}</small>` : ""}` : `<span class="dim">—</span>`, sv:e => e.o.cf || 0},
+  php: {h:"Health", n:1, cell:e => e.o.hp ? `${fmt(e.o.hp, 0)}${e.o.mat ? ` <small class="dim">${esc(e.o.mat)}</small>` : ""}` : `<span class="dim">—</span>`, sv:e => e.o.hp || 0},
+  sname: {h:"Station", cell:e => nameCell(e, esc(`${(D.stations[e.id].ext || []).length} upgrades`)), sv:e => e.name},
+  levels: {h:"Max level", n:1, cell:e => D.stations[e.id].max, sv:e => D.stations[e.id].max},
+  crafts: {h:"Recipes", n:1, cell:e => (RBS[e.id] || []).length || `<span class="dim">—</span>`, sv:e => (RBS[e.id] || []).length},
+  cst: {h:"Station", cell:e => `<span class="st">${stIcon(e.o.st)}${esc(e.st)}</span>`, sv:e => e.st},
+  cflow: {h:"Recipe", cell:e => convFlow(e.o), sv:e => e.name},
+  ctime: {h:"Time", n:1, cell:e => e.o.t ? dur(e.o.t) + (e.o.t2 && e.o.t2 !== e.o.t ? "–" + dur(e.o.t2) : "") : `<span class="dim">—</span>`, sv:e => e.o.t || 0},
+  cfuel: {h:"Fuel", cell:e => e.o.fuel ? `<span class="mats">${matsCell([[e.o.fuel, e.o.fp || 1]])}</span>` : `<span class="dim">—</span>`, sv:e => e.o.fuel || ""},
+  creature: {h:"Creature", cell:e => nameCell(e, esc(biomes(e.o.b))), sv:e => e.name},
+  chp: {h:"Health", n:1, cell:e => fmt(e.o.hp, 0), sv:e => e.o.hp || 0},
+  weak: {h:"Weak to", cell:e => modPills(e.o.wk, true), sv:e => Object.values(e.o.wk || {}).filter(v => /Weak/.test(v)).length},
+  resist: {h:"Resists", cell:e => modPills(e.o.wk, false), sv:e => Object.values(e.o.wk || {}).filter(v => !/Weak/.test(v)).length},
+  drops: {h:"Drops", cell:e => matsCell((e.o.dr || []).map(d => [d[0], d[1] === d[2] ? d[1] : d[1] + "–" + d[2]])), sv:e => (e.o.dr || []).length},
+};
+const COLS = {
+  weapons:["item","station","mats","dmg","block","dur","wt"],
+  ammo:["item","station","mats","dmg","wt"],
+  shields:["item","station","mats","block","parry","dur","move","wt"],
+  armor:["item","station","mats","armor","dur","move","eff","wt"],
+  tools:["item","station","mats","tier","tooldmg","dmg","dur","wt"],
+  food:["item","station","mats","hp","stam","eitr","ftime","regen"],
+  meads:["item","station","mats","effect"],
+  materials:["item","src","used","stack","wt"],
+  other:["item","src","used","wt"],
+  building:["piece","pmats","needs","comfort","php"],
+  stations:["sname","pmats","levels","crafts"],
+  processing:["cst","cflow","ctime","cfuel"],
+  creatures:["creature","chp","weak","resist","drops"],
+};
+const DEFAULT_SORT = {weapons:["dmg",1], ammo:["dmg",1], shields:["block",1], armor:["armor",1], tools:["tier",1], food:["hp",1], meads:["item",1],
+  materials:["item",1], other:["item",1], building:["piece",1], stations:["crafts",-1], processing:["cst",1], creatures:["chp",1]};
+
+function firstLine(t){ return String(t || "").split("\n").map(s => s.trim()).filter(Boolean).slice(0, 2).join(" · "); }
+function dur(s){ s = Math.round(s); if (s >= 3600) return fmt(s / 3600, 1) + " h"; if (s >= 60) return fmt(s / 60, s % 60 ? 1 : 0) + " min"; return s + " s"; }
+function usedCount(id){ return (USED[id] || []).length; }
+function effectsCell(o){
+  const bits = [];
+  if (o.set) bits.push(`<span class="pill">${esc(setLabel(o))}</span>`);
+  if (o.eq && D.ses[o.eq]) bits.push(`<span class="pill">${esc(D.ses[o.eq].n)}</span>`);
+  if (o.res && o.res.length) bits.push(`<span class="pill">${o.res.length} resist${o.res.length > 1 ? "s" : ""}</span>`);
+  return bits.length ? `<div class="pillset">${bits.join("")}</div>` : `<span class="dim">—</span>`;
+}
+function setLabel(o){ const se = D.ses[o.setse]; return (se ? se.n : prettify(o.set)) + " set"; }
+function modPills(wk, weak){
+  const e = Object.entries(wk || {}).filter(([k, v]) => weak ? /Weak/.test(v) : !/Weak/.test(v));
+  if (!e.length) return `<span class="dim">—</span>`;
+  return `<div class="pillset">${e.map(([k, v]) => `<span class="pill ${weak ? "good" : "bad"}" title="${esc(MODNAME[v] || v)}">${esc(DNAME[k] || prettify(k))}${/Very|Immune|Ignore/.test(v) ? (weak ? " ++" : " ✕") : ""}</span>`).join("")}</div>`;
+}
+function srcSummary(id){
+  const bits = [];
+  if (RBI[id]){ const r = RBI[id][0]; bits.push(`<span class="st">${r.s ? stIcon(r.s, "s18") : ""}${esc(r.s ? "Craft at " + stName(r.s) : "Craft by hand")}</span>`); }
+  const p = PROD[id];
+  if (p && p.length) bits.push(`<span class="st">${stIcon(p[0].st, "s18")}${esc((CONVK[p[0].k] || "Made") + " in " + stName(p[0].st))}</span>`);
+  const s = D.sources[id] || [];
+  const kinds = {};
+  for (const x of s) (kinds[x.k] ||= []).push(x.fn);
+  for (const [k, names] of Object.entries(kinds)){
+    const u = [...new Set(names)];
+    bits.push(`<span>${esc(SRCK[k] || k)} ${esc(u.slice(0, 2).join(", "))}${u.length > 2 ? ` <span class="dim">+${u.length - 2}</span>` : ""}</span>`);
+  }
+  return bits.length ? bits.slice(0, 3).join("<br>") : `<span class="dim">Unknown</span>`;
+}
+function convFlow(c, big){
+  const s = big ? "s22" : "s18";
+  const side = arr => arr.length ? arr.map(x => `<button class="gi" data-go="item:${esc(x[0])}">${iicon(x[0], s)}${esc(iname(x[0]))}${x[1] > 1 ? `<span class="x">×${x[1]}</span>` : ""}</button>`).join("") : `<span class="dim">${c.k === "plant" ? "Plant" : "Nothing"}</span>`;
+  return `<div class="flow">${side(c.in)}<span class="arrow">→</span>${side(c.out)}</div>`;
+}
+
+// ---------- render: chips
+function counts(){
+  const g = {all:0}, c = {};
+  const qN = norm(S.q), qC = qN.replace(/ /g, ""), toks = qN.split(" ").filter(Boolean);
+  for (const e of ENT){
+    if (!visible(e)) continue;
+    if (qC && (e.dup || !score(e, qN, qC, toks))) continue;
+    if (!e.dup){ g[e.g] = (g[e.g] || 0) + 1; g.all++; }
+    else g[e.g] = (g[e.g] || 0) + 1;
+    if (e.g === S.group){
+      if (e.k === "creature"){ for (const b of e.multi || []) c["cr|" + b] = (c["cr|" + b] || 0) + 1; if (e.o.boss) c["cr|boss"] = (c["cr|boss"] || 0) + 1; }
+      else c[e.c] = (c[e.c] || 0) + 1;
+    }
+  }
+  return {g, c};
+}
+function renderChips(ct){
+  const gs = [{k:"all", n:"Everything"}].concat(D.groups);
+  $("#groups").innerHTML = gs.filter(g => g.k === "all" || ct.g[g.k]).map(g =>
+    `<button class="chip" data-group="${g.k}" aria-pressed="${S.group === g.k}">${esc(g.n)} <span class="ct">${(ct.g[g.k] || 0).toLocaleString()}</span></button>`).join("");
+  let subs = [];
+  if (S.group === "building"){
+    const keys = Object.keys(ct.c);
+    const toolOrder = t => t === "Hammer" ? 0 : 1;
+    keys.sort((a, b) => {
+      const [, ta, ca] = a.split("|"), [, tb, cb] = b.split("|");
+      const na = iname(ta), nb = iname(tb);
+      return toolOrder(na) - toolOrder(nb) || na.localeCompare(nb) || (CAT_ORDER.indexOf(ca) + 1 || 99) - (CAT_ORDER.indexOf(cb) + 1 || 99) || ca.localeCompare(cb);
+    });
+    subs = keys.map(k => { const [, t, c] = k.split("|"); const tn = t ? iname(t) : "Other"; return {k, n:tn === "Hammer" ? c : `${tn} · ${c}`}; });
+  } else if (S.group === "processing"){
+    subs = Object.keys(ct.c).map(k => ({k, n:k.slice(2)})).sort((a, b) => a.n.localeCompare(b.n));
+  } else if (S.group === "creatures"){
+    const order = ["Meadows","BlackForest","Swamp","Mountain","Plains","Mistlands","AshLands","DeepNorth","Ocean"];
+    subs = Object.keys(ct.c).map(k => ({k, n:k === "cr|boss" ? "Bosses" : (BIOME[k.slice(3)] || prettify(k.slice(3)))}))
+      .sort((a, b) => (a.k === "cr|boss" ? -1 : b.k === "cr|boss" ? 1 : (order.indexOf(a.k.slice(3)) + 1 || 99) - (order.indexOf(b.k.slice(3)) + 1 || 99)));
+  } else if (S.group !== "all" && S.group !== "stations"){
+    subs = D.classes.filter(c => c.g === S.group && ct.c[c.k]).map(c => ({k:c.k, n:c.n}));
+  }
+  $("#classes").hidden = subs.length < 2;
+  $("#classes").innerHTML = subs.length < 2 ? "" : [`<button class="chip" data-cls="" aria-pressed="${!S.cls}">All</button>`].concat(subs.map(s =>
+    `<button class="chip" data-cls="${esc(s.k)}" aria-pressed="${S.cls === s.k}">${esc(s.n)} <span class="ct">${ct.c[s.k]}</span></button>`)).join("");
+}
+
+// ---------- render: results
+function sectionHTML(key, title, ents, gkey, note){
+  const cols = COLS[gkey] || COLS.other;
+  const [sk, sd] = S.sort[key] || S.sort[gkey] || DEFAULT_SORT[gkey] || ["item", 1];
+  const cdef = col[sk] && cols.includes(sk) ? col[sk] : col[cols[0]];
+  const sorted = ents.slice().sort((a, b) => {
+    if (a._sc !== b._sc && S.q) return b._sc - a._sc;
+    const va = cdef.sv(a), vb = cdef.sv(b);
+    return (typeof va === "string" ? va.localeCompare(vb) : va - vb) * sd || a.name.localeCompare(b.name);
+  });
+  const ctx = {max:0};
+  const toolKeys = gkey === "tools" ? ["chop","pickaxe"] : COMBAT;
+  for (const e of ents){ if (e.o.q){ ctx.max = Math.max(ctx.max, dsum(e.o.q[e.o.q.length - 1].dmg, COMBAT), gkey === "tools" ? dsum(e.o.q[e.o.q.length - 1].dmg, toolKeys) : 0); } }
+  const limit = S.open[key] ? 1e9 : (S.cls || ents.length <= 40 ? 400 : 25);
+  const rows = sorted.slice(0, limit).map(e => {
+    const on = S.sel && S.sel.k === e.k && S.sel.id === e.id ? " class=\"on\"" : "";
+    return `<tr data-go="${e.k}:${esc(e.id)}"${on}>${cols.map(c => `<td${col[c].n ? ` class="num"` : ""}>${col[c].cell(e, ctx)}</td>`).join("")}</tr>`;
+  }).join("");
+  const head = cols.map(c => `<th${col[c].n ? ` class="num"` : ""} data-sort="${c}" data-sec="${esc(key)}" aria-sort="${c === sk ? (sd > 0 ? "ascending" : "descending") : "none"}">${esc(col[c].h)}${c === sk ? ` <span class="sa">${sd > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
+  const more = sorted.length > limit ? `<button class="more" data-more="${esc(key)}">Show all ${sorted.length.toLocaleString()}</button>` : "";
+  return `<section class="sec"><div class="sec-h"><h2>${esc(title)}</h2><span class="ct">${ents.length.toLocaleString()}</span>${note ? `<span class="note">${note}</span>` : ""}</div>
+    <div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>${more}</div></section>`;
+}
+function render(){
+  const ct = counts();
+  if (S.group !== "all" && !ct.g[S.group] && S.q) S.group = "all";
+  renderChips(ct);
+  const res = searchResults();
+  for (const [sc, e] of res) e._sc = sc;
+  const ents = res.map(x => x[1]);
+  $("#count").textContent = S.q ? `${ents.filter(e => !e.dup).length.toLocaleString()} matches for “${S.q}”` : "";
+  let html = "";
+  if (!ents.length){
+    html = `<div class="empty"><b>Nothing matches “${esc(S.q)}”.</b><br>Try a shorter word, a weapon type like <i>atgeir</i>, a material like <i>bronze</i>, or clear the mod filter.</div>`;
+  } else if (S.group === "all"){
+    const byG = {};
+    for (const e of ents) if (!e.dup || !S.q) (byG[e.g] ||= []).push(e);
+    const best = k => Math.max(...byG[k].map(e => e._sc || 0));
+    const gorder = D.groups.map(g => g.k).filter(k => byG[k]);
+    if (S.q) gorder.sort((a, b) => best(b) - best(a) || 0);
+    for (const k of gorder) html += sectionHTML("g:" + k, GRP[k].n, byG[k], k);
+  } else if (S.cls || S.q || ["stations","processing"].includes(S.group)){
+    const title = S.cls ? ($(`#classes [data-cls="${CSS.escape(S.cls)}"]`)?.firstChild?.textContent.trim() || GRP[S.group].n) : GRP[S.group].n;
+    html = sectionHTML("c:" + S.group + ":" + (S.cls || ""), title, ents, S.group, classNote());
+  } else {
+    // whole group: one section per class
+    const byC = {};
+    for (const e of ents) (byC[e.c] ||= []).push(e);
+    const keys = Object.keys(byC);
+    const order = [...$("#classes").querySelectorAll("[data-cls]")].map(b => b.dataset.cls).filter(Boolean);
+    keys.sort((a, b) => (order.indexOf(a) + 1 || 999) - (order.indexOf(b) + 1 || 999));
+    if (S.group === "creatures"){
+      html = sectionHTML("c:creatures:", "Creatures", ents.filter(e => !e.dup), "creatures");
+    } else {
+      for (const k of keys){
+        const label = $(`#classes [data-cls="${CSS.escape(k)}"]`)?.firstChild?.textContent.trim() || (CLS[k] && CLS[k].n) || k;
+        html += sectionHTML("c:" + S.group + ":" + k, label, byC[k], S.group);
+      }
+    }
+  }
+  $("#results").innerHTML = html;
+}
+function classNote(){
+  if (S.group === "weapons") return "Base damage summed across damage types; bar shows the mix at max level.";
+  if (S.group === "armor") return "Armor ★1 → fully upgraded.";
+  if (S.group === "building") return "Station = must be within its build range.";
+  return "";
+}
+
+// ---------- detail panel
+function select(k, id, push = true){
+  if (push && S.sel && !(S.sel.k === k && S.sel.id === id)) S.hist.push(S.sel);
+  if (k === "conv"){ const c = D.conversions[+id]; if (c && c.out[0]) { k = "item"; id = c.out[0][0]; } }
+  if (k === "piece" && D.stations[id] && !D.pieces[id]) k = "station";
+  S.sel = {k, id};
+  S.lvl = 1;
+  if (k === "item" && D.items[id]) S.lvl = 1;
+  renderDetail();
+  document.querySelectorAll("#results tr.on").forEach(tr => tr.classList.remove("on"));
+  document.querySelectorAll(`#results tr[data-go="${CSS.escape(k + ":" + id)}"]`).forEach(tr => tr.classList.add("on"));
+  if (/^[A-Za-z0-9._~-]+$/.test(id)) { try{ history.replaceState(null, "", "#" + k[0] + "." + id); }catch(e){} }
+  openSheet(true);
+}
+function openSheet(on){
+  const d = $("#detail");
+  d.classList.toggle("open", on);
+  const scrim = $(".scrim");
+  if (on && matchMedia("(max-width:1100px)").matches && !scrim){ const s = document.createElement("div"); s.className = "scrim"; s.addEventListener("click", () => openSheet(false)); document.body.appendChild(s); }
+  if (!on && scrim) scrim.remove();
+}
+function fromHash(){
+  const h = decodeURIComponent(location.hash.slice(1));
+  const m = /^([ipsc])\.(.+)$/.exec(h);
+  if (!m) return;
+  const k = {i:"item", p:"piece", s:"station", c:"creature"}[m[1]];
+  const ok = (k === "item" && D.items[m[2]]) || (k === "piece" && D.pieces[m[2]]) || (k === "station" && D.stations[m[2]]) || (k === "creature" && D.creatures[m[2]]);
+  if (ok){ S.sel = {k, id:m[2]}; renderDetail(); }
+}
+function dhead(i, name, metaBits, desc){
+  const ic = i === -2 && S.sel ? crIcon(S.sel.id, "s56") : icon(i, "s56", name);
+  return `<div class="dhead">${ic}<div><h2>${esc(name)}</h2><div class="meta">${metaBits.filter(Boolean).join("")}</div></div>
+    <div class="ctl">${S.hist.length ? `<button class="iconbtn" data-back title="Back" aria-label="Back"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M15 6l-6 6 6 6"/></svg></button>` : ""}
+    <button class="iconbtn sheet-close" data-close title="Close" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>
+    ${desc ? `<p class="desc">${esc(desc)}</p>` : ""}`;
+}
+const tag = (t, cls = "") => t ? `<span class="tag ${cls}">${esc(t)}</span>` : "";
+function reqGrid(reqs, q = 1, r = null){
+  const list = reqs.map(x => [x[0], r ? recipeAmount(r, x, q) : x[1]]).filter(x => x[1]);
+  if (!list.length) return `<span class="dim">Free</span>`;
+  return `<div class="reqs">${list.map(x => `<button class="req" data-go="item:${esc(x[0])}">${iicon(x[0], "s22")}<span class="q">${x[1]}</span><span class="rn">${esc(iname(x[0]))}</span></button>`).join("")}</div>`;
+}
+function inlineReqs(reqs, q, r){
+  const list = reqs.map(x => [x[0], recipeAmount(r, x, q)]).filter(x => x[1]);
+  if (!list.length) return `<span class="dim">—</span>`;
+  return `<div class="mats">${list.map(x => `<button class="mat" data-go="item:${esc(x[0])}" title="${esc(iname(x[0]))}">${iicon(x[0], "s18")}<b>${x[1]}</b></button>`).join("")}</div>`;
+}
+function delta(a, b){ const d = (b || 0) - (a || 0); if (!d) return ""; return `<span class="${d > 0 ? "up" : "down"}">${d > 0 ? "+" : ""}${fmt(d)}</span>`; }
+
+function itemDetail(id){
+  const o = D.items[id];
+  if (!o) return `<div class="inner"><p>Unknown item ${esc(id)}.</p></div>`;
+  const cl = CLS[o.c];
+  const recs = RBI[id] || [];
+  let h = `<div class="inner">` + dhead(o.i, o.n, [tag(cl && cl.n), o.m !== "Valheim" ? tag(o.m, "mod") : tag("Vanilla"), o.sk ? tag(o.sk + " skill") : "", o.nt ? tag("Not teleportable", "warn") : ""], o.d);
+
+  // how to craft
+  if (recs.length){
+    recs.forEach((r, n) => {
+      h += `<div class="card"><h3>${recs.length > 1 ? `Recipe ${n + 1} of ${recs.length}` : "How to craft"}${r.a > 1 ? `<span class="aside">makes ${r.a}</span>` : ""}</h3>
+        <div class="recipe-line">${r.s ? `<button class="gi" data-go="station:${esc(r.s)}">${stIcon(r.s)}${esc(stName(r.s))}<span class="x">Lv ${stationLevel(r, 1)}</span></button>` : `<span class="st hand">Crafted by hand from your inventory</span>`}
+        ${r.rep ? `<span class="dim">Repair at ${esc(stName(r.rep))}</span>` : ""}${r.one ? tag("Needs only one of these") : ""}</div>
+        ${reqGrid(r.r, 1, r)}</div>`;
+    });
+  }
+
+  // upgrades table
+  const r0 = recs[0];
+  const mq = maxQ(o);
+  if (o.q && (mq > 1 || o.q[0])){
+    const hasD = o.q.some(e => dsum(e.dmg)), hasT = o.q.some(e => e.dmg && (e.dmg.chop || e.dmg.pickaxe));
+    const hasA = o.q.some(e => e.arm), hasB = o.q.some(e => e.blk), hasU = o.q.some(e => e.dur);
+    if (mq > 1){
+      let rows = "";
+      for (let q = 1; q <= mq; q++){
+        const e = o.q[q - 1] || {}, p = o.q[q - 2] || null;
+        rows += `<tr><td class="lvl">★${q}</td>
+          <td>${r0 ? (r0.s ? `Lv ${stationLevel(r0, q)}` : "Hand") : "—"}</td>
+          <td>${r0 ? inlineReqs(r0.r, q, r0) : "—"}</td>
+          ${hasD ? `<td class="num">${fmt(dsum(e.dmg))}${p ? delta(dsum(p.dmg), dsum(e.dmg)) : ""}</td>` : ""}
+          ${hasT && !hasD ? `<td class="num">${fmt(dsum(e.dmg, ["chop","pickaxe"]))}${p ? delta(dsum(p.dmg, ["chop","pickaxe"]), dsum(e.dmg, ["chop","pickaxe"])) : ""}</td>` : ""}
+          ${hasA ? `<td class="num">${fmt(e.arm)}${p ? delta(p.arm, e.arm) : ""}</td>` : ""}
+          ${hasB ? `<td class="num">${fmt(e.blk)}${p ? delta(p.blk, e.blk) : ""}</td>` : ""}
+          ${hasU ? `<td class="num">${fmt(e.dur, 0)}${p ? delta(p.dur, e.dur) : ""}</td>` : ""}</tr>`;
+      }
+      h += `<div class="card"><h3>Upgrades <span class="aside">${r0 && r0.s ? "station level needed per item level" : ""}</span></h3>
+        <div style="overflow-x:auto"><table class="dtable"><thead><tr><th>Item</th><th>Station</th><th>${r0 ? "Cost" : ""}</th>${hasD ? "<th class=num>Damage</th>" : ""}${hasT && !hasD ? "<th class=num>Chop/Pick</th>" : ""}${hasA ? "<th class=num>Armor</th>" : ""}${hasB ? "<th class=num>Block</th>" : ""}${hasU ? "<th class=num>Durability</th>" : ""}</tr></thead><tbody>${rows}</tbody></table></div></div>`;
+    }
+    // stats at level
+    const lv = Math.min(S.lvl, mq), e = o.q[lv - 1] || {};
+    const lvlBtns = mq > 1 ? `<span class="levels" role="group" aria-label="Item level">${Array.from({length:mq}, (_, i) => `<button data-lvl="${i + 1}" aria-pressed="${lv === i + 1}">★${i + 1}</button>`).join("")}</span>` : "";
+    let stats = "";
+    if (e.dmg && Object.keys(e.dmg).length){
+      const mx = Math.max(...Object.values(e.dmg));
+      const rowsD = Object.entries(e.dmg).sort((a, b) => b[1] - a[1]).map(([k, v]) => {
+        const pv = lv > 1 && o.q[lv - 2].dmg ? (o.q[lv - 2].dmg[k] || 0) : null;
+        return `<div class="row"><span class="dt" style="--c:var(--d-${k})">${esc(DNAME[k] || k)}</span><span class="track"><i class="d-${k}" style="width:${(v / mx * 100).toFixed(1)}%"></i></span><span class="v">${fmt(v)}${pv != null ? delta(pv, v) : ""}</span></div>`;
+      }).join("");
+      stats += `<div class="dbreak">${rowsD}</div>`;
+    }
+    const kv = [];
+    const push = (label, val, sub = "") => { if (val !== undefined && val !== null && val !== "" && val !== 0) kv.push(`<div><span>${label}</span><b>${val}${sub ? ` <small>${sub}</small>` : ""}</b></div>`); };
+    if (e.dmg) push("Total damage", fmt(dsum(e.dmg)));
+    push("Armor", e.arm ? fmt(e.arm) : 0);
+    push("Block", e.blk ? fmt(e.blk) : 0);
+    const x = o.x || {};
+    if (x.parry) push("Parry bonus", "×" + fmt(x.parry, 2));
+    push("Knockback", e.dfl ? fmt(e.dfl) : 0, e.dfl ? "deflection" : "");
+    push("Durability", e.dur ? fmt(e.dur, 0) : 0);
+    if (o.atk){
+      if (o.atk.stam) push("Attack stamina", fmt(o.atk.stam));
+      if (o.atk.eitr) push("Attack eitr", fmt(o.atk.eitr));
+      if (o.atk.hp) push("Attack health", fmt(o.atk.hp));
+      if (o.atk.hpPct) push("Attack health", fmt(o.atk.hpPct * 100) + "%");
+    }
+    if (o.atk2){
+      if (o.atk2.stam) push("Secondary stamina", fmt(o.atk2.stam));
+      if (o.atk2.eitr) push("Secondary eitr", fmt(o.atk2.eitr));
+      if (o.atk2.mult && o.atk2.mult !== 1) push("Secondary damage", "×" + fmt(o.atk2.mult, 2));
+    }
+    if (x.backstab) push("Backstab", "×" + fmt(x.backstab, 1));
+    if (x.force) push("Knockback force", fmt(x.force));
+    if (x.tier != null && (o.c === "pickaxes" || o.c === "axes" || o.c === "battleaxes" || o.c === "tools")) push("Tool tier", fmt(x.tier, 0));
+    if (x.move) push("Movement", pct(x.move));
+    for (const [k, lab] of [["eitrRegen","Eitr regen"],["heat","Heat resist"],["atkStam","Attack stamina"],["blkStam","Block stamina"],["dodgeStam","Dodge stamina"],["runStam","Run stamina"],["jumpStam","Jump stamina"],["swimStam","Swim stamina"],["sneakStam","Sneak stamina"],["homeStam","Home item stamina"]]) if (x[k]) push(lab, pct(x[k]));
+    push("Weight", fmt(o.w));
+    if (o.st > 1) push("Stack", o.st);
+    if (o.val) push("Value", o.val, "coins");
+    if (stats || kv.length) h += `<div class="card"><h3>Stats ${lvlBtns}</h3>${stats}${kv.length ? `<div class="kv" style="margin-top:${stats ? 12 : 0}px">${kv.join("")}</div>` : ""}</div>`;
+  } else {
+    const kv = [];
+    kv.push(`<div><span>Weight</span><b>${fmt(o.w)}</b></div>`);
+    if (o.st > 1) kv.push(`<div><span>Stack</span><b>${o.st}</b></div>`);
+    if (o.val) kv.push(`<div><span>Value</span><b>${o.val} <small>coins</small></b></div>`);
+    if (!o.food) h += `<div class="card"><h3>Stats</h3><div class="kv">${kv.join("")}</div></div>`;
+  }
+
+  if (o.food){
+    const f = o.food, kv = [];
+    for (const [k, lab] of [["hp","Health"],["stam","Stamina"],["eitr","Eitr"]]) if (f[k]) kv.push(`<div><span>${lab}</span><b>${fmt(f[k], 0)}</b></div>`);
+    if (f.time) kv.push(`<div><span>Lasts</span><b>${fmt(f.time / 60, 0)} <small>min</small></b></div>`);
+    if (f.regen) kv.push(`<div><span>Regen</span><b>${fmt(f.regen)} <small>hp/tick</small></b></div>`);
+    kv.push(`<div><span>Weight</span><b>${fmt(o.w)}</b></div>`);
+    h += `<div class="card"><h3>Food</h3><div class="kv">${kv.join("")}</div></div>`;
+  }
+  for (const [k, lab] of [["cons","When consumed"],["eq","While equipped"],["atkse","On hit"]]){
+    const s = D.ses[o[k]];
+    if (s) h += `<div class="card"><h3>${lab}${s.d ? `<span class="aside">${dur(s.d)}</span>` : ""}</h3><div class="se"><b>${esc(s.n)}</b>${esc(s.t)}</div></div>`;
+  }
+  if (o.res && o.res.length){
+    h += `<div class="card"><h3>Resistances</h3><div class="pillset">${o.res.map(([t, m]) => `<span class="pill ${/Weak/.test(m) ? "bad" : "good"}">${esc(DNAME[t.toLowerCase()] || t)}: ${esc(MODNAME[m] || m)}</span>`).join("")}</div></div>`;
+  }
+  if (o.set){
+    const members = (D.sets[o.set] || []).filter(p => p !== id);
+    const s = D.ses[o.setse];
+    h += `<div class="card"><h3>Set bonus <span class="aside">wear ${o.setn || "all"} pieces</span></h3>${s ? `<div class="se"><b>${esc(s.n)}</b>${esc(s.t)}</div>` : ""}
+      <div class="grid-items" style="margin-top:8px">${[id].concat(members).map(p => `<button class="gi" data-go="item:${esc(p)}">${iicon(p, "s22")}${esc(iname(p))}</button>`).join("")}</div></div>`;
+  }
+
+  // where to get
+  const prod = PROD[id] || [], srcs = D.sources[id] || [];
+  if (prod.length || srcs.length){
+    let s = "";
+    if (prod.length){
+      s += `<div class="k">Processing</div>` + prod.map(c => `<div class="it" data-go="station:${esc(c.st)}" role="button" tabindex="0">${stIcon(c.st)}<span class="t">${esc((CONVK[c.k] || "Made") + " in " + stName(c.st))}<small>${c.in.length ? esc(c.in.map(x => (x[1] > 1 ? x[1] + "× " : "") + iname(x[0])).join(" + ")) : ""}${c.out[0][1] > 1 ? " → " + c.out[0][1] + "×" : ""}${c.fuel ? " · fuel: " + esc(iname(c.fuel)) : ""}${c.biome ? " · " + esc(biomes(String(c.biome).split(/, ?/))) : ""}</small></span><span class="r">${c.t ? dur(c.t) : ""}</span></div>`).join("");
+    }
+    const byK = {};
+    for (const x of srcs) (byK[x.k] ||= []).push(x);
+    for (const [k, arr] of Object.entries(byK)){
+      arr.sort((a, b) => (b.p || 1) - (a.p || 1));
+      s += `<div class="k">${esc(SRCK[k] || k)}</div>` + arr.slice(0, 14).map(x => {
+        const go = D.creatures[x.f] ? `creature:${x.f}` : D.pieces[x.f] ? `piece:${x.f}` : "";
+        const amt = x.a ? (x.a[0] === x.a[1] ? x.a[0] : x.a[0] + "–" + x.a[1]) : "";
+        const sub = [x.b ? biomes(x.b) : "", x.tier ? tierHint(x.tier, k) : "", x.price ? x.price + " coins" : "", x.key ? keyName(x.key) : ""].filter(Boolean).join(" · ");
+        return `<div class="it"${go ? ` data-go="${esc(go)}" role="button" tabindex="0"` : ""}>${D.creatures[x.f] ? crIcon(x.f, "s22") : (D.pieces[x.f] || D.items[x.f]) ? iicon(x.f, "s22") : glyph(k)}<span class="t">${esc(x.fn)}${x.boss ? " " + tag("Boss", "boss") : ""}${sub ? `<small>${esc(sub)}</small>` : ""}</span><span class="r">${amt ? "×" + amt : ""}${x.p ? `<br>${fmt(x.p * 100, 1)}%` : ""}</span></div>`;
+      }).join("") + (arr.length > 14 ? `<p class="dim" style="margin:4px 0 0;font-size:12px">+${arr.length - 14} more</p>` : "");
+    }
+    h += `<div class="card"><h3>Where to get it</h3><div class="src">${s}</div></div>`;
+  } else if (!recs.length){
+    h += `<div class="card"><h3>Where to get it</h3><p class="dim" style="margin:0">No recipe, drop or trader found. It probably comes from world chests, events, bounties or another mod's system.</p></div>`;
+  }
+
+  // used in
+  const used = USED[id] || [];
+  if (used.length){
+    const rec = used.filter(u => u.t === "recipe"), pcs = used.filter(u => u.t === "piece"), cv = used.filter(u => u.t === "conv" || u.t === "fuel");
+    const key = "used:" + id;
+    const lim = S.open[key] ? 1e9 : 30;
+    let u = "";
+    if (rec.length) u += `<div class="lvlhead">Crafting · ${rec.length}</div><div class="grid-items">${rec.slice(0, lim).map(x => `<button class="gi" data-go="item:${esc(x.r.it)}">${iicon(x.r.it, "s22")}${esc(iname(x.r.it))}<span class="x">${x.a || ""}</span></button>`).join("")}</div>`;
+    if (pcs.length) u += `<div class="lvlhead">Building · ${pcs.length}</div><div class="grid-items">${pcs.slice(0, lim).map(x => `<button class="gi" data-go="piece:${esc(x.id)}">${icon(D.pieces[x.id].i, "s22", D.pieces[x.id].n)}${esc(D.pieces[x.id].n)}<span class="x">${x.a}</span></button>`).join("")}</div>`;
+    if (cv.length) u += `<div class="lvlhead">Processing · ${cv.length}</div><div class="src">${cv.slice(0, lim).map(x => `<div class="it" data-go="station:${esc(x.c.st)}" role="button" tabindex="0">${stIcon(x.c.st)}<span class="t">${esc(stName(x.c.st))}<small>${x.t === "fuel" ? "Fuel" : esc(x.c.in.map(y => iname(y[0])).join(" + "))} → ${esc(x.c.out.map(y => iname(y[0])).join(", "))}</small></span><span class="r">${x.c.t ? dur(x.c.t) : ""}</span></div>`).join("")}</div>`;
+    const tooMany = Math.max(rec.length, pcs.length, cv.length) > lim;
+    h += `<div class="card"><h3>Used in <span class="aside">${used.length} recipe${used.length > 1 ? "s" : ""}</span></h3>${u}${tooMany ? `<button class="more" style="border-radius:8px;margin-top:8px" data-more="${esc(key)}">Show all</button>` : ""}</div>`;
+  }
+  if (o.tip) h += `<div class="card"><details class="tip"><summary>In-game tooltip${mq > 1 ? " (max level)" : ""}</summary><pre>${esc(o.tip)}</pre></details></div>`;
+  return h + `</div>`;
+}
+function tierHint(t, k){
+  const cls = k === "chop" ? ["axes","battleaxes","dualaxes"] : ["pickaxes"];
+  const tools = Object.entries(D.items).filter(([id, o]) => cls.includes(o.c) && o.x && o.x.tier >= t && RBI[id]).sort((a, b) => a[1].x.tier - b[1].x.tier);
+  return tools.length ? `needs ${tools[0][1].n} or better` : `tool tier ${t}+`;
+}
+
+function pieceDetail(id){
+  const p = D.pieces[id];
+  if (!p) return `<div class="inner">Unknown piece.</div>`;
+  let h = `<div class="inner">` + dhead(p.i, p.n, [p.tool ? tag(iname(p.tool)) : "", tag(p.cat), p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla")], p.d);
+  h += `<div class="card"><h3>Build cost</h3>${reqGrid(p.r)}${p.s ? `<div class="recipe-line" style="margin:10px 0 0"><span class="dim">Must be in range of</span><button class="gi" data-go="station:${esc(p.s)}">${stIcon(p.s)}${esc(stName(p.s))}</button></div>` : ""}</div>`;
+  const kv = [];
+  if (p.cf) kv.push(`<div><span>Comfort</span><b>+${p.cf}</b>${p.cfg ? `<small class="dim"> ${esc(p.cfg)} group</small>` : ""}</div>`);
+  if (p.hp) kv.push(`<div><span>Health</span><b>${fmt(p.hp, 0)}</b></div>`);
+  if (p.mat) kv.push(`<div><span>Material</span><b style="font-family:var(--sans)">${esc(p.mat)}</b></div>`);
+  if (p.box) kv.push(`<div><span>Storage</span><b>${p.box[0] * p.box[1]}</b> <small class="dim">slots (${p.box[0]}×${p.box[1]})</small></div>`);
+  if (p.fuel) kv.push(`<div><span>Fuel</span><b>${p.fuel.inf ? "∞" : fmt(p.fuel.max, 0)}</b> <small class="dim">${p.fuel.item ? esc(iname(p.fuel.item)) : ""}${p.fuel.sec ? " · " + dur(p.fuel.sec) + " each" : ""}</small></div>`);
+  if (kv.length) h += `<div class="card"><h3>Properties</h3><div class="kv">${kv.join("")}</div>${p.fl ? `<div class="pillset" style="margin-top:8px">${p.fl.map(f => `<span class="pill">${esc(f)}</span>`).join("")}</div>` : ""}</div>`;
+  else if (p.fl) h += `<div class="card"><h3>Placement</h3><div class="pillset">${p.fl.map(f => `<span class="pill">${esc(f)}</span>`).join("")}</div></div>`;
+  if (p.ext){
+    const st = D.stations[p.ext];
+    h += `<div class="card"><h3>Station upgrade</h3><p style="margin:0 0 8px">Placed near a <b>${esc(stName(p.ext))}</b>, this raises its level by one.</p><button class="gi" data-go="station:${esc(p.ext)}">${stIcon(p.ext)}${esc(stName(p.ext))}<span class="x">max Lv ${st ? st.max : "?"}</span></button></div>`;
+  }
+  if (D.stations[id]) h += `<div class="card"><h3>Crafting station</h3><button class="gi" data-go="station:${esc(id)}">${stIcon(id)}See everything made here<span class="x">${(RBS[id] || []).length}</span></button></div>`;
+  if (CBS[id]) h += convCard(id);
+  return h + `</div>`;
+}
+function convCard(st){
+  const list = CBS[st] || [];
+  return `<div class="card"><h3>Processing <span class="aside">${list.length} recipe${list.length > 1 ? "s" : ""}</span></h3><div class="src">${list.map(c =>
+    `<div class="it" style="cursor:default">${c.out[0] ? iicon(c.out[0][0], "s22") : ""}<span class="t">${convFlow(c)}${c.fuel || c.biome || c.oc ? `<small>${[c.fuel ? "Fuel: " + (c.fp > 1 ? c.fp + "× " : "") + iname(c.fuel) : "", c.oc ? "Burns into " + iname(c.oc) + " if left" : "", c.biome ? biomes(String(c.biome).split(/, ?/)) : ""].filter(Boolean).map(esc).join(" · ")}</small>` : ""}</span><span class="r">${c.t ? dur(c.t) : ""}</span></div>`).join("")}</div></div>`;
+}
+function stationDetail(id){
+  const st = D.stations[id];
+  if (!st) return `<div class="inner">Unknown station.</div>`;
+  const p = D.pieces[id];
+  let h = `<div class="inner">` + dhead(st.i, st.n, [tag("Crafting station"), p && p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla"), st.roof ? tag("Needs roof") : "", st.fire ? tag("Needs fire") : ""], p && p.d);
+  if (p) h += `<div class="card"><h3>Build cost</h3>${reqGrid(p.r)}${p.s ? `<div class="recipe-line" style="margin:10px 0 0"><span class="dim">Must be in range of</span><button class="gi" data-go="station:${esc(p.s)}">${stIcon(p.s)}${esc(stName(p.s))}</button></div>` : ""}</div>`;
+  const ext = st.ext || [];
+  if (ext.length){
+    h += `<div class="card"><h3>Upgrades <span class="aside">Level ${st.max} with all ${ext.length} placed</span></h3>
+      <p class="dim" style="margin:0 0 10px;font-size:12.5px">Each different upgrade built within range adds one level. Order doesn't matter.</p><div class="src">${ext.map(e => {
+        const ep = D.pieces[e];
+        return `<div class="it" data-go="piece:${esc(e)}" role="button" tabindex="0">${icon(ep.i, "s36", ep.n)}<span class="t">${esc(ep.n)}<small>${esc(ep.r.map(q => q[1] + " " + iname(q[0])).join(", "))}</small></span><span class="r">+1 Lv</span></div>`;
+      }).join("")}</div></div>`;
+  }
+  const recs = RBS[id] || [];
+  if (recs.length){
+    const byL = {};
+    for (const r of recs) (byL[stationLevel(r, 1)] ||= []).push(r);
+    const key = "st:" + id;
+    let body = "";
+    for (const L of Object.keys(byL).map(Number).sort((a, b) => a - b)){
+      const list = byL[L].slice().sort((a, b) => iname(a.it).localeCompare(iname(b.it)));
+      body += `<div class="lvlhead">Level ${L} · ${list.length}</div><div class="grid-items">${list.slice(0, S.open[key] ? 1e9 : 40).map(r => `<button class="gi" data-go="item:${esc(r.it)}">${iicon(r.it, "s22")}${esc(iname(r.it))}${r.a > 1 ? `<span class="x">×${r.a}</span>` : ""}</button>`).join("")}${list.length > 40 && !S.open[key] ? `<button class="gi" data-more="${esc(key)}">+${list.length - 40} more</button>` : ""}</div>`;
+    }
+    const maxUp = Math.max(...recs.map(r => stationLevel(r, maxQ(D.items[r.it] || {}))));
+    h += `<div class="card"><h3>Crafted here <span class="aside">${recs.length} recipes</span></h3>
+      <p class="dim" style="margin:0 0 4px;font-size:12.5px">Upgrading an item one level needs the station one level higher than the level before${maxUp > st.max ? `. Some upgrades here need Lv ${maxUp}` : ""}.</p>${body}</div>`;
+  }
+  if (CBS[id]) h += convCard(id);
+  return h + `</div>`;
+}
+function creatureDetail(id){
+  const c = D.creatures[id];
+  if (!c) return `<div class="inner">Unknown creature.</div>`;
+  let h = `<div class="inner">` + dhead(-2, c.n, [c.boss ? tag("Boss", "boss") : "", c.m !== "Valheim" ? tag(c.m, "mod") : tag("Vanilla"), c.fac ? tag(prettify(c.fac)) : ""], "");
+  const kv = [`<div><span>Health</span><b>${fmt(c.hp, 0)}</b></div>`];
+  if (c.b) kv.push(`<div style="grid-column:span 2"><span>Found in</span><b style="font-family:var(--sans);font-size:13.5px">${esc(biomes(c.b))}</b></div>`);
+  h += `<div class="card"><h3>Basics</h3><div class="kv">${kv.join("")}</div></div>`;
+  if (c.wk) h += `<div class="card"><h3>Damage taken</h3><div class="pillset">${Object.entries(c.wk).map(([k, v]) => `<span class="pill ${/Weak/.test(v) ? "good" : "bad"}">${esc(DNAME[k] || prettify(k))}: ${esc(MODNAME[v] || v)}</span>`).join("")}</div><p class="dim" style="font-size:12px;margin:8px 0 0">Green means it takes extra damage from that type.</p></div>`;
+  if (c.atk && c.atk.length) h += `<div class="card"><h3>Attacks</h3><div class="src">${c.atk.map(a => `<div class="it" style="cursor:default"><span class="dt" style="--c:var(--d-${a[2]})"></span><span class="t">${esc(a[0])}<small>${esc(DNAME[a[2]] || a[2])}</small></span><span class="r">${fmt(a[1], 0)}</span></div>`).join("")}</div></div>`;
+  if (c.dr && c.dr.length) h += `<div class="card"><h3>Drops</h3><div class="src">${c.dr.map(d => `<div class="it" data-go="item:${esc(d[0])}" role="button" tabindex="0">${iicon(d[0], "s22")}<span class="t">${esc(iname(d[0]))}${d[4] ? "<small>One per player</small>" : ""}</span><span class="r">×${d[1] === d[2] ? d[1] : d[1] + "–" + d[2]}<br>${fmt(d[3] * 100, 1)}%</span></div>`).join("")}</div></div>`;
+  return h + `</div>`;
+}
+function helpDetail(){
+  const n = Object.keys(D.items).length;
+  return `<div class="inner help"><div class="dhead"><span></span><div><h2>How to read the atlas</h2></div><div class="ctl"><button class="iconbtn sheet-close" data-close aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>
+    <p>Search for a weapon type, an item, a material, a station or a creature. <b>Greatsword</b> lists every greatsword side by side. <b>Iron</b> shows iron and everything named after it. Click any row or material icon to open it here.</p>
+    <p><b>Stations and levels.</b> A crafting station starts at level 1. Each different upgrade you build within range adds a level. The level badge next to a station is what you need to craft the item.</p>
+    <p><b>Item levels (★).</b> ★1 is the crafted item. Each upgrade costs the materials shown and needs the station one level higher. The upgrade table shows how damage, armor, block and durability grow at each step.</p>
+    <p><b>Damage</b> is the weapon's base damage added up across types (slash, pierce, fire and so on). Your skill in that weapon decides how much of it lands.</p>
+    <p><b>Where to get it</b> covers smelting and cooking, creature drops with drop chances, mining and chopping (including which tool you need), chests and traders.</p>
+    <p class="dim">${n.toLocaleString()} items across ${D.modsUsed.length} sources, including vanilla Valheim.</p></div>`;
+}
+function renderDetail(){
+  const s = S.sel;
+  let h;
+  if (!s) h = helpDetail();
+  else if (s.k === "item") h = itemDetail(s.id);
+  else if (s.k === "piece") h = pieceDetail(s.id);
+  else if (s.k === "station") h = stationDetail(s.id);
+  else if (s.k === "creature") h = creatureDetail(s.id);
+  else h = helpDetail();
+  const d = $("#detail");
+  d.innerHTML = h;
+  d.scrollTop = 0;
+}
+
+// ---------- events
+function wire(){
+  const q = $("#q");
+  let t;
+  q.addEventListener("input", () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const had = !!S.q;
+      S.q = q.value.trim();
+      if (S.q && !had){ S.group = "all"; S.cls = null; }
+      if (!S.q && had){ S.group = store("atlas.group") || "weapons"; S.cls = null; }
+      S.open = {};
+      render();
+    }, 110);
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "/" && document.activeElement !== q && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){ e.preventDefault(); q.focus(); q.select(); }
+    if (e.key === "Escape"){
+      if ($("#detail").classList.contains("open") && matchMedia("(max-width:1100px)").matches) openSheet(false);
+      else if (document.activeElement === q && q.value){ q.value = ""; q.dispatchEvent(new Event("input")); }
+    }
+    if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[role=button][data-go]")){ e.preventDefault(); e.target.click(); }
+  });
+  $("#mod").addEventListener("change", e => { S.mod = e.target.value; render(); });
+  $("#nosrc").addEventListener("change", e => { S.nosrc = e.target.checked; render(); });
+  document.addEventListener("click", e => {
+    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close]");
+    if (!el) return;
+    if (el.dataset.group){ S.group = el.dataset.group; S.cls = null; S.open = {}; if (S.group !== "all") store("atlas.group", S.group); render(); return; }
+    if (el.dataset.cls !== undefined){ S.cls = el.dataset.cls || null; S.open = {}; render(); return; }
+    if (el.dataset.sort){
+      const key = el.dataset.sec, c = el.dataset.sort;
+      const g = key.split(":")[1];
+      const cur = S.sort[key] || S.sort[g] || DEFAULT_SORT[g] || [];
+      const dir = cur[0] === c ? -cur[1] : (col[c].n ? -1 : 1);
+      S.sort[key] = [c, dir]; S.sort[g] = [c, dir];
+      render(); return;
+    }
+    if (el.dataset.more){ S.open[el.dataset.more] = true; if (el.closest("#detail")) renderDetail(); else render(); return; }
+    if (el.dataset.lvl){ S.lvl = +el.dataset.lvl; const sc = $("#detail").scrollTop; renderDetail(); $("#detail").scrollTop = sc; return; }
+    if (el.hasAttribute("data-back")){ const p = S.hist.pop(); if (p){ S.sel = p; renderDetail(); } return; }
+    if (el.hasAttribute("data-close")){ openSheet(false); return; }
+    if (el.dataset.go){
+      e.preventDefault();
+      const i = el.dataset.go.indexOf(":");
+      select(el.dataset.go.slice(0, i), el.dataset.go.slice(i + 1));
+    }
+  });
+  window.addEventListener("hashchange", fromHash);
+}
+boot();
+})();
+</script>
+
+</body></html>
