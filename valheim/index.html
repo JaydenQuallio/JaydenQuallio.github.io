@@ -1304,10 +1304,20 @@ function stationDetail(id){
   if (CBS[id]) h += convCard(id);
   return h + `</div>`;
 }
+// Normal residents vs spawns that need a boss kill (world key) or a running world event.
+const PEV_NAMES = {jotun_invasion:"Fimbulvinter (Jotun invasion)"};
+function gateOf(r){
+  if (r.pev) return {kind:"event", rank:2, active:false, html:`<span class="cond">Only during the ${esc(PEV_NAMES[r.pev] || prettify(r.pev))} world event</span>`};
+  if (r.key){
+    const on = worldKeys().has(String(r.key).toLowerCase());
+    return {kind:"progress", rank:1, active:on, html:`<span class="cond">Only after ${esc(keyText(r.key))} · <span class="${on ? "ok" : ""}">${on ? "active in your world" : "not in your world yet"}</span></span>`};
+  }
+  return {kind:"natural", rank:0, active:true, html:""};
+}
 function spawnRow(r){
   const when = r.day && r.night ? "Day & night" : r.night ? "Night only" : r.day ? "Day only" : "Never";
   const cond = [];
-  if (r.key) cond.push("after " + keyText(r.key));
+  const gate = gateOf(r);
   if (r.env) cond.push("weather: " + r.env.map(prettify).join(" / "));
   if (r.forest) cond.push(r.forest + " forests");
   if (r.ocean) cond.push("ocean " + fmt(r.ocean[0]) + "–" + fmt(r.ocean[1]) + " m deep");
@@ -1315,11 +1325,11 @@ function spawnRow(r){
   if (r.dist) cond.push((r.dist[0] ? fmt(r.dist[0]) + " m" : "0") + "–" + (r.dist[1] ? fmt(r.dist[1]) + " m" : "any") + " from center");
   if (r.hunt) cond.push("hunts players");
   const grp = r.grp && r.grp[1] > 1 ? `groups of ${r.grp[0]}–${r.grp[1]}` : "alone";
-  return `<tr><td>${esc(biomes(r.b))}</td><td>${when}</td><td class="num">${pctS(r.ch)}<br><span class="dim">every ${dur(r.int)}</span></td><td class="num">${r.max}</td><td>${grp}${cond.length ? `<div class="cond">${esc(cond.join(" · "))}</div>` : ""}</td></tr>`;
+  return `<tr${gate.kind !== "natural" && !gate.active ? ` class="dim"` : ""}><td>${esc(r.b.includes("All") ? "Any biome" : biomes(r.b))}${gate.html ? "<br>" + gate.html : ""}</td><td>${when}</td><td class="num">${pctS(r.ch)}<br><span class="dim">every ${dur(r.int)}</span></td><td class="num">${r.max}</td><td>${grp}${cond.length ? `<div class="cond">${esc(cond.join(" · "))}</div>` : ""}</td></tr>`;
 }
 function starsCard(id, c, boss){
   if (!D.sls) return "";
-  const home = boss ? null : ((c.sp || [])[0] || {}).b ? c.sp[0].b[0] : (c.b || [])[0];
+  const home = boss ? null : (c.b || [])[0] || (((c.sp || [])[0] || {}).b || [])[0];
   if (!home && !boss) return "";
   const day = starDist(home, false, boss) || [], night = starDist(home, true, boss) || [];
   const rows = day.slice(0, 8).map(([st, p]) => {
@@ -1360,8 +1370,10 @@ function creatureDetail(id){
     h += `<div class="card"><h3>Attacks${ds !== 1 ? `<span class="aside">×${fmt(ds, 2)} for your world</span>` : ""}</h3><div class="src">${c.atk.map(a => `<div class="it" style="cursor:default"><span class="dt" style="--c:var(--d-${a[2]})"></span><span class="t">${esc(atkName(a[0]))}<small>${esc(DNAME[a[2]] || a[2])}</small></span><span class="r">${fmt(a[1] * ds, 0)}${ds !== 1 ? `<br><span class="dim">base ${fmt(a[1], 0)}</span>` : ""}</span></div>`).join("")}</div></div>`;
   }
   if (c.sp && c.sp.length){
-    h += `<div class="card"><h3>Where it spawns <span class="aside">world spawner</span></h3><div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Biome</th><th>When</th><th class="num">Chance</th><th class="num">Max</th><th>Group & conditions</th></tr></thead><tbody>${c.sp.map(spawnRow).join("")}</tbody></table></div>
-      <p class="note">Every interval, each spawner rolls its chance near players until the max are alive.${D.sls && D.sls.spawnRate && D.sls.spawnRate !== 1 ? ` StarLevelSystem multiplies spawns ×${D.sls.spawnRate}.` : ""}</p></div>`;
+    const sp = c.sp.slice().sort((a, b) => gateOf(a).rank - gateOf(b).rank);
+    const natural = sp.filter(r => gateOf(r).kind === "natural").length;
+    h += `<div class="card"><h3>Where it spawns <span class="aside">world spawner</span></h3>${natural ? "" : `<p class="callout">It has no normal home biome. Every entry below needs a boss kill or a world event first.</p>`}<div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Biome</th><th>When</th><th class="num">Chance</th><th class="num">Max</th><th>Group & conditions</th></tr></thead><tbody>${sp.map(spawnRow).join("")}</tbody></table></div>
+      <p class="note">Every interval, each spawner rolls its chance near players until the max are alive. Grey rows aren't happening in your world yet.${D.sls && D.sls.spawnRate && D.sls.spawnRate !== 1 ? ` StarLevelSystem multiplies spawns ×${D.sls.spawnRate}.` : ""}${c.ev && c.ev.length ? " Raids are separate; see Also appears." : ""}</p></div>`;
   }
   if ((c.loc && c.loc.length) || (c.ev && c.ev.length)){
     h += `<div class="card"><h3>Also appears</h3>${c.loc ? `<div class="lvlhead">At locations · ${c.loc.length}</div><div class="grid-items">${c.loc.slice(0, 24).map(l => D.locations[l] ? `<button class="gi" data-go="loc:${esc(l)}">${locIcon(D.locations[l], "s22")}${esc(D.locations[l].n)}</button>` : "").join("")}</div>` : ""}
@@ -1511,14 +1523,16 @@ function biomeDetail(id){
   if (b.weather){
     h += `<div class="card"><h3>Weather</h3><div class="wx">${b.weather.slice().sort((x, y) => y[1] - x[1]).map(w => `<div class="row"><span>${esc(prettify(w[0]))}${w[2].length ? `<br><small class="dim">${esc(w[2].join(", "))}</small>` : ""}</span><span class="dbreak"><span class="track"><i class="d-frost" style="width:${w[1]}%"></i></span></span><span class="mono" style="text-align:right">${pctS(w[1])}</span></div>`).join("")}</div></div>`;
   }
-  const rows = [];
-  for (const p of b.spawns){ for (const r of (D.creatures[p].sp || [])) if (r.b.includes(id) || r.b.includes("All")) rows.push([p, r]); }
-  if (rows.length){
-    h += `<div class="card"><h3>Spawn table <span class="aside">${rows.length} entries</span></h3><div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Creature</th><th>When</th><th class="num">Chance</th><th class="num">Max</th><th>Conditions</th></tr></thead><tbody>${rows.sort((x, y) => y[1].ch - x[1].ch).map(([p, r]) => {
-      const cond = [r.key ? "after " + keyText(r.key) : "", r.env ? r.env.map(prettify).join("/") : "", r.forest ? r.forest + " forests" : "", r.ocean ? "ocean" : "", r.hunt ? "hunts you" : "", r.grp[1] > 1 ? "groups " + r.grp[0] + "–" + r.grp[1] : ""].filter(Boolean).join(" · ");
-      return `<tr><td><button class="lnk" data-go="creature:${esc(p)}">${esc(crName(p))}</button></td><td>${r.day && r.night ? "Any" : r.night ? "Night" : "Day"}</td><td class="num">${pctS(r.ch)}<br><span class="dim">/${dur(r.int)}</span></td><td class="num">${r.max}</td><td class="cond">${esc(cond) || ""}</td></tr>`;
-    }).join("")}</tbody></table></div></div>`;
-  }
+  const all = [];
+  for (const [p, cr] of Object.entries(D.creatures)) for (const r of (cr.sp || [])) if (r.b.includes(id) || r.b.includes("All")) all.push([p, r, gateOf(r)]);
+  const spawnTable = (rows, gateCol) => `<div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Creature</th><th>When</th><th class="num">Chance</th><th class="num">Max</th><th>${gateCol ? "Needs" : "Conditions"}</th></tr></thead><tbody>${rows.sort((x, y) => x[2].rank - y[2].rank || y[1].ch - x[1].ch).map(([p, r, g]) => {
+      const cond = [r.env ? r.env.map(prettify).join("/") : "", r.forest ? r.forest + " forests" : "", r.ocean ? "ocean" : "", r.hunt ? "hunts you" : "", r.grp[1] > 1 ? "groups " + r.grp[0] + "–" + r.grp[1] : ""].filter(Boolean).join(" · ");
+      return `<tr${g.kind !== "natural" && !g.active ? ` class="dim"` : ""}><td><button class="lnk" data-go="creature:${esc(p)}">${esc(crName(p))}</button></td><td>${r.day && r.night ? "Any" : r.night ? "Night" : "Day"}</td><td class="num">${pctS(r.ch)}<br><span class="dim">/${dur(r.int)}</span></td><td class="num">${r.max}</td><td>${g.html}${cond ? `<div class="cond">${esc(cond)}</div>` : ""}</td></tr>`;
+    }).join("")}</tbody></table></div>`;
+  const nat = all.filter(x => x[2].kind === "natural"), prog = all.filter(x => x[2].kind === "progress"), evs = all.filter(x => x[2].kind === "event");
+  if (nat.length) h += `<div class="card"><h3>Spawn table <span class="aside">${nat.length} normal entries</span></h3>${spawnTable(nat)}</div>`;
+  if (prog.length) h += `<div class="card"><h3>Unlocked by boss kills <span class="aside">${prog.filter(x => x[2].active).length} of ${prog.length} active in your world</span></h3><p class="note" style="margin:0 0 8px">Vanilla night spawns that only start once a boss is dead. They aren't raids and they aren't from a mod.</p>${spawnTable(prog, true)}</div>`;
+  if (evs.length) h += `<div class="card"><h3>During world events</h3><p class="note" style="margin:0 0 8px">These only spawn while a world event is running, not as normal residents.</p>${spawnTable(evs, true)}</div>`;
   if (b.resources.length) h += `<div class="card"><h3>Resources in the wild</h3><div class="grid-items">${b.resources.map(x => `<button class="gi" data-go="item:${esc(x)}">${iicon(x, "s22")}${esc(iname(x))}</button>`).join("")}</div></div>`;
   if (b.locations.length) h += `<div class="card"><h3>Locations · ${b.locations.length}</h3><div class="grid-items">${b.locations.map(l => `<button class="gi" data-go="loc:${esc(l)}">${locIcon(D.locations[l], "s22")}${esc(D.locations[l].n)}</button>`).join("")}</div></div>`;
   if (b.events.length) h += `<div class="card"><h3>Raids that can happen here</h3><div class="grid-items">${b.events.map(e => evById(e) ? `<button class="gi" data-go="event:${esc(e)}">${glyph("raid", 22)}${esc(evById(e).n)}${eventPossible(evById(e)) ? `<span class="x ok">now</span>` : ""}</button>` : "").join("")}</div></div>`;
