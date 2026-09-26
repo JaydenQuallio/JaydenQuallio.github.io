@@ -1040,8 +1040,11 @@ function classNote(){
 }
 
 // ---------- detail panel
-function select(k, id, push = true){
-  if (push && S.sel && !(S.sel.k === k && S.sel.id === id)) S.hist.push(S.sel);
+// mode: "link" follows a link inside the detail panel (Back returns here), "fresh" starts a new trail
+// from the lists, "back" retraces the trail without recording it.
+function select(k, id, mode = "link"){
+  if (mode === "fresh") S.hist = [];
+  else if (mode === "link" && S.sel && !(S.sel.k === k && S.sel.id === id)) S.hist.push(S.sel);
   if (k === "conv"){ const c = D.conversions[+id]; if (c && c.out[0]) { k = "item"; id = c.out[0][0]; } }
   if (k === "piece" && D.stations[id] && !D.pieces[id]) k = "station";
   S.sel = {k, id};
@@ -1684,12 +1687,12 @@ function wire(){
     }
     if (el.dataset.more){ S.open[el.dataset.more] = true; if (el.closest("#detail")) renderDetail(); else render(); return; }
     if (el.dataset.lvl){ S.lvl = +el.dataset.lvl; const sc = $("#detail").scrollTop; renderDetail(); $("#detail").scrollTop = sc; return; }
-    if (el.hasAttribute("data-back")){ const p = S.hist.pop(); if (p){ S.sel = p; renderDetail(); } return; }
+    if (el.hasAttribute("data-back")){ const p = S.hist.pop(); if (p) select(p.k, p.id, "back"); return; }
     if (el.hasAttribute("data-close")){ openSheet(false); return; }
     if (el.dataset.go){
       e.preventDefault();
       const i = el.dataset.go.indexOf(":");
-      select(el.dataset.go.slice(0, i), el.dataset.go.slice(i + 1));
+      select(el.dataset.go.slice(0, i), el.dataset.go.slice(i + 1), el.closest("#detail") ? "link" : "fresh");
     }
   });
   window.addEventListener("hashchange", fromHash);
