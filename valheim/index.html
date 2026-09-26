@@ -222,6 +222,60 @@ details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px;
 @media (prefers-reduced-motion: reduce){ .detail{transition:none} }
 .foot{color:var(--faint); font-size:12px; margin-top:30px; border-top:1px solid var(--line-soft); padding-top:14px}
 .loading{padding:80px 0; text-align:center; color:var(--muted); font-family:var(--serif); font-size:18px}
+
+/* collapsible sections */
+.sec-h{cursor:pointer; user-select:none; border-radius:6px}
+.sec-h .chev{flex:none; width:18px; height:18px; display:inline-grid; place-items:center; color:var(--muted); transition:transform .15s ease; align-self:center}
+.sec.closed .chev{transform:rotate(-90deg)}
+.sec.closed .tbl-wrap{display:none}
+.sec.closed{margin-bottom:10px}
+.sec-h:hover h2{color:var(--link)}
+.groups-sep{align-self:center; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); margin:0 2px 0 10px}
+.lnk{border:0; background:none; color:var(--link); cursor:pointer; font:inherit; font-size:12.5px; padding:0}
+.lnk:hover{text-decoration:underline}
+.world-now{display:flex; flex-wrap:wrap; gap:5px; align-items:center}
+.world-now .pill{background:var(--surface-3); color:var(--text)}
+/* world panel */
+:root{--r0:#9aa3ad; --r1:#4f8fd6; --r2:#a35bd6; --r3:#e0a33a; --r4:#e0553a}
+.wpanel{display:grid; gap:16px}
+.wcard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; min-width:0}
+.wcard > h2{font-family:var(--serif); font-size:19px; margin:0 0 4px; text-wrap:balance}
+.wcard > .tip{color:var(--muted); font-size:12.5px; margin:0 0 10px; max-width:70ch}
+.wgrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px}
+.seg{display:flex; flex-wrap:wrap; border:1px solid var(--line); border-radius:9px; overflow:hidden; width:fit-content; max-width:100%}
+.seg button{border:0; background:transparent; padding:6px 11px; cursor:pointer; font-size:12.5px; color:var(--muted); line-height:1.2; text-align:left}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+.seg button .yours{display:block; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; opacity:.8}
+.effects{margin:10px 0 0; padding:0; list-style:none; display:grid; gap:4px; font-size:13px}
+.effects li{padding-left:14px; position:relative}
+.effects li::before{content:""; position:absolute; left:2px; top:.55em; width:6px; height:6px; border-radius:2px; background:var(--accent)}
+.range{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.range input[type=range]{accent-color:var(--accent); width:200px; max-width:60vw}
+.prob{display:grid; gap:4px}
+.prob .row{display:grid; grid-template-columns:62px minmax(0,1fr) 64px; gap:8px; align-items:center; font-size:12.5px}
+.prob .track{height:10px; background:var(--surface-3); border-radius:5px; overflow:hidden}
+.prob .track i{display:block; height:100%; background:var(--accent); border-radius:5px; min-width:2px}
+.prob .v{font-family:var(--mono); text-align:right}
+.stars{color:var(--accent); font-family:var(--mono); white-space:nowrap}
+.wtable{width:100%; border-collapse:collapse; font-size:12.5px}
+.wtable th{position:static; background:none; padding:5px 6px; cursor:default; font-size:10.5px; border-bottom:1px solid var(--line)}
+.wtable td{padding:6px 6px; border-bottom:1px solid var(--line-soft); cursor:default; vertical-align:top}
+.wtable tr:hover td{background:none}
+.wtable td.num, .wtable th.num{text-align:right; font-family:var(--mono)}
+.cond{font-size:12px; color:var(--muted)}
+.cond b{color:var(--text)}
+.ok{color:var(--good)} .no{color:var(--bad)}
+.rar{display:flex; height:8px; border-radius:4px; overflow:hidden; background:var(--surface-3); min-width:110px}
+.rar i{display:block; height:100%}
+.r0{background:var(--r0)} .r1{background:var(--r1)} .r2{background:var(--r2)} .r3{background:var(--r3)} .r4{background:var(--r4)}
+.legend{display:flex; flex-wrap:wrap; gap:10px; font-size:11.5px; color:var(--muted); margin-top:6px}
+.legend span::before{content:""; display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:4px; background:var(--c)}
+.note{font-size:12px; color:var(--muted); margin:8px 0 0}
+.callout{border-left:3px solid var(--accent); background:var(--accent-soft); padding:8px 11px; border-radius:6px; font-size:12.5px; margin:0 0 10px}
+.wx{display:grid; gap:5px}
+.wx .row{display:grid; grid-template-columns:130px minmax(0,1fr) 48px; gap:8px; align-items:center; font-size:12.5px}
 </style>
 
 <div class="wrap">
@@ -242,6 +296,9 @@ details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px;
     <label for="mod">Mod <select id="mod"><option value="">All mods</option></select></label>
     <label><input type="checkbox" id="nosrc"> Show items with no known source</label>
     <span class="spacer"></span>
+    <span class="world-now" id="worldnow"></span>
+    <button class="lnk" data-collapse="1">Collapse all</button>
+    <button class="lnk" data-collapse="0">Expand all</button>
     <span id="count"></span>
   </div>
   <div class="layout">
@@ -263,8 +320,14 @@ const SRCK = {drop:"Dropped by",mine:"Mined from",chop:"Chopped from",break:"Fou
 const CONVK = {smelter:"Smelted",cooking:"Cooked",fermenter:"Fermented",incinerator:"Obliterated",incineratorDefault:"Obliterated",beehive:"Produced",sap:"Collected",plant:"Grown"};
 const CAT_ORDER = ["Misc","Crafting","Building","Heavy building","Furniture"];
 
-let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {};
-const S = {q:"", group:"weapons", cls:null, mod:"", nosrc:false, sel:null, hist:[], lvl:1, sort:{}, open:{}};
+let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {}, TRADERS = {}, BOSS_BY_KEY = {};
+const S = {q:"", group:"weapons", cls:null, mod:"", nosrc:false, sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}};
+// World settings the numbers are shown under. Starts as the exported world; the World tab changes it.
+const W = {opt:{}, base:{}, players:1, night:false};
+const WORLD_GROUPS = ["creatures","bosses","events","locations","biomes","world"];
+const BIOME_ORDER = ["Meadows","BlackForest","Swamp","Mountain","Plains","Mistlands","AshLands","DeepNorth","Ocean"];
+const PROGRESSION = ["defeated_eikthyr","defeated_gdking","defeated_bonemass","defeated_dragon","defeated_goblinking","defeated_queen","defeated_fader","defeated_frozenking"];
+const THEME_NAMES = {Crypt:"Crypt",SunkenCrypt:"Sunken crypt",Cave:"Frost cave",ForestCrypt:"Burial chambers",GoblinCamp:"Fuling village",MeadowsVillage:"Village",MeadowsFarm:"Farm",DvergerTown:"Infested mine",DvergerBoss:"Infested citadel",ForestCryptHildir:"Smouldering tomb",CaveHildir:"Howling cavern",PlainsFortHildir:"Sealed tower",AshlandRuins:"Ashlands ruins",FortressRuins:"Fortress ruins",Hole:"The hole",NorthVillage:"Northern village",MorkHalla:"Morkhalla"};
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const norm = s => String(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
@@ -298,17 +361,101 @@ const GLYPH = {
   pick:'<path d="M8 14V7.5M8 7.5C5 7.5 3 5.4 3 2.5c3 0 5 2 5 5zM8 10c1.6-1.4 3.6-1.6 5.2.2-1.8 1.4-3.6 1.4-5.2-.2z"/>',
   fish:'<path d="M2 8c3-4 7-4 10 0-3 4-7 4-10 0zM12 8l2.6-2.6v5.2z"/>',
   trade:'<circle cx="8" cy="8" r="5.6"/><path d="M8 4.8v6.4M9.8 6.3H7.4a1 1 0 0 0 0 2h1.2a1 1 0 0 1 0 2H6.2"/>',
-  other:'<circle cx="8" cy="8" r="5"/>'
+  other:'<circle cx="8" cy="8" r="5"/>',
+  raid:'<path d="M2.5 2.5l7 7M9.5 6.5l3 3-3 3M13.5 2.5l-7 7M6.5 6.5l-3 3 3 3"/>',
+  pin:'<path d="M8 14s4.5-4.2 4.5-7.5a4.5 4.5 0 0 0-9 0C3.5 9.8 8 14 8 14z"/><circle cx="8" cy="6.5" r="1.6"/>',
+  dungeon:'<path d="M2.5 13.5V7l5.5-4.5L13.5 7v6.5M6 13.5V10a2 2 0 0 1 4 0v3.5"/>',
+  biome:'<path d="M1.5 13.5l4.5-7 3 4.5 2-3 3.5 5.5z"/>',
+  trader:'<circle cx="8" cy="8" r="5.6"/><path d="M8 4.8v6.4M9.8 6.3H7.4a1 1 0 0 0 0 2h1.2a1 1 0 0 1 0 2H6.2"/>',
+  rune:'<path d="M5 2.5h6l1 11H4zM8 5v6M6.5 6.5L8 8l1.5-1.5"/>'
 };
 function glyph(k, size = 22){
+  if (typeof size === "string") size = {s18:18, s22:22, s36:36, s56:56}[size] || 28;
   return `<span class="glyph" style="--g:${size}px" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${GLYPH[k] || GLYPH.other}</svg></span>`;
 }
 function crIcon(id, size = ""){
   const c = D.creatures[id];
   const t = c && (c.dr || []).map(d => d[0]).find(x => D.items[x] && D.items[x].c === "trophies");
-  if (!t) return glyph("drop", size === "s56" ? 56 : size === "s22" ? 22 : 28);
+  if (!t) return glyph("drop", size || 28);
   return icon(D.items[t].i, size, c ? c.n : id);
 }
+const crName = p => (D.creatures[p] && D.creatures[p].n) || prettify(p);
+const dash = `<span class="dim">—</span>`;
+function keyText(k){
+  const lk = String(k || "").toLowerCase();
+  if (BOSS_BY_KEY[lk]) return crName(BOSS_BY_KEY[lk]) + " defeated";
+  if (BOSSKEY[lk]) return BOSSKEY[lk] + " defeated";
+  let m = /^killed_?(.+)$/i.exec(k) || /^(.+?)_?killed$/i.exec(k);
+  if (m) return "a " + prettify(m[1]).toLowerCase() + " has been killed";
+  m = /^(.+?)_defeated$/i.exec(k);
+  if (m) return prettify(m[1]) + " defeated";
+  m = /^hildir(\d)$/i.exec(k);
+  if (m) return "Hildir's quest " + m[1] + " started";
+  if (/^GP_/.test(k) && D.ses[k]) return "you've taken " + D.ses[k].n + "'s forsaken power";
+  if (/^\$se_(.+)_name$/.exec(k)) return "you've used " + prettify(/^\$se_(.+)_name$/.exec(k)[1]) + "'s forsaken power";
+  return prettify(k);
+}
+function worldKeys(){ return new Set((D.world && D.world.keys || []).map(k => k.toLowerCase().split(" ")[0])); }
+function eventPossible(ev){
+  const keys = worldKeys();
+  return ev.req.every(k => keys.has(k.toLowerCase())) && !ev.notReq.some(k => keys.has(k.toLowerCase()));
+}
+function parseKeys(list){
+  const o = {};
+  for (const k of list || []){ const [n, v] = String(k).toLowerCase().split(" "); o[n] = v === undefined ? true : +v; }
+  return o;
+}
+// Effective world rates from the chosen slider options (percent values, 100 = vanilla).
+function rates(){
+  const r = {playerdamage:100, enemydamage:100, enemyspeedsize:100, enemyleveluprate:100, resourcerate:100, eventrate:100, skillreductionrate:100};
+  for (const m of (D.world && D.world.modifiers) || []){
+    const opt = m.opts.find(o => o.v === W.opt[m.id]) || m.opts.find(o => o.v === "Default");
+    Object.assign(r, parseKeys(opt ? opt.keys : []));
+  }
+  return r;
+}
+const resRate = () => rates().resourcerate / 100;
+const playerCount = () => Math.max(1, Math.min(W.players, (D.world && D.world.scale.maxPlayers) || 5));
+function hpScale(){ return 1 + ((D.world && D.world.scale.hpPerPlayer) || 0.3) * (playerCount() - 1); }
+function dmgScale(){ return (1 + ((D.world && D.world.scale.dmgPerPlayer) || 0.04) * (playerCount() - 1)) * rates().enemydamage / 100; }
+function scaleAmt(a, item, kind){
+  const nonScaled = (D.items[item] && D.items[item].c === "trophies") || kind === "trade";
+  const r = nonScaled ? 1 : resRate();
+  if (!a) return "";
+  const lo = a[0] * r, hi = a[1] * r;
+  return lo === hi ? fmt(lo, 1) : fmt(lo, 1) + "–" + fmt(hi, 1);
+}
+// StarLevelSystem: one roll against a falling chance table, capped by biome (LevelSelection.DetermineLevelRollResult).
+function slsTable(tbl){ return Object.entries(tbl).map(([k, v]) => [+k, +v]).sort((a, b) => a[0] - b[0]); }
+function starDist(biome, night, boss, table){
+  const s = D.sls;
+  if (!s) return null;
+  const t = slsTable(table || s.table);
+  const cap = boss ? s.maxBossLevel + 1 : (s.caps[biome] != null ? s.caps[biome] + 1 : s.maxLevel + 1);
+  const mult = night ? (s.night || 1) : 1;
+  const out = [];
+  let prev = 100;
+  for (let i = 0; i < t.length; i++){
+    const [L, c] = t[i];
+    if (L >= cap || i === t.length - 1){ out.push([Math.min(L, cap) - 1, prev]); prev = 0; break; }
+    const a = Math.min(100, c * mult);
+    out.push([L - 1, Math.max(0, prev - a)]);
+    prev = a;
+  }
+  if (t.length && t[0][0] > 1){ /* conditional tables start above level 1 */ }
+  return out.filter(x => x[1] > 0.00005);
+}
+function starMult(stars, boss){
+  const s = D.sls || {hpPerLevel:1, dmgPerLevel:0.5, bossHpPerLevel:1, bossDmgPerLevel:0.5, loot:{scale:1}};
+  const lvl = stars + 1;
+  return {
+    hp: 1 + (boss ? s.bossHpPerLevel : s.hpPerLevel) * (lvl - 1),
+    dmg: 1 + (boss ? s.bossDmgPerLevel : s.dmgPerLevel) * (lvl - 1),
+    loot: lvl <= 1 ? 1 : Math.max(1, Math.round(lvl * ((s.loot && s.loot.scale) || 1))),
+  };
+}
+const starLabel = n => n ? `<span class="stars">${"★".repeat(Math.min(n, 5))}${n > 5 ? "+" + (n - 5) : ""}</span>` : `<span class="dim">no star</span>`;
+const pctS = v => v >= 10 ? fmt(v, 0) + "%" : v >= 1 ? fmt(v, 1) + "%" : v >= 0.01 ? fmt(v, 2) + "%" : "<0.01%";
 const keyName = k => BOSSKEY[k] ? "after " + BOSSKEY[k] : prettify(String(k).replace(/^defeated_/, "after "));
 
 // ---------- recipe helpers
@@ -355,15 +502,39 @@ async function boot(){
   $("#meta").textContent = [m.profile, (m.mods || []).length + " mods", m.game ? "Valheim " + m.game : "", m.generated ? "exported " + new Date(m.generated).toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) : ""].filter(Boolean).join(" · ");
   const sel = $("#mod");
   for (const md of D.modsUsed) sel.insertAdjacentHTML("beforeend", `<option value="${esc(md)}">${esc(md)}</option>`);
+  $("#foot").dataset.x = "";
   $("#foot").innerHTML = `Read straight from your game (${esc(m.mode === "game" ? "in-world export, server settings applied" : "main-menu export")}): ${Object.keys(D.items).length.toLocaleString()} items, ${D.recipes.length.toLocaleString()} recipes, ${Object.keys(D.pieces).length.toLocaleString()} building pieces, ${D.conversions.length} processing recipes, ${Object.keys(D.creatures).length} creatures. Damage is base weapon damage; skill level and combat mods change what actually lands.`;
   const saved = store("atlas.group");
   if (saved && GRP[saved]) S.group = saved;
+  worldInit();
   wire();
   fromHash();
   render();
   if (!S.sel) renderDetail();
 }
 
+function worldInit(){
+  if (!D.world) return;
+  const have = new Set((D.world.keys || []).map(k => k.toLowerCase()));
+  for (const m of D.world.modifiers){
+    let pick = "Default", best = 0;
+    for (const o of m.opts){ if (o.keys.length > best && o.keys.every(k => have.has(k.toLowerCase()))){ pick = o.v; best = o.keys.length; } }
+    W.opt[m.id] = pick; W.base[m.id] = pick;
+  }
+  const sp = +store("atlas.players");
+  if (sp > 0) W.players = sp;
+  renderWorldNow();
+}
+function renderWorldNow(){
+  const el = $("#worldnow");
+  if (!el || !D.world) return;
+  const bits = D.world.modifiers.filter(m => ["Combat","Resources","Raids"].includes(m.id)).map(m => {
+    const o = m.opts.find(x => x.v === W.opt[m.id]);
+    return `<span class="pill">${esc(m.n)}: ${esc(o ? o.n : "Normal")}</span>`;
+  });
+  const changed = Object.keys(W.opt).some(k => W.opt[k] !== W.base[k]);
+  el.innerHTML = `<span>${changed ? "Showing a what-if world:" : "Numbers use your world:"}</span>${bits.join("")}<span class="pill">${W.players} player${W.players > 1 ? "s" : ""}</span><button class="lnk" data-group="world">${changed ? "Adjust" : "Change"}</button>`;
+}
 function index(){
   D.recipes.forEach((r, i) => {
     r.idx = i;
@@ -412,6 +583,29 @@ function index(){
     ENT.push({k:"conv", id:String(c.idx), o:c, g:"processing", c:"p|" + (c.k === "plant" ? "Planting" : st), mod:(D.pieces[c.st] || {}).m || "Valheim", name:out, nameN:norm(out), nameC:compact(out),
       tags:norm([st, inn, CONVK[c.k] || c.k, "processing"].join(" ")), st});
   }
+  for (const [item, arr] of Object.entries(D.sources)) for (const x of arr) if (x.k === "trade") (TRADERS[x.fn] ||= []).push({item, price:x.price, stack:x.a ? x.a[0] : 1, key:x.key});
+  for (const [id, b] of Object.entries(D.bosses || {})){ if (b.key) BOSS_BY_KEY[b.key.toLowerCase()] = id; if (b.key2) BOSS_BY_KEY[b.key2.toLowerCase()] = id; }
+  for (const [id, b] of Object.entries(D.bosses || {})){
+    const cr = D.creatures[id];
+    if (!cr) continue;
+    const L = D.locations[(b.altars || b.lairs || [])[0]];
+    const bb = L ? L.b : [];
+    ENT.push({k:"boss", id, o:cr, b, g:"bosses", c:"bo|" + (bb[0] || "Unknown"), mod:cr.m, name:cr.n, nameN:norm(cr.n), nameC:compact(cr.n),
+      tags:norm(["boss", biomes(bb), b.summon && b.summon.item ? iname(b.summon.item) : "", cr.m].join(" ")), multi:bb});
+  }
+  for (const ev of D.events || []){
+    ENT.push({k:"event", id:ev.id, o:ev, g:"events", c:"ev", mod:null, name:ev.n, nameN:norm(ev.n + " " + (ev.msg || "")), nameC:compact(ev.n),
+      tags:norm(["raid event attack", biomes(ev.b), ev.spawns.map(x => crName(x.p)).join(" ")].join(" "))});
+  }
+  for (const [id, l] of Object.entries(D.locations || {})){
+    const c = l.c || {};
+    ENT.push({k:"loc", id, o:l, g:"locations", c:"lo|" + (l.b[0] || "None"), mod:null, name:l.n, nameN:norm(l.n + " " + id), nameC:compact(l.n),
+      tags:norm(["location", biomes(l.b), c.dungeon ? "dungeon" : "", c.altar ? "altar boss summon" : "", c.traders ? "trader vendor merchant" : "", c.veg ? "vegvisir" : "",
+        (c.creatures || []).map(x => crName(x[0])).join(" ")].join(" ")), multi:l.b.length ? l.b : ["None"]});
+  }
+  for (const [id, b] of Object.entries(D.biomes || {})){
+    ENT.push({k:"biome", id, o:b, g:"biomes", c:"bi", mod:null, name:b.n, nameN:norm(b.n), nameC:compact(b.n), tags:norm("biome zone region " + id)});
+  }
   for (const [id, cr] of Object.entries(D.creatures)){
     ENT.push({k:"creature", id, o:cr, g:"creatures", c:cr.boss ? "cr|boss" : "cr|" + ((cr.b || ["Unknown"])[0]), mod:cr.m, name:cr.n, nameN:norm(cr.n), nameC:compact(cr.n),
       tags:norm(["creature monster enemy", biomes(cr.b), cr.boss ? "boss" : "", cr.fac || "", cr.m].join(" ")), multi:(cr.b || [])});
@@ -420,7 +614,7 @@ function index(){
 
 // ---------- filtering & search
 function visible(e){
-  if (S.mod && e.mod !== S.mod) return false;
+  if (S.mod && e.mod && e.mod !== S.mod) return false;
   if (!S.nosrc && e.ns) return false;
   return true;
 }
@@ -464,7 +658,9 @@ function searchResults(){
 }
 function classMatch(e, cls){
   if (e.c === cls) return true;
-  if (e.k === "creature" && cls.startsWith("cr|") && cls !== "cr|boss") return (e.multi || []).includes(cls.slice(3));
+  const m = /^(cr|lo|bo)\|(.+)$/.exec(cls);
+  if (m && m[2] !== "boss" && e.multi) return e.multi.includes(m[2]);
+  if (cls === "cr|boss" && e.k === "creature") return !!e.o.boss;
   return false;
 }
 
@@ -476,7 +672,8 @@ function nameCell(e, sub){
   if (o.m && o.m !== "Valheim") tags.push(`<span class="tag mod">${esc(o.m)}</span>`);
   if (o.ns) tags.push(`<span class="tag warn">no known source</span>`);
   const i = e.k === "conv" ? (D.items[o.out[0][0]] || {}).i : o.i;
-  return `<div class="nm">${e.k === "creature" ? crIcon(e.id) : icon(i, "", e.name)}<div><b>${esc(e.name)}</b><small>${sub || ""} ${tags.join(" ")}</small></div></div>`;
+  const ic = e.k === "creature" || e.k === "boss" ? crIcon(e.id) : e.k === "loc" ? locIcon(e.o) : e.k === "biome" ? glyph("biome") : e.k === "event" ? glyph("raid") : icon(i, "", e.name);
+  return `<div class="nm">${ic}<div><b>${esc(e.name)}</b><small>${sub || ""} ${tags.join(" ")}</small></div></div>`;
 }
 function itemSub(e){
   const o = e.o, cl = CLS[o.c];
@@ -569,6 +766,85 @@ const col = {
   resist: {h:"Resists", cell:e => modPills(e.o.wk, false), sv:e => Object.values(e.o.wk || {}).filter(v => !/Weak/.test(v)).length},
   drops: {h:"Drops", cell:e => matsCell((e.o.dr || []).map(d => [d[0], d[1] === d[2] ? d[1] : d[1] + "–" + d[2]])), sv:e => (e.o.dr || []).length},
 };
+function locIcon(l, size = ""){
+  const c = l.c || {};
+  if (c.altar){ const b = D.bosses[c.altar[0].boss]; if (b && b.trophy) return iicon(b.trophy, size); return crIcon(c.altar[0].boss, size); }
+  if (c.traders) return glyph("trader", size || 28);
+  if (c.dungeon) return glyph("dungeon", size || 28);
+  if (c.veg || c.runes) return glyph("rune", size || 28);
+  return glyph("pin", size || 28);
+}
+const atkName = n => /[A-Z]\w*[a-z]\d|_/.test(n) || /^[A-Z][a-z]+[A-Z]/.test(n) ? prettify(n).replace(/(\D)(\d)/g, "$1 $2") : n;
+function crCell(list){
+  if (!list || !list.length) return dash;
+  return `<div class="mats">${list.slice(0, 7).map(x => `<button class="mat" ${D.creatures[x[0]] ? `data-go="creature:${esc(x[0])}"` : ""} title="${esc(crName(x[0]))}">${crIcon(x[0], "s22")}${x[1] != null && x[1] !== "" ? `<b>${x[1]}</b>` : ""}</button>`).join("")}${list.length > 7 ? `<span class="dim">+${list.length - 7}</span>` : ""}</div>`;
+}
+function bossRank(id){
+  const b = D.bosses[id] || {};
+  const i = PROGRESSION.indexOf((b.key || "").toLowerCase());
+  return i >= 0 ? i : 50 + (D.creatures[id].hp || 0) / 1e5;
+}
+function evRank(ev){
+  const ks = ev.req.map(k => PROGRESSION.indexOf(k.toLowerCase())).filter(i => i >= 0);
+  return ks.length ? Math.max(...ks) + 1 : 0;
+}
+function evWhen(ev, short){
+  const a = ev.req.map(keyText), n = ev.notReq.map(keyText);
+  if (!a.length && !n.length) return short ? "Any time" : "No progress requirement";
+  const bits = [];
+  if (a.length) bits.push("After " + a.join(" and "));
+  if (n.length) bits.push((a.length ? "until " : "Until ") + n.join(" and "));
+  return esc(bits.join(", "));
+}
+function locLoot(id){
+  const l = D.locations[id], c = (l && l.c) || {}, out = new Set();
+  for (const ch of c.chests || []) for (const x of ch.loot) out.add(x[0]);
+  for (const th of c.dungeon || []) for (const ch of ((D.themes[th] || {}).chests || [])) for (const x of ch.loot) out.add(x[0]);
+  for (const x of c.ground || []) out.add(x[0]);
+  for (const x of c.picks || []) out.add(x[0]);
+  return [...out].filter(x => D.items[x]);
+}
+function locCreatures(id){
+  const c = (D.locations[id] || {}).c || {}, m = new Map();
+  for (const x of c.creatures || []) m.set(x[0], (m.get(x[0]) || 0) + x[1]);
+  for (const n of c.nests || []) for (const x of n.spawn) if (!m.has(x[0])) m.set(x[0], "");
+  for (const th of c.dungeon || []) for (const x of ((D.themes[th] || {}).creatures || [])) if (!m.has(x[0])) m.set(x[0], "");
+  return [...m.entries()];
+}
+function locWhat(l){
+  const c = l.c || {}, bits = [];
+  if (c.altar) bits.push(`<span class="pill">Altar: ${esc(crName(c.altar[0].boss))}</span>`);
+  if (c.dungeon) bits.push(`<span class="pill">Dungeon</span>`);
+  if (c.traders) bits.push(`<span class="pill">Trader: ${esc(c.traders.join(", "))}</span>`);
+  if (c.veg) bits.push(`<span class="pill">Vegvisir</span>`);
+  if (c.stones) bits.push(`<span class="pill">Boss stones</span>`);
+  if (c.chests) bits.push(`<span class="pill">${c.chests.length} chest type${c.chests.length > 1 ? "s" : ""}</span>`);
+  if (c.nests) bits.push(`<span class="pill">Spawner</span>`);
+  return bits.length ? `<div class="pillset">${bits.join("")}</div>` : dash;
+}
+col.bossn = {h:"Boss", cell:e => nameCell(e, esc(biomes(e.multi) + (e.b.phases ? " · " + (e.b.phases.length + 1) + " phases" : ""))), sv:e => bossRank(e.id)};
+col.summon = {h:"Summon", cell:e => e.b.summon && e.b.summon.item ? `${matsCell([[e.b.summon.item, e.b.summon.n]])}<small class="dim">${e.b.summon.stands ? "on stands" : "in altar"}</small>` : e.b.door ? `<span class="st">${iicon(e.b.door, "s18")}${esc(iname(e.b.door))} opens the door</span>` : dash, sv:e => e.b.summon ? e.b.summon.n : 0};
+col.bhp = {h:"Health", n:1, cell:e => fmt(e.o.hp * hpScale(), 0), sv:e => e.o.hp || 0};
+col.power = {h:"Forsaken power", cell:e => e.b.power && D.ses[e.b.power] ? `<span class="st">${icon(D.ses[e.b.power].i, "s18")}${esc(D.ses[e.b.power].n)}</span>` : dash, sv:e => e.b.power || ""};
+col.bdrops = {h:"Drops", cell:e => matsCell((e.o.dr || []).map(d => [d[0], scaleAmt([d[1], d[2]], d[0])])), sv:e => (e.o.dr || []).length};
+col.evn = {h:"Raid", cell:e => `<div class="nm">${glyph("raid")}<div><b>${esc(e.o.n)}</b><small>${esc(e.o.msg || "")}</small></div></div>`, sv:e => evRank(e.o) * 100 + e.name.charCodeAt(0) / 1000};
+col.evwhen = {h:"When it can happen", cell:e => `<span class="${eventPossible(e.o) ? "ok" : ""}">${evWhen(e.o, true)}</span>${eventPossible(e.o) ? `<br><small class="ok">Possible in your world now</small>` : ""}`, sv:e => evRank(e.o)};
+col.evwhere = {h:"Biomes", cell:e => esc(biomes(e.o.b)), sv:e => e.o.b.join()};
+col.evdur = {h:"Lasts", n:1, cell:e => dur(e.o.dur), sv:e => e.o.dur || 0};
+col.evspawn = {h:"Attackers (max alive)", cell:e => crCell(e.o.spawns.map(x => [x.p, x.max])), sv:e => e.o.spawns.reduce((t, x) => t + (x.max || 0), 0)};
+col.locn = {h:"Location", cell:e => nameCell(e, esc(biomes(e.o.b)) + ` <span class="dim mono" style="font-size:10.5px">${esc(e.id)}</span>`), sv:e => e.name};
+col.locq = {h:"In world", n:1, cell:e => e.o.uniq ? "1" : "≈" + e.o.q, sv:e => e.o.uniq ? 1 : e.o.q || 0};
+col.locwhat = {h:"What's there", cell:e => locWhat(e.o), sv:e => (e.o.c && e.o.c.altar ? 4 : 0) + (e.o.c && e.o.c.dungeon ? 2 : 0)};
+col.locmob = {h:"Creatures", cell:e => crCell(locCreatures(e.id)), sv:e => locCreatures(e.id).length};
+col.locloot = {h:"Loot", cell:e => matsCell(locLoot(e.id).map(x => [x, ""])), sv:e => locLoot(e.id).length};
+col.bion = {h:"Biome", cell:e => nameCell(e, e.o.bosses.length ? esc("Boss: " + e.o.bosses.map(crName).join(", ")) : ""), sv:e => BIOME_ORDER.indexOf(e.id)};
+col.biocap = {h:"Star cap", n:1, cell:e => D.sls && D.sls.caps[e.id] != null ? starLabel(D.sls.caps[e.id]) : D.sls ? `<span class="dim">up to ${D.sls.maxLevel}★</span>` : dash, sv:e => D.sls ? (D.sls.caps[e.id] ?? 99) : 0};
+col.biomob = {h:"Creatures", cell:e => crCell(e.o.spawns.map(p => [p, ""])), sv:e => e.o.spawns.length};
+col.bioweather = {h:"Weather", cell:e => (e.o.weather || []).slice().sort((a, b) => b[1] - a[1]).slice(0, 2).map(w => `${esc(prettify(w[0]))} <span class="dim">${pctS(w[1])}</span>`).join("<br>") || dash, sv:e => (e.o.weather || []).length};
+col.chp.h = "Health";
+col.chp.cell = e => fmt(e.o.hp * hpScale(), 0);
+col.cmmo = {h:"MMO lvl", n:1, cell:e => D.mmo && D.mmo[e.id] ? D.mmo[e.id][0] : dash, sv:e => D.mmo && D.mmo[e.id] ? D.mmo[e.id][0] : 0};
+col.drops.cell = e => matsCell((e.o.dr || []).map(d => [d[0], scaleAmt([d[1], d[2]], d[0])]));
 const COLS = {
   weapons:["item","station","mats","dmg","block","dur","wt"],
   ammo:["item","station","mats","dmg","wt"],
@@ -582,10 +858,15 @@ const COLS = {
   building:["piece","pmats","needs","comfort","php"],
   stations:["sname","pmats","levels","crafts"],
   processing:["cst","cflow","ctime","cfuel"],
-  creatures:["creature","chp","weak","resist","drops"],
+  creatures:["creature","chp","cmmo","weak","resist","drops"],
+  bosses:["bossn","summon","bhp","power","bdrops"],
+  events:["evn","evwhen","evwhere","evdur","evspawn"],
+  locations:["locn","locq","locwhat","locmob","locloot"],
+  biomes:["bion","biocap","biomob","bioweather"],
 };
 const DEFAULT_SORT = {weapons:["dmg",1], ammo:["dmg",1], shields:["block",1], armor:["armor",1], tools:["tier",1], food:["hp",1], meads:["item",1],
-  materials:["item",1], other:["item",1], building:["piece",1], stations:["crafts",-1], processing:["cst",1], creatures:["chp",1]};
+  materials:["item",1], other:["item",1], building:["piece",1], stations:["crafts",-1], processing:["cst",1], creatures:["chp",1],
+  bosses:["bossn",1], events:["evn",1], locations:["locn",1], biomes:["bion",1]};
 
 function firstLine(t){ return String(t || "").split("\n").map(s => s.trim()).filter(Boolean).slice(0, 2).join(" · "); }
 function dur(s){ s = Math.round(s); if (s >= 3600) return fmt(s / 3600, 1) + " h"; if (s >= 60) return fmt(s / 60, s % 60 ? 1 : 0) + " min"; return s + " s"; }
@@ -633,7 +914,8 @@ function counts(){
     if (!e.dup){ g[e.g] = (g[e.g] || 0) + 1; g.all++; }
     else g[e.g] = (g[e.g] || 0) + 1;
     if (e.g === S.group){
-      if (e.k === "creature"){ for (const b of e.multi || []) c["cr|" + b] = (c["cr|" + b] || 0) + 1; if (e.o.boss) c["cr|boss"] = (c["cr|boss"] || 0) + 1; }
+      const pre = e.k === "creature" ? "cr|" : e.k === "loc" ? "lo|" : e.k === "boss" ? "bo|" : null;
+      if (pre && e.multi){ for (const b of e.multi) c[pre + b] = (c[pre + b] || 0) + 1; if (e.k === "creature" && e.o.boss) c["cr|boss"] = (c["cr|boss"] || 0) + 1; }
       else c[e.c] = (c[e.c] || 0) + 1;
     }
   }
@@ -641,8 +923,10 @@ function counts(){
 }
 function renderChips(ct){
   const gs = [{k:"all", n:"Everything"}].concat(D.groups);
-  $("#groups").innerHTML = gs.filter(g => g.k === "all" || ct.g[g.k]).map(g =>
-    `<button class="chip" data-group="${g.k}" aria-pressed="${S.group === g.k}">${esc(g.n)} <span class="ct">${(ct.g[g.k] || 0).toLocaleString()}</span></button>`).join("");
+  const chip = g => `<button class="chip" data-group="${g.k}" aria-pressed="${S.group === g.k}">${esc(g.n)}${g.k === "world" ? "" : ` <span class="ct">${(ct.g[g.k] || 0).toLocaleString()}</span>`}</button>`;
+  const show = g => g.k === "all" || ct.g[g.k] || (g.k === "world" && !S.q);
+  $("#groups").innerHTML = gs.filter(g => show(g) && !WORLD_GROUPS.includes(g.k)).map(chip).join("") +
+    `<span class="groups-sep">World</span>` + gs.filter(g => show(g) && WORLD_GROUPS.includes(g.k)).map(chip).join("");
   let subs = [];
   if (S.group === "building"){
     const keys = Object.keys(ct.c);
@@ -655,11 +939,11 @@ function renderChips(ct){
     subs = keys.map(k => { const [, t, c] = k.split("|"); const tn = t ? iname(t) : "Other"; return {k, n:tn === "Hammer" ? c : `${tn} · ${c}`}; });
   } else if (S.group === "processing"){
     subs = Object.keys(ct.c).map(k => ({k, n:k.slice(2)})).sort((a, b) => a.n.localeCompare(b.n));
-  } else if (S.group === "creatures"){
-    const order = ["Meadows","BlackForest","Swamp","Mountain","Plains","Mistlands","AshLands","DeepNorth","Ocean"];
-    subs = Object.keys(ct.c).map(k => ({k, n:k === "cr|boss" ? "Bosses" : (BIOME[k.slice(3)] || prettify(k.slice(3)))}))
+  } else if (["creatures","locations","bosses"].includes(S.group)){
+    const order = BIOME_ORDER;
+    subs = Object.keys(ct.c).map(k => ({k, n:k === "cr|boss" ? "Bosses" : (BIOME[k.slice(3)] || (k.slice(3) === "None" ? "Anywhere" : prettify(k.slice(3))))}))
       .sort((a, b) => (a.k === "cr|boss" ? -1 : b.k === "cr|boss" ? 1 : (order.indexOf(a.k.slice(3)) + 1 || 99) - (order.indexOf(b.k.slice(3)) + 1 || 99)));
-  } else if (S.group !== "all" && S.group !== "stations"){
+  } else if (!["all","stations","events","biomes","world"].includes(S.group)){
     subs = D.classes.filter(c => c.g === S.group && ct.c[c.k]).map(c => ({k:c.k, n:c.n}));
   }
   $("#classes").hidden = subs.length < 2;
@@ -679,7 +963,7 @@ function sectionHTML(key, title, ents, gkey, note){
   });
   const ctx = {max:0};
   const toolKeys = gkey === "tools" ? ["chop","pickaxe"] : COMBAT;
-  for (const e of ents){ if (e.o.q){ ctx.max = Math.max(ctx.max, dsum(e.o.q[e.o.q.length - 1].dmg, COMBAT), gkey === "tools" ? dsum(e.o.q[e.o.q.length - 1].dmg, toolKeys) : 0); } }
+  for (const e of ents){ if (e.k === "item" && e.o.q){ ctx.max = Math.max(ctx.max, dsum(e.o.q[e.o.q.length - 1].dmg, COMBAT), gkey === "tools" ? dsum(e.o.q[e.o.q.length - 1].dmg, toolKeys) : 0); } }
   const limit = S.open[key] ? 1e9 : (S.cls || ents.length <= 40 ? 400 : 25);
   const rows = sorted.slice(0, limit).map(e => {
     const on = S.sel && S.sel.k === e.k && S.sel.id === e.id ? " class=\"on\"" : "";
@@ -687,7 +971,8 @@ function sectionHTML(key, title, ents, gkey, note){
   }).join("");
   const head = cols.map(c => `<th${col[c].n ? ` class="num"` : ""} data-sort="${c}" data-sec="${esc(key)}" aria-sort="${c === sk ? (sd > 0 ? "ascending" : "descending") : "none"}">${esc(col[c].h)}${c === sk ? ` <span class="sa">${sd > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
   const more = sorted.length > limit ? `<button class="more" data-more="${esc(key)}">Show all ${sorted.length.toLocaleString()}</button>` : "";
-  return `<section class="sec"><div class="sec-h"><h2>${esc(title)}</h2><span class="ct">${ents.length.toLocaleString()}</span>${note ? `<span class="note">${note}</span>` : ""}</div>
+  const closed = !!S.collapsed[key];
+  return `<section class="sec${closed ? " closed" : ""}" data-sec-key="${esc(key)}"><div class="sec-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}"><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M6 9l6 6 6-6"/></svg></span><h2>${esc(title)}</h2><span class="ct">${ents.length.toLocaleString()}</span>${note ? `<span class="note">${note}</span>` : ""}</div>
     <div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>${more}</div></section>`;
 }
 function render(){
@@ -699,6 +984,10 @@ function render(){
   const ents = res.map(x => x[1]);
   $("#count").textContent = S.q ? `${ents.filter(e => !e.dup).length.toLocaleString()} matches for “${S.q}”` : "";
   let html = "";
+  if (S.group === "world" && !S.q){
+    $("#results").innerHTML = worldPanel();
+    return;
+  }
   if (!ents.length){
     html = `<div class="empty"><b>Nothing matches “${esc(S.q)}”.</b><br>Try a shorter word, a weapon type like <i>atgeir</i>, a material like <i>bronze</i>, or clear the mod filter.</div>`;
   } else if (S.group === "all"){
@@ -718,8 +1007,15 @@ function render(){
     const keys = Object.keys(byC);
     const order = [...$("#classes").querySelectorAll("[data-cls]")].map(b => b.dataset.cls).filter(Boolean);
     keys.sort((a, b) => (order.indexOf(a) + 1 || 999) - (order.indexOf(b) + 1 || 999));
-    if (S.group === "creatures"){
-      html = sectionHTML("c:creatures:", "Creatures", ents.filter(e => !e.dup), "creatures");
+    if (["creatures","locations","bosses"].includes(S.group)){
+      const pre = {creatures:"cr|", locations:"lo|", bosses:"bo|"}[S.group];
+      const byB = {};
+      for (const e of ents) for (const b of (e.multi && e.multi.length ? e.multi : ["Unknown"])) (byB[b] ||= []).push(e);
+      const bk = Object.keys(byB).sort((a, b) => (BIOME_ORDER.indexOf(a) + 1 || 99) - (BIOME_ORDER.indexOf(b) + 1 || 99));
+      if (S.group === "bosses") html += sectionHTML("c:bosses:all", "All bosses in progression order", ents, "bosses", "Health shown for " + W.players + " player" + (W.players > 1 ? "s" : "") + " nearby.");
+      else for (const b of bk) html += sectionHTML("c:" + S.group + ":" + b, BIOME[b] || (b === "None" || b === "All" ? "Anywhere" : b === "Unknown" ? "No natural spawns (dungeons, raids, summons)" : prettify(b)), byB[b], S.group);
+    } else if (["events","biomes"].includes(S.group)){
+      html = sectionHTML("c:" + S.group + ":", GRP[S.group].n, ents, S.group, S.group === "events" ? raidNote() : "");
     } else {
       for (const k of keys){
         const label = $(`#classes [data-cls="${CSS.escape(k)}"]`)?.firstChild?.textContent.trim() || (CLS[k] && CLS[k].n) || k;
@@ -728,6 +1024,13 @@ function render(){
     }
   }
   $("#results").innerHTML = html;
+}
+function raidNote(){
+  const r = rates().eventrate / 100, R = D.world && D.world.raid;
+  if (!R) return "";
+  if (!r) return "Raids are turned off in these settings.";
+  const every = R.interval * r, p = R.chance / r;
+  return `A raid roll happens every ${fmt(every, 0)} min near your base with a ${fmt(p, 1)}% chance, about one raid every ${fmt(every / (p / 100) / 60, 1)} h of play.`;
 }
 function classNote(){
   if (S.group === "weapons") return "Base damage summed across damage types; bar shows the mix at max level.";
@@ -747,7 +1050,8 @@ function select(k, id, push = true){
   renderDetail();
   document.querySelectorAll("#results tr.on").forEach(tr => tr.classList.remove("on"));
   document.querySelectorAll(`#results tr[data-go="${CSS.escape(k + ":" + id)}"]`).forEach(tr => tr.classList.add("on"));
-  if (/^[A-Za-z0-9._~-]+$/.test(id)) { try{ history.replaceState(null, "", "#" + k[0] + "." + id); }catch(e){} }
+  const hk = {item:"i", piece:"p", station:"s", creature:"c", boss:"b", event:"e", loc:"l", biome:"m"}[k];
+  if (hk && /^[A-Za-z0-9._~-]+$/.test(id)) { try{ history.replaceState(null, "", "#" + hk + "." + id); }catch(e){} }
   openSheet(true);
 }
 function openSheet(on){
@@ -759,14 +1063,15 @@ function openSheet(on){
 }
 function fromHash(){
   const h = decodeURIComponent(location.hash.slice(1));
-  const m = /^([ipsc])\.(.+)$/.exec(h);
+  const m = /^([ipscbelm])\.(.+)$/.exec(h);
   if (!m) return;
-  const k = {i:"item", p:"piece", s:"station", c:"creature"}[m[1]];
-  const ok = (k === "item" && D.items[m[2]]) || (k === "piece" && D.pieces[m[2]]) || (k === "station" && D.stations[m[2]]) || (k === "creature" && D.creatures[m[2]]);
+  const k = {i:"item", p:"piece", s:"station", c:"creature", b:"boss", e:"event", l:"loc", m:"biome"}[m[1]];
+  const ok = (k === "item" && D.items[m[2]]) || (k === "piece" && D.pieces[m[2]]) || (k === "station" && D.stations[m[2]]) || (k === "creature" && D.creatures[m[2]])
+    || (k === "boss" && D.bosses[m[2]]) || (k === "event" && evById(m[2])) || (k === "loc" && D.locations[m[2]]) || (k === "biome" && D.biomes[m[2]]);
   if (ok){ S.sel = {k, id:m[2]}; renderDetail(); }
 }
 function dhead(i, name, metaBits, desc){
-  const ic = i === -2 && S.sel ? crIcon(S.sel.id, "s56") : icon(i, "s56", name);
+  const ic = i === -2 && S.sel ? crIcon(S.sel.id, "s56") : i === -3 ? glyph("raid", 56) : i === -4 && S.sel ? locIcon(D.locations[S.sel.id], "s56") : i === -5 ? glyph("biome", 56) : icon(i, "s56", name);
   return `<div class="dhead">${ic}<div><h2>${esc(name)}</h2><div class="meta">${metaBits.filter(Boolean).join("")}</div></div>
     <div class="ctl">${S.hist.length ? `<button class="iconbtn" data-back title="Back" aria-label="Back"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M15 6l-6 6 6 6"/></svg></button>` : ""}
     <button class="iconbtn sheet-close" data-close title="Close" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>
@@ -838,7 +1143,7 @@ function itemDetail(id){
     }
     const kv = [];
     const push = (label, val, sub = "") => { if (val !== undefined && val !== null && val !== "" && val !== 0) kv.push(`<div><span>${label}</span><b>${val}${sub ? ` <small>${sub}</small>` : ""}</b></div>`); };
-    if (e.dmg) push("Total damage", fmt(dsum(e.dmg)));
+    if (e.dmg){ const pd = rates().playerdamage / 100; push("Total damage", fmt(dsum(e.dmg)), pd !== 1 ? `×${fmt(pd, 2)} in your world = ${fmt(dsum(e.dmg) * pd)}` : ""); }
     push("Armor", e.arm ? fmt(e.arm) : 0);
     push("Block", e.blk ? fmt(e.blk) : 0);
     const x = o.x || {};
@@ -908,12 +1213,14 @@ function itemDetail(id){
       arr.sort((a, b) => (b.p || 1) - (a.p || 1));
       s += `<div class="k">${esc(SRCK[k] || k)}</div>` + arr.slice(0, 14).map(x => {
         const go = D.creatures[x.f] ? `creature:${x.f}` : D.pieces[x.f] ? `piece:${x.f}` : "";
-        const amt = x.a ? (x.a[0] === x.a[1] ? x.a[0] : x.a[0] + "–" + x.a[1]) : "";
+        const amt = x.a ? scaleAmt(x.a, id, x.k) : "";
         const sub = [x.b ? biomes(x.b) : "", x.tier ? tierHint(x.tier, k) : "", x.price ? x.price + " coins" : "", x.key ? keyName(x.key) : ""].filter(Boolean).join(" · ");
         return `<div class="it"${go ? ` data-go="${esc(go)}" role="button" tabindex="0"` : ""}>${D.creatures[x.f] ? crIcon(x.f, "s22") : (D.pieces[x.f] || D.items[x.f]) ? iicon(x.f, "s22") : glyph(k)}<span class="t">${esc(x.fn)}${x.boss ? " " + tag("Boss", "boss") : ""}${sub ? `<small>${esc(sub)}</small>` : ""}</span><span class="r">${amt ? "×" + amt : ""}${x.p ? `<br>${fmt(x.p * 100, 1)}%` : ""}</span></div>`;
       }).join("") + (arr.length > 14 ? `<p class="dim" style="margin:4px 0 0;font-size:12px">+${arr.length - 14} more</p>` : "");
     }
-    h += `<div class="card"><h3>Where to get it</h3><div class="src">${s}</div></div>`;
+    if (o.chestAt && o.chestAt.length) s += `<div class="k">Chests at these locations</div><div class="grid-items">${o.chestAt.map(l => D.locations[l] ? `<button class="gi" data-go="loc:${esc(l)}">${locIcon(D.locations[l], "s22")}${esc(D.locations[l].n)}</button>` : "").join("")}</div>`;
+    const rr = resRate();
+    h += `<div class="card"><h3>Where to get it${rr !== 1 && o.c !== "trophies" ? `<span class="aside">amounts ×${fmt(rr, 2)} for Resources</span>` : ""}</h3><div class="src">${s}</div></div>`;
   } else if (!recs.length){
     h += `<div class="card"><h3>Where to get it</h3><p class="dim" style="margin:0">No recipe, drop or trader found. It probably comes from world chests, events, bounties or another mod's system.</p></div>`;
   }
@@ -997,16 +1304,292 @@ function stationDetail(id){
   if (CBS[id]) h += convCard(id);
   return h + `</div>`;
 }
+function spawnRow(r){
+  const when = r.day && r.night ? "Day & night" : r.night ? "Night only" : r.day ? "Day only" : "Never";
+  const cond = [];
+  if (r.key) cond.push("after " + keyText(r.key));
+  if (r.env) cond.push("weather: " + r.env.map(prettify).join(" / "));
+  if (r.forest) cond.push(r.forest + " forests");
+  if (r.ocean) cond.push("ocean " + fmt(r.ocean[0]) + "–" + fmt(r.ocean[1]) + " m deep");
+  if (r.alt) cond.push("altitude " + fmt(r.alt[0]) + "–" + fmt(r.alt[1]));
+  if (r.dist) cond.push((r.dist[0] ? fmt(r.dist[0]) + " m" : "0") + "–" + (r.dist[1] ? fmt(r.dist[1]) + " m" : "any") + " from center");
+  if (r.hunt) cond.push("hunts players");
+  const grp = r.grp && r.grp[1] > 1 ? `groups of ${r.grp[0]}–${r.grp[1]}` : "alone";
+  return `<tr><td>${esc(biomes(r.b))}</td><td>${when}</td><td class="num">${pctS(r.ch)}<br><span class="dim">every ${dur(r.int)}</span></td><td class="num">${r.max}</td><td>${grp}${cond.length ? `<div class="cond">${esc(cond.join(" · "))}</div>` : ""}</td></tr>`;
+}
+function starsCard(id, c, boss){
+  if (!D.sls) return "";
+  const home = boss ? null : ((c.sp || [])[0] || {}).b ? c.sp[0].b[0] : (c.b || [])[0];
+  if (!home && !boss) return "";
+  const day = starDist(home, false, boss) || [], night = starDist(home, true, boss) || [];
+  const rows = day.slice(0, 8).map(([st, p]) => {
+    const n = (night.find(x => x[0] === st) || [0, 0])[1], m = starMult(st, boss);
+    return `<tr><td>${starLabel(st)}</td><td class="num">${pctS(p)}</td><td class="num">${pctS(n)}</td><td class="num">${fmt(c.hp * m.hp * hpScale(), 0)}</td><td class="num">×${fmt(m.dmg, 2)}</td><td class="num">×${m.loot}</td></tr>`;
+  }).join("");
+  const cap = boss ? D.sls.maxBossLevel : D.sls.caps[home] ?? D.sls.maxLevel;
+  return `<div class="card"><h3>Stars <span class="aside">StarLevelSystem${boss ? "" : " · " + esc(BIOME[home] || home)}</span></h3>
+    <div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Level</th><th class="num">Day</th><th class="num">Night</th><th class="num">Health</th><th class="num">Damage</th><th class="num">Loot</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="note">Capped at ${cap}★${boss ? " for bosses" : " in this biome"}. Night spawns roll ${fmt(D.sls.night, 2)}× the chances. ${D.sls.distanceOn ? "Distance from the world center adds more." : "The distance bonus is off in your config."}${D.sls.scalingInDungeons ? "" : " Dungeon spawns don't scale."}</p></div>`;
+}
+function elootCard(id){
+  const t = D.eloot && D.eloot[id];
+  if (!t) return "";
+  const rows = t.levels.slice(0, 8).map(l => {
+    const none = (l.n.find(x => x[0] === 0) || [0, 0])[1];
+    const some = l.n.filter(x => x[0] > 0).map(x => `${x[0]}: ${pctS(x[1])}`).join(", ");
+    const rar = l.rar.map((v, i) => v ? `<i class="r${i}" style="width:${v}%" title="${["Magic","Rare","Epic","Legendary","Mythic"][i]} ${fmt(v, 1)}%"></i>` : "").join("");
+    return `<tr><td>${starLabel(l.lvl - 1)}</td><td class="num">${pctS(100 - none)}</td><td>${some || dash}</td><td><div class="rar">${rar}</div>${l.other ? `<small class="dim">${fmt(l.other, 0)}% shards/mats</small>` : ""}</td></tr>`;
+  }).join("");
+  return `<div class="card"><h3>Magic drops <span class="aside">Epic Loot${t.ref ? " · " + esc(prettify(t.ref)) + " table" : ""}</span></h3>
+    <div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Level</th><th class="num">Any</th><th>Items (chance)</th><th>Rarity mix</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="legend">${["Magic","Rare","Epic","Legendary","Mythic"].map((n, i) => `<span style="--c:var(--r${i})">${n}</span>`).join("")}</div></div>`;
+}
 function creatureDetail(id){
   const c = D.creatures[id];
   if (!c) return `<div class="inner">Unknown creature.</div>`;
-  let h = `<div class="inner">` + dhead(-2, c.n, [c.boss ? tag("Boss", "boss") : "", c.m !== "Valheim" ? tag(c.m, "mod") : tag("Vanilla"), c.fac ? tag(prettify(c.fac)) : ""], "");
-  const kv = [`<div><span>Health</span><b>${fmt(c.hp, 0)}</b></div>`];
+  const boss = !!c.boss;
+  let h = `<div class="inner">` + dhead(-2, c.n, [boss ? tag("Boss", "boss") : "", c.m !== "Valheim" ? tag(c.m, "mod") : tag("Vanilla"), c.fac ? tag(prettify(c.fac)) : "", D.bosses[id] ? `<button class="lnk" data-go="boss:${esc(id)}">Boss guide →</button>` : ""], "");
+  const kv = [`<div><span>Health</span><b>${fmt(c.hp * hpScale(), 0)}</b>${hpScale() !== 1 ? `<small class="dim"> ${W.players} players</small>` : ""}</div>`];
+  if (c.mv && c.mv.run) kv.push(`<div><span>Run speed</span><b>${fmt(c.mv.run * rates().enemyspeedsize / 100, 1)}</b></div>`);
+  if (D.mmo && D.mmo[id]) kv.push(`<div><span>EpicMMO level</span><b>${D.mmo[id][0]}</b><small class="dim"> ${D.mmo[id][1]}–${D.mmo[id][2]} xp</small></div>`);
   if (c.b) kv.push(`<div style="grid-column:span 2"><span>Found in</span><b style="font-family:var(--sans);font-size:13.5px">${esc(biomes(c.b))}</b></div>`);
-  h += `<div class="card"><h3>Basics</h3><div class="kv">${kv.join("")}</div></div>`;
+  h += `<div class="card"><h3>Basics</h3><div class="kv">${kv.join("")}</div>${c.noWater ? `<p class="note">Won't follow you into deep water.</p>` : ""}</div>`;
   if (c.wk) h += `<div class="card"><h3>Damage taken</h3><div class="pillset">${Object.entries(c.wk).map(([k, v]) => `<span class="pill ${/Weak/.test(v) ? "good" : "bad"}">${esc(DNAME[k] || prettify(k))}: ${esc(MODNAME[v] || v)}</span>`).join("")}</div><p class="dim" style="font-size:12px;margin:8px 0 0">Green means it takes extra damage from that type.</p></div>`;
-  if (c.atk && c.atk.length) h += `<div class="card"><h3>Attacks</h3><div class="src">${c.atk.map(a => `<div class="it" style="cursor:default"><span class="dt" style="--c:var(--d-${a[2]})"></span><span class="t">${esc(a[0])}<small>${esc(DNAME[a[2]] || a[2])}</small></span><span class="r">${fmt(a[1], 0)}</span></div>`).join("")}</div></div>`;
-  if (c.dr && c.dr.length) h += `<div class="card"><h3>Drops</h3><div class="src">${c.dr.map(d => `<div class="it" data-go="item:${esc(d[0])}" role="button" tabindex="0">${iicon(d[0], "s22")}<span class="t">${esc(iname(d[0]))}${d[4] ? "<small>One per player</small>" : ""}</span><span class="r">×${d[1] === d[2] ? d[1] : d[1] + "–" + d[2]}<br>${fmt(d[3] * 100, 1)}%</span></div>`).join("")}</div></div>`;
+  if (c.atk && c.atk.length){
+    const ds = dmgScale();
+    h += `<div class="card"><h3>Attacks${ds !== 1 ? `<span class="aside">×${fmt(ds, 2)} for your world</span>` : ""}</h3><div class="src">${c.atk.map(a => `<div class="it" style="cursor:default"><span class="dt" style="--c:var(--d-${a[2]})"></span><span class="t">${esc(atkName(a[0]))}<small>${esc(DNAME[a[2]] || a[2])}</small></span><span class="r">${fmt(a[1] * ds, 0)}${ds !== 1 ? `<br><span class="dim">base ${fmt(a[1], 0)}</span>` : ""}</span></div>`).join("")}</div></div>`;
+  }
+  if (c.sp && c.sp.length){
+    h += `<div class="card"><h3>Where it spawns <span class="aside">world spawner</span></h3><div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Biome</th><th>When</th><th class="num">Chance</th><th class="num">Max</th><th>Group & conditions</th></tr></thead><tbody>${c.sp.map(spawnRow).join("")}</tbody></table></div>
+      <p class="note">Every interval, each spawner rolls its chance near players until the max are alive.${D.sls && D.sls.spawnRate && D.sls.spawnRate !== 1 ? ` StarLevelSystem multiplies spawns ×${D.sls.spawnRate}.` : ""}</p></div>`;
+  }
+  if ((c.loc && c.loc.length) || (c.ev && c.ev.length)){
+    h += `<div class="card"><h3>Also appears</h3>${c.loc ? `<div class="lvlhead">At locations · ${c.loc.length}</div><div class="grid-items">${c.loc.slice(0, 24).map(l => D.locations[l] ? `<button class="gi" data-go="loc:${esc(l)}">${locIcon(D.locations[l], "s22")}${esc(D.locations[l].n)}</button>` : "").join("")}</div>` : ""}
+      ${c.ev ? `<div class="lvlhead">In raids · ${c.ev.length}</div><div class="grid-items">${c.ev.map(e => evById(e) ? `<button class="gi" data-go="event:${esc(e)}">${glyph("raid", 22)}${esc(evById(e).n)}</button>` : "").join("")}</div>` : ""}</div>`;
+  }
+  h += starsCard(id, c, boss);
+  if (c.dr && c.dr.length){
+    const rr = resRate();
+    h += `<div class="card"><h3>Drops${rr !== 1 ? `<span class="aside">amounts ×${fmt(rr, 2)} for Resources</span>` : ""}</h3><div class="src">${c.dr.map(d => `<div class="it" data-go="item:${esc(d[0])}" role="button" tabindex="0">${iicon(d[0], "s22")}<span class="t">${esc(iname(d[0]))}${d[4] ? "<small>One per player</small>" : ""}</span><span class="r">×${scaleAmt([d[1], d[2]], d[0])}<br>${pctS(d[3] * 100)}</span></div>`).join("")}</div>
+      ${D.sls ? `<p class="note">Starred creatures multiply these amounts (see Stars). Drops under 100% also gain ${fmt(D.sls.loot.chancePerLevel * 100, 0)}% chance per level.</p>` : ""}</div>`;
+  }
+  h += elootCard(id);
+  if (c.tame){
+    const t = c.tame;
+    h += `<div class="card"><h3>Taming</h3><div class="kv"><div><span>Tame time</span><b>${dur(t.time)}</b></div><div><span>Stays fed</span><b>${dur(t.fed)}</b></div>${t.ride ? `<div><span>Rideable</span><b>Yes</b></div>` : ""}${t.cmd ? `<div><span>Follows commands</span><b>Yes</b></div>` : ""}</div>
+      ${t.food.length ? `<div class="lvlhead">Eats</div><div class="grid-items">${t.food.map(f => `<button class="gi" data-go="item:${esc(f)}">${iicon(f, "s22")}${esc(iname(f))}</button>`).join("")}</div>` : ""}
+      ${t.breed ? `<p class="note">Breeds when fed: ${pctS(t.breed.chance * 100)} chance every ${dur(t.breed.time)}, up to ${t.breed.max} nearby.</p>` : ""}</div>`;
+  }
+  return h + `</div>`;
+}
+function evById(id){ return (D.events || []).find(e => e.id === id); }
+function bossDetail(id){
+  const c = D.creatures[id], b = D.bosses[id];
+  if (!c || !b) return creatureDetail(id);
+  const altars = (b.altars || b.lairs || []).filter(l => D.locations[l]);
+  const L = D.locations[altars[0]] || {b:[], q:0};
+  let h = `<div class="inner">` + dhead(-2, c.n, [tag("Boss", "boss"), c.m !== "Valheim" ? tag(c.m, "mod") : tag("Vanilla"), L.b.length ? tag(biomes(L.b)) : ""], "");
+  // summoning
+  let sm = "";
+  if (b.summon && b.summon.item){
+    sm += `<p style="margin:0 0 8px">${b.summon.stands ? "Place" : "Offer"} <b>${b.summon.n} × ${esc(iname(b.summon.item))}</b> ${b.summon.stands ? "on the item stands around" : "at"} the altar.</p>
+      <div class="reqs"><button class="req" data-go="item:${esc(b.summon.item)}">${iicon(b.summon.item, "s22")}<span class="q">${b.summon.n}</span><span class="rn">${esc(iname(b.summon.item))}</span></button></div>`;
+    const src = (D.sources[b.summon.item] || []).slice(0, 4), rec = RBI[b.summon.item];
+    if (rec) sm += `<p class="note">Crafted at ${esc(stName(rec[0].s))} from ${esc(rec[0].r.map(x => x[1] + " " + iname(x[0])).join(", "))}.</p>`;
+    else if (src.length) sm += `<p class="note">${esc(src.map(x => (SRCK[x.k] || "From") + " " + x.fn + (x.p ? " (" + pctS(x.p * 100) + ")" : "")).join(" · "))}</p>`;
+  } else if (b.door){
+    sm += `<p style="margin:0 0 8px">Found deep inside the dungeon. The sealed door opens with a <button class="lnk" data-go="item:${esc(b.door)}">${esc(iname(b.door))}</button>.</p>`;
+  }
+  if (sm) h += `<div class="card"><h3>How to summon</h3>${sm}</div>`;
+  // finding it
+  if (altars.length){
+    const seenVia = new Set();
+    const vias = [...new Set(altars.flatMap(a => D.locations[a].foundVia || []))].filter(v => D.locations[v] && !seenVia.has(D.locations[v].n) && seenVia.add(D.locations[v].n));
+    h += `<div class="card"><h3>Where to find it</h3><div class="src">${altars.map(a => { const l = D.locations[a]; return `<div class="it" data-go="loc:${esc(a)}" role="button" tabindex="0">${locIcon(l, "s36")}<span class="t">${esc(l.n)}<small>${esc(biomes(l.b))} · ${l.uniq ? "1 in the world" : "about " + l.q + " per world"}${l.dist ? " · " + (l.dist[0] ? fmt(l.dist[0]) + " m" : "0") + "–" + (l.dist[1] ? fmt(l.dist[1]) + " m" : "edge") + " from center" : ""}</small></span><span class="r">→</span></div>`; }).join("")}</div>
+      ${vias.length ? `<div class="lvlhead">Revealed on your map by</div><div class="grid-items">${vias.map(v => `<button class="gi" data-go="loc:${esc(v)}">${locIcon(D.locations[v], "s22")}${esc(D.locations[v].n)}</button>`).join("")}</div><p class="note">Read the vegvisir or runestone at these places to mark the nearest altar.</p>` : ""}</div>`;
+  }
+  // fight
+  const kv = [`<div><span>Health</span><b>${fmt(c.hp * hpScale(), 0)}</b>${W.players > 1 ? `<small class="dim"> ${W.players} players</small>` : ""}</div>`];
+  if (b.phases) kv.push(`<div><span>Phases</span><b>${b.phases.length + 1}</b></div>`);
+  h += `<div class="card"><h3>The fight</h3><div class="kv">${kv.join("")}</div>
+    ${c.wk ? `<div class="pillset" style="margin-top:10px">${Object.entries(c.wk).map(([k, v]) => `<span class="pill ${/Weak/.test(v) ? "good" : "bad"}">${esc(DNAME[k] || prettify(k))}: ${esc(MODNAME[v] || v)}</span>`).join("")}</div>` : ""}
+    ${c.atk && c.atk.length ? `<div class="src" style="margin-top:10px">${c.atk.map(a => `<div class="it" style="cursor:default"><span class="dt" style="--c:var(--d-${a[2]})"></span><span class="t">${esc(atkName(a[0]))}<small>${esc(DNAME[a[2]] || a[2])}</small></span><span class="r">${fmt(a[1] * dmgScale(), 0)}</span></div>`).join("")}</div>` : ""}</div>`;
+  if (b.power && D.ses[b.power]){
+    const se = D.ses[b.power];
+    h += `<div class="card"><h3>Forsaken power${se.d ? `<span class="aside">lasts ${dur(se.d)}</span>` : ""}</h3>${b.trophy ? `<p style="margin:0 0 8px">Hang its <button class="lnk" data-go="item:${esc(b.trophy)}">${esc(iname(b.trophy))}</button> at the <button class="lnk" data-go="loc:StartTemple">Sacrificial Stones</button>, then activate it with the power key.</p>` : ""}<div class="se"><b>${esc(se.n)}</b>${esc(se.t)}</div></div>`;
+  }
+  if (c.dr && c.dr.length) h += `<div class="card"><h3>Drops</h3><div class="grid-items">${c.dr.map(d => `<button class="gi" data-go="item:${esc(d[0])}">${iicon(d[0], "s22")}${esc(iname(d[0]))}<span class="x">×${scaleAmt([d[1], d[2]], d[0])}${d[3] < 1 ? " " + pctS(d[3] * 100) : ""}</span></button>`).join("")}</div></div>`;
+  const un = (b.unlocks || []).map(evById).filter(Boolean), en = (b.ends || []).map(evById).filter(Boolean);
+  if (b.key || un.length || en.length){
+    h += `<div class="card"><h3>After you win</h3>${b.key ? `<p class="note" style="margin:0 0 8px">Sets the world key <span class="mono">${esc(b.key2 || b.key)}</span>.</p>` : ""}
+      ${un.length ? `<div class="lvlhead">New raids can hit your base</div><div class="grid-items">${un.map(e => `<button class="gi" data-go="event:${esc(e.id)}">${glyph("raid", 22)}${esc(e.n)}</button>`).join("")}</div>` : ""}
+      ${en.length ? `<div class="lvlhead">These raids stop</div><div class="grid-items">${en.map(e => `<button class="gi" data-go="event:${esc(e.id)}">${glyph("raid", 22)}${esc(e.n)}</button>`).join("")}</div>` : ""}</div>`;
+  }
+  h += starsCard(id, c, true);
+  h += elootCard(id);
+  return h + `</div>`;
+}
+function eventDetail(id){
+  const ev = evById(id);
+  if (!ev) return `<div class="inner">Unknown raid.</div>`;
+  const now = eventPossible(ev);
+  let h = `<div class="inner">` + dhead(-3, ev.n, [tag("Raid"), now ? `<span class="tag" style="color:var(--good);border-color:currentColor">Possible now</span>` : ""], ev.msg ? "“" + ev.msg + "”" : "");
+  const conds = [];
+  if (ev.req.length) conds.push(`<li>World progress: <b>${esc(ev.req.map(keyText).join(" and "))}</b></li>`);
+  if (ev.notReq.length) conds.push(`<li>Stops once: <b>${esc(ev.notReq.map(keyText).join(" or "))}</b></li>`);
+  conds.push(`<li>Biome${ev.b.length > 1 ? "s" : ""}: <b>${esc(ev.b.includes("All") ? "any" : biomes(ev.b))}</b></li>`);
+  if (ev.base) conds.push(`<li>Only near a base: 3 or more of your structures within range</li>`);
+  h += `<div class="card"><h3>When it can happen</h3><ul class="effects">${conds.join("")}</ul>
+    ${ev.pAny.length || ev.pAll.length || ev.pNot.length || ev.known.length ? `<p class="note">With the “Player based raids” world option, each player's own progress counts instead: ${esc([ev.pAll.length ? "needs " + ev.pAll.map(keyText).join(" and ") : "", ev.pAny.length ? "needs any of " + ev.pAny.map(keyText).join(", ") : "", ev.known.length ? "or knowing " + ev.known.map(iname).join(", ") : "", ev.pNot.length ? "not after " + ev.pNot.map(keyText).join(", ") : ""].filter(Boolean).join("; "))}.</p>` : ""}</div>`;
+  h += `<div class="card"><h3>How often</h3><p style="margin:0">${raidNote()}</p><p class="note">When a roll succeeds, one raid is picked at random from those that are possible. This one lasts ${dur(ev.dur)} and covers a ${fmt(ev.range, 0)} m radius.</p></div>`;
+  if (ev.spawns.length){
+    h += `<div class="card"><h3>Attackers</h3><div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Creature</th><th class="num">Max alive</th><th class="num">Spawn roll</th><th>Group</th><th>When</th></tr></thead><tbody>${ev.spawns.map(x => `<tr><td>${D.creatures[x.p] ? `<button class="lnk" data-go="creature:${esc(x.p)}">${esc(crName(x.p))}</button>` : esc(crName(x.p))}</td><td class="num">${x.max}</td><td class="num">${pctS(x.ch)}<br><span class="dim">every ${dur(x.int)}</span></td><td>${x.grp[1] > 1 ? x.grp[0] + "–" + x.grp[1] : "1"}</td><td>${x.day && x.night ? "Any" : x.night ? "Night" : "Day"}</td></tr>`).join("")}</tbody></table></div></div>`;
+  }
+  return h + `</div>`;
+}
+function chestHTML(ch){
+  const rolls = ch.rolls && ch.rolls[0] != null ? (ch.rolls[0] === ch.rolls[1] ? ch.rolls[0] : ch.rolls[0] + "–" + ch.rolls[1]) : "?";
+  return `<div class="lvlhead">${esc(ch.n)} <span class="dim">· ${rolls} pulls${ch.chance < 100 ? ", " + pctS(ch.chance) + " to fill" : ""}${resRate() !== 1 ? " · ×" + Math.ceil(resRate()) + " rolls for Resources" : ""}</span></div>
+    <div class="grid-items">${ch.loot.map(x => `<button class="gi" data-go="item:${esc(x[0])}" title="${esc(iname(x[0]))}: ${pctS(x[3])} per pull">${iicon(x[0], "s22")}${esc(iname(x[0]))}<span class="x">${x[1] === x[2] ? x[1] : x[1] + "–" + x[2]} · ${pctS(x[3])}</span></button>`).join("")}</div>`;
+}
+function locationDetail(id){
+  const l = D.locations[id];
+  if (!l) return `<div class="inner">Unknown location.</div>`;
+  const c = l.c || {};
+  let h = `<div class="inner">` + dhead(-4, l.n, [tag(biomes(l.b) || "Anywhere"), c.dungeon ? tag("Dungeon") : "", l.uniq ? tag("Unique") : "", `<span class="mono dim" style="font-size:11px">${esc(id)}</span>`], "");
+  const kv = [`<div><span>In each world</span><b>${l.uniq || l.q === 1 ? 1 : "≈" + l.q}</b></div>`];
+  if (l.dist) kv.push(`<div><span>From center</span><b>${l.dist[0] ? fmt(l.dist[0]) : 0}–${l.dist[1] ? fmt(l.dist[1]) : "∞"}</b><small class="dim"> m</small></div>`);
+  if (l.alt) kv.push(`<div><span>Altitude</span><b>${fmt(l.alt[0])}–${fmt(l.alt[1])}</b></div>`);
+  h += `<div class="card"><h3>Where</h3><div class="kv">${kv.join("")}</div>${l.icon ? `<p class="note">Always shown on the map.</p>` : l.iconFound ? `<p class="note">Marked on the map once discovered.</p>` : ""}</div>`;
+  if (c.altar) h += `<div class="card"><h3>Boss altar</h3>${c.altar.map(a => `<button class="gi" data-go="boss:${esc(a.boss)}">${crIcon(a.boss, "s22")}${esc(crName(a.boss))}<span class="x">${a.n} × ${esc(iname(a.item))}</span></button>`).join("")}</div>`;
+  if (c.stones) h += `<div class="card"><h3>Boss stones</h3><div class="src">${c.stones.filter(x => x.power).map(x => `<div class="it" style="cursor:default">${x.items[0] ? iicon(x.items[0], "s22") : ""}<span class="t">${esc(x.items.map(iname).join(", "))}<small>${esc(D.ses[x.power] ? D.ses[x.power].n : x.power)}</small></span></div>`).join("")}</div></div>`;
+  if (c.traders){
+    let t = "";
+    for (const name of c.traders){ const list = TRADERS[name] || []; t += `<div class="lvlhead">${esc(name)} sells · ${list.length}</div><div class="grid-items">${list.map(x => `<button class="gi" data-go="item:${esc(x.item)}">${iicon(x.item, "s22")}${esc(iname(x.item))}<span class="x">${x.price} coins${x.key ? " · " + esc(keyText(x.key)) : ""}</span></button>`).join("")}</div>`; }
+    h += `<div class="card"><h3>Trader</h3>${t}</div>`;
+  }
+  const mobs = c.creatures || [];
+  if (mobs.length || c.nests){
+    h += `<div class="card"><h3>Creatures here</h3>${mobs.length ? `<div class="grid-items">${mobs.map(x => `<button class="gi" ${D.creatures[x[0]] ? `data-go="creature:${esc(x[0])}"` : ""}>${crIcon(x[0], "s22")}${esc(crName(x[0]))}<span class="x">×${x[1]}${x[3] > 1 ? " · up to " + (x[3] - 1) + "★" : ""}</span></button>`).join("")}</div>` : ""}
+      ${(c.nests || []).map(n => `<div class="lvlhead">${esc(n.n)} <span class="dim">· every ${dur(n.int)}, up to ${n.near} nearby</span></div><div class="grid-items">${n.spawn.map(x => `<button class="gi" ${D.creatures[x[0]] ? `data-go="creature:${esc(x[0])}"` : ""}>${crIcon(x[0], "s22")}${esc(crName(x[0]))}<span class="x">weight ${x[1]}</span></button>`).join("")}</div>`).join("")}</div>`;
+  }
+  for (const th of c.dungeon || []){
+    const t = D.themes[th];
+    if (!t) continue;
+    h += `<div class="card"><h3>Inside: ${esc(THEME_NAMES[th] || prettify(th))} <span class="aside">${c.rooms ? c.rooms[0] + "–" + c.rooms[1] + " rooms" : ""}</span></h3>
+      ${t.creatures.length ? `<div class="lvlhead">Creature spawners in its rooms</div><div class="grid-items">${t.creatures.map(x => `<button class="gi" ${D.creatures[x[0]] ? `data-go="creature:${esc(x[0])}"` : ""}>${crIcon(x[0], "s22")}${esc(crName(x[0]))}<span class="x">${x[1]} spots${x[3] > 1 ? " · up to " + (x[3] - 1) + "★" : ""}</span></button>`).join("")}</div>` : ""}
+      ${t.chests.map(chestHTML).join("")}
+      ${t.items.length ? `<div class="lvlhead">Lying around</div><div class="grid-items">${t.items.filter(x => D.items[x[0]]).slice(0, 16).map(x => `<button class="gi" data-go="item:${esc(x[0])}">${iicon(x[0], "s22")}${esc(iname(x[0]))}<span class="x">×${x[1]}</span></button>`).join("")}</div>` : ""}</div>`;
+  }
+  if (c.chests) h += `<div class="card"><h3>Chests</h3>${c.chests.map(chestHTML).join("")}</div>`;
+  if (c.ground || c.picks) h += `<div class="card"><h3>Items here</h3><div class="grid-items">${(c.ground || []).concat(c.picks || []).map(x => `<button class="gi" data-go="item:${esc(x[0])}">${iicon(x[0], "s22")}${esc(iname(x[0]))}<span class="x">×${x[1]}</span></button>`).join("")}</div></div>`;
+  if (c.veg){
+    h += `<div class="card"><h3>Vegvisir</h3><p style="margin:0 0 8px">Reveals the nearest:</p><div class="grid-items">${c.veg.map(v => D.locations[v] ? `<button class="gi" data-go="loc:${esc(v)}">${locIcon(D.locations[v], "s22")}${esc(D.locations[v].n)}</button>` : `<span class="gi">${esc(prettify(v))}</span>`).join("")}</div></div>`;
+  }
+  const seenF = new Set();
+  if (l.foundVia) h += `<div class="card"><h3>Revealed by</h3><div class="grid-items">${l.foundVia.filter(v => D.locations[v] && !seenF.has(D.locations[v].n) && seenF.add(D.locations[v].n)).map(v => `<button class="gi" data-go="loc:${esc(v)}">${locIcon(D.locations[v], "s22")}${esc(D.locations[v].n)}</button>`).join("")}</div></div>`;
+  if (c.runes) h += `<div class="card"><h3>Runestone${c.runes > 1 ? "s" : ""}</h3><p class="note" style="margin:0">${c.runes} runestone${c.runes > 1 ? "s" : ""} with lore here. Read ${c.runes > 1 ? "them" : "it"} in game.</p></div>`;
+  return h + `</div>`;
+}
+function biomeDetail(id){
+  const b = D.biomes[id];
+  if (!b) return `<div class="inner">Unknown biome.</div>`;
+  let h = `<div class="inner">` + dhead(-5, b.n, [tag("Biome"), D.sls && D.sls.caps[id] != null ? tag("Stars up to " + D.sls.caps[id]) : ""], "");
+  if (b.bosses.length) h += `<div class="card"><h3>Boss</h3><div class="grid-items">${b.bosses.map(p => `<button class="gi" data-go="boss:${esc(p)}">${crIcon(p, "s22")}${esc(crName(p))}</button>`).join("")}</div></div>`;
+  if (D.sls){
+    const day = starDist(id, false) || [], night = starDist(id, true) || [];
+    const bar = (arr) => arr.slice(0, 6).map(([st, p]) => `<div class="row"><span>${starLabel(st)}</span><span class="track"><i style="width:${Math.min(100, p)}%"></i></span><span class="v">${pctS(p)}</span></div>`).join("");
+    let cond = "";
+    for (const [key, per] of Object.entries(D.sls.conditional || {})){
+      const t = per[id];
+      if (!t) continue;
+      const dist = starDist(id, false, false, t.table) || [];
+      cond += `<p class="note">After ${esc(keyText(key))}: levels ${t.min}–${t.max} (${esc(t.style)} curve), most often ${starLabel(dist.reduce((a, x) => x[1] > a[1] ? x : a, [0, 0])[0])}.</p>`;
+    }
+    h += `<div class="card"><h3>Star chances <span class="aside">StarLevelSystem</span></h3><div class="wgrid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><div><div class="lvlhead">Day</div><div class="prob">${bar(day)}</div></div><div><div class="lvlhead">Night ×${fmt(D.sls.night, 2)}</div><div class="prob">${bar(night)}</div></div></div>${cond}</div>`;
+  }
+  if (b.weather){
+    h += `<div class="card"><h3>Weather</h3><div class="wx">${b.weather.slice().sort((x, y) => y[1] - x[1]).map(w => `<div class="row"><span>${esc(prettify(w[0]))}${w[2].length ? `<br><small class="dim">${esc(w[2].join(", "))}</small>` : ""}</span><span class="dbreak"><span class="track"><i class="d-frost" style="width:${w[1]}%"></i></span></span><span class="mono" style="text-align:right">${pctS(w[1])}</span></div>`).join("")}</div></div>`;
+  }
+  const rows = [];
+  for (const p of b.spawns){ for (const r of (D.creatures[p].sp || [])) if (r.b.includes(id) || r.b.includes("All")) rows.push([p, r]); }
+  if (rows.length){
+    h += `<div class="card"><h3>Spawn table <span class="aside">${rows.length} entries</span></h3><div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Creature</th><th>When</th><th class="num">Chance</th><th class="num">Max</th><th>Conditions</th></tr></thead><tbody>${rows.sort((x, y) => y[1].ch - x[1].ch).map(([p, r]) => {
+      const cond = [r.key ? "after " + keyText(r.key) : "", r.env ? r.env.map(prettify).join("/") : "", r.forest ? r.forest + " forests" : "", r.ocean ? "ocean" : "", r.hunt ? "hunts you" : "", r.grp[1] > 1 ? "groups " + r.grp[0] + "–" + r.grp[1] : ""].filter(Boolean).join(" · ");
+      return `<tr><td><button class="lnk" data-go="creature:${esc(p)}">${esc(crName(p))}</button></td><td>${r.day && r.night ? "Any" : r.night ? "Night" : "Day"}</td><td class="num">${pctS(r.ch)}<br><span class="dim">/${dur(r.int)}</span></td><td class="num">${r.max}</td><td class="cond">${esc(cond) || ""}</td></tr>`;
+    }).join("")}</tbody></table></div></div>`;
+  }
+  if (b.resources.length) h += `<div class="card"><h3>Resources in the wild</h3><div class="grid-items">${b.resources.map(x => `<button class="gi" data-go="item:${esc(x)}">${iicon(x, "s22")}${esc(iname(x))}</button>`).join("")}</div></div>`;
+  if (b.locations.length) h += `<div class="card"><h3>Locations · ${b.locations.length}</h3><div class="grid-items">${b.locations.map(l => `<button class="gi" data-go="loc:${esc(l)}">${locIcon(D.locations[l], "s22")}${esc(D.locations[l].n)}</button>`).join("")}</div></div>`;
+  if (b.events.length) h += `<div class="card"><h3>Raids that can happen here</h3><div class="grid-items">${b.events.map(e => evById(e) ? `<button class="gi" data-go="event:${esc(e)}">${glyph("raid", 22)}${esc(evById(e).n)}${eventPossible(evById(e)) ? `<span class="x ok">now</span>` : ""}</button>` : "").join("")}</div></div>`;
+  return h + `</div>`;
+}
+function keyEffect(k){
+  const [name, v] = String(k).toLowerCase().split(" "), n = +v;
+  const R = D.world && D.world.raid;
+  switch (name){
+    case "playerdamage": return `You deal ${n}% damage`;
+    case "enemydamage": return `Enemies deal ${n}% damage`;
+    case "enemyspeedsize": return n > 100 ? `Enemies are ${n - 100}% faster and bigger` : `Enemies are ${100 - n}% slower and smaller`;
+    case "enemyleveluprate": return `Vanilla star chances ×${fmt(n / 100, 2)}${D.sls ? " (StarLevelSystem rolls stars in this pack instead)" : ""}`;
+    case "resourcerate": return `×${fmt(n / 100, 2)} resources from mining, chopping, picking, chests and creature drops (trophies excluded)`;
+    case "eventrate": return n === 0 ? "No raids at all" : R ? `A raid roll every ${fmt(R.interval * n / 100, 0)} min with a ${fmt(R.chance / (n / 100), 1)}% chance` : `Raid rate ${n}%`;
+    case "skillreductionrate": return `Dying costs ${n}% of the normal skill loss`;
+    case "deathkeepequip": return "Keep your equipped gear when you die";
+    case "deathdeleteitems": return "Everything you carry is destroyed when you die";
+    case "deathdeleteunequipped": return "Unequipped items are destroyed when you die";
+    case "deathskillsreset": return "All skills reset to zero when you die";
+    case "teleportall": return "Portals accept every item, including ores and metals";
+    case "nobossportals": return "No portals near boss altars or inside boss dungeons";
+    case "noportals": return "Portals can't be used";
+    default: return prettify(k);
+  }
+}
+function worldPanel(){
+  if (!D.world || !D.world.modifiers.length) return `<div class="empty">No world settings in this export.</div>`;
+  const r = rates();
+  const have = new Set((D.world.keys || []).map(k => k.toLowerCase().split(" ")[0]));
+  const changed = Object.keys(W.opt).some(k => W.opt[k] !== W.base[k]);
+  let h = `<div class="wpanel"><div class="wcard"><h2>World & difficulty</h2><p class="tip">These are the world modifiers from Valheim's world settings. Your world's choice is marked. Pick another option to see how numbers across the atlas change: creature health and damage, drop amounts, and how often raids come.</p>
+    ${changed ? `<div class="callout">Showing a what-if world. <button class="lnk" data-w-reset>Back to your world</button></div>` : ""}
+    <div class="range"><label for="w-players"><b>Players nearby</b></label><input type="range" id="w-players" min="1" max="10" value="${W.players}"><span class="mono">${W.players}</span>
+      <span class="dim">Creatures get +${fmt(D.world.scale.hpPerPlayer * 100, 0)}% health and +${fmt(D.world.scale.dmgPerPlayer * 100, 0)}% damage per extra player within ${fmt(D.world.scale.range, 0)} m, up to ${D.world.scale.maxPlayers}.</span></div></div>
+    <div class="wgrid">`;
+  for (const m of D.world.modifiers){
+    const cur = W.opt[m.id], opt = m.opts.find(o => o.v === cur);
+    h += `<div class="wcard"><h2>${esc(m.n)}</h2><p class="tip">${esc(m.tip || "")}</p><div class="seg" role="group" aria-label="${esc(m.n)}">${m.opts.map(o => `<button data-w-mod="${esc(m.id)}" data-w-opt="${esc(o.v)}" aria-pressed="${o.v === cur}">${esc(o.n)}${o.v === W.base[m.id] ? `<span class="yours">your world</span>` : ""}</button>`).join("")}</div>
+      <ul class="effects">${opt && opt.keys.length ? opt.keys.map(k => `<li>${esc(keyEffect(k))}</li>`).join("") : `<li>Vanilla behaviour</li>`}${opt && opt.tip ? `<li class="dim">${esc(opt.tip)}</li>` : ""}</ul></div>`;
+  }
+  h += `</div>`;
+  h += `<div class="wcard"><h2>What this means right now</h2><div class="kv">
+    <div><span>You deal</span><b>${r.playerdamage}%</b></div><div><span>Enemies deal</span><b>${fmt(dmgScale() * 100, 0)}%</b><small class="dim"> incl. players</small></div>
+    <div><span>Enemy health</span><b>×${fmt(hpScale(), 2)}</b></div><div><span>Drops & resources</span><b>×${fmt(r.resourcerate / 100, 2)}</b></div>
+    <div><span>Enemy speed & size</span><b>${r.enemyspeedsize}%</b></div><div><span>Skill loss on death</span><b>${r.skillreductionrate}%</b></div></div>
+    <p class="note">${raidNote()}</p></div>`;
+  const possible = (D.events || []).filter(eventPossible);
+  h += `<div class="wcard"><h2>Raids that can hit you now</h2><p class="tip">Based on your world's progress: ${esc([...have].filter(k => /defeated|killed/.test(k)).map(keyText).join(", ") || "no bosses yet")}.</p>
+    <div class="grid-items">${possible.map(e => `<button class="gi" data-go="event:${esc(e.id)}">${glyph("raid", 22)}${esc(e.n)}<span class="x">${dur(e.dur)}</span></button>`).join("") || `<span class="dim">None yet</span>`}</div></div>`;
+  if (D.world.toggles.length){
+    h += `<div class="wcard"><h2>Other world options</h2><div style="overflow-x:auto"><table class="wtable"><tbody>${D.world.toggles.map(t => `<tr><td><b>${esc(t.n)}</b><div class="cond">${esc(t.tip || "")}</div></td><td class="num">${have.has((t.key || "").toLowerCase()) ? `<span class="ok">On</span>` : `<span class="dim">Off</span>`}</td></tr>`).join("")}</tbody></table></div></div>`;
+  }
+  if (D.sls){
+    const s = D.sls;
+    const biomesRows = BIOME_ORDER.filter(b => D.biomes[b]).map(b => {
+      const d = starDist(b, W.night) || [];
+      const at = n => (d.find(x => x[0] === n) || [0, 0])[1];
+      const plus = d.filter(x => x[0] >= 3).reduce((t, x) => t + x[1], 0);
+      return `<tr><td><button class="lnk" data-go="biome:${esc(b)}">${esc(BIOME[b])}</button></td><td class="num">${s.caps[b] != null ? s.caps[b] + "★" : s.maxLevel + "★"}</td><td class="num">${pctS(at(0))}</td><td class="num">${pctS(at(1))}</td><td class="num">${pctS(at(2))}</td><td class="num">${pctS(plus)}</td></tr>`;
+    }).join("");
+    h += `<div class="wcard"><h2>Creature stars</h2><p class="tip">StarLevelSystem replaces Valheim's star rolls. Each spawn rolls once against its chance table (${esc(s.source)}), capped per biome. ${s.distanceOn ? "Distance from the center adds chance." : "The distance bonus is off in your config."}</p>
+      <div class="seg" style="margin-bottom:10px"><button data-w-night="0" aria-pressed="${!W.night}">Day</button><button data-w-night="1" aria-pressed="${W.night}">Night ×${fmt(s.night, 2)}</button></div>
+      <div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Biome</th><th class="num">Cap</th><th class="num">No star</th><th class="num">★</th><th class="num">★★</th><th class="num">★★★+</th></tr></thead><tbody>${biomesRows}</tbody></table></div>
+      <p class="note">Each star: +${fmt(s.hpPerLevel * 100, 0)}% health, +${fmt(s.dmgPerLevel * 100, 0)}% damage, and about ×(level × ${fmt(s.loot.scale, 2)}) loot. Bosses: +${fmt(s.bossHpPerLevel * 100, 0)}% health per star, up to ${s.maxBossLevel}★. After later bosses fall, some biomes switch to higher tables; open a biome to see them.</p></div>`;
+  }
+  h += `<div class="wcard"><h2>How the numbers work</h2><ul class="effects">
+    <li>Resources above ×1 roll world loot tables (rocks, trees, chests) that many times; creature drops are multiplied directly.</li>
+    <li>Health and damage from nearby players stack with the Combat setting and with stars.</li>
+    <li>Raids need a base: 3 or more of your structures near a player, in a biome the raid allows, with the right bosses killed.</li>
+    <li>World options are read from your world's save. Your server may use its own StarLevelSystem config; the one here is from your profile.</li></ul></div>`;
   return h + `</div>`;
 }
 function helpDetail(){
@@ -1016,6 +1599,7 @@ function helpDetail(){
     <p><b>Stations and levels.</b> A crafting station starts at level 1. Each different upgrade you build within range adds a level. The level badge next to a station is what you need to craft the item.</p>
     <p><b>Item levels (★).</b> ★1 is the crafted item. Each upgrade costs the materials shown and needs the station one level higher. The upgrade table shows how damage, armor, block and durability grow at each step.</p>
     <p><b>Damage</b> is the weapon's base damage added up across types (slash, pierce, fire and so on). Your skill in that weapon decides how much of it lands.</p>
+    <p><b>World tabs.</b> Bosses shows how to summon each one, where its altar is and what beating it changes. Raids lists every raid with the progress that unlocks it. Locations and Biomes cover spawners, dungeon rooms, chest loot, weather and star chances. World &amp; difficulty lets you try other world settings; health, damage, drop amounts and raid timing across the atlas follow what you pick.</p>
     <p><b>Where to get it</b> covers smelting and cooking, creature drops with drop chances, mining and chopping (including which tool you need), chests and traders.</p>
     <p class="dim">${n.toLocaleString()} items across ${D.modsUsed.length} sources, including vanilla Valheim.</p></div>`;
 }
@@ -1027,6 +1611,10 @@ function renderDetail(){
   else if (s.k === "piece") h = pieceDetail(s.id);
   else if (s.k === "station") h = stationDetail(s.id);
   else if (s.k === "creature") h = creatureDetail(s.id);
+  else if (s.k === "boss") h = bossDetail(s.id);
+  else if (s.k === "event") h = eventDetail(s.id);
+  else if (s.k === "loc") h = locationDetail(s.id);
+  else if (s.k === "biome") h = biomeDetail(s.id);
   else h = helpDetail();
   const d = $("#detail");
   d.innerHTML = h;
@@ -1059,8 +1647,17 @@ function wire(){
   $("#mod").addEventListener("change", e => { S.mod = e.target.value; render(); });
   $("#nosrc").addEventListener("change", e => { S.nosrc = e.target.checked; render(); });
   document.addEventListener("click", e => {
-    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close]");
+    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night]");
     if (!el) return;
+    if (el.dataset.toggle){ toggleSection(el.dataset.toggle); return; }
+    if (el.dataset.collapse){
+      const on = el.dataset.collapse === "1";
+      document.querySelectorAll("#results .sec[data-sec-key]").forEach(sec => { S.collapsed[sec.dataset.secKey] = on; sec.classList.toggle("closed", on); sec.querySelector(".sec-h").setAttribute("aria-expanded", String(!on)); });
+      saveCollapsed(); return;
+    }
+    if (el.dataset.wMod){ W.opt[el.dataset.wMod] = el.dataset.wOpt; worldChanged(); return; }
+    if (el.hasAttribute("data-w-reset")){ Object.assign(W.opt, W.base); worldChanged(); return; }
+    if (el.dataset.wNight){ W.night = el.dataset.wNight === "1"; worldChanged(); return; }
     if (el.dataset.group){ S.group = el.dataset.group; S.cls = null; S.open = {}; if (S.group !== "all") store("atlas.group", S.group); render(); return; }
     if (el.dataset.cls !== undefined){ S.cls = el.dataset.cls || null; S.open = {}; render(); return; }
     if (el.dataset.sort){
@@ -1082,6 +1679,30 @@ function wire(){
     }
   });
   window.addEventListener("hashchange", fromHash);
+  document.addEventListener("input", e => {
+    if (e.target.id === "w-players"){ W.players = +e.target.value; store("atlas.players", String(W.players)); worldChanged(); }
+  });
+  document.addEventListener("keydown", e => {
+    const h = e.target.closest && e.target.closest("[data-toggle]");
+    if (h && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); toggleSection(h.dataset.toggle); }
+  });
+  try{ S.collapsed = JSON.parse(store("atlas.collapsed") || "{}") || {}; }catch(err){ S.collapsed = {}; }
+}
+function saveCollapsed(){ store("atlas.collapsed", JSON.stringify(S.collapsed)); }
+function toggleSection(key){
+  S.collapsed[key] = !S.collapsed[key];
+  if (!S.collapsed[key]) delete S.collapsed[key];
+  const sec = [...document.querySelectorAll("#results .sec[data-sec-key]")].find(x => x.dataset.secKey === key);
+  if (sec){ sec.classList.toggle("closed", !!S.collapsed[key]); sec.querySelector(".sec-h").setAttribute("aria-expanded", String(!S.collapsed[key])); }
+  saveCollapsed();
+}
+function worldChanged(){
+  const sy = window.scrollY, dy = $("#detail").scrollTop;
+  renderWorldNow();
+  render();
+  if (S.sel) renderDetail();
+  window.scrollTo(0, sy);
+  $("#detail").scrollTop = dy;
 }
 boot();
 })();
