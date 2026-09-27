@@ -3,141 +3,183 @@
 <title>Valheim Crafting Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Averia+Sans+Libre:wght@400;700&family=Averia+Serif+Libre:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
+/* Dark-first: a hearth in an iron hall. Light mode swaps the same roles. */
 :root{
   color-scheme: dark;
-  --bg:#13110e; --surface:#1c1814; --surface-2:#241f19; --surface-3:#2d271f;
-  --line:#3b3229; --line-soft:#2b251e;
-  --text:#ede1c9; --muted:#a8977c; --faint:#77695a;
-  --accent:#eea43f; --accent-soft:rgba(238,164,63,.14); --accent-ink:#1b1207; --link:#f3b865;
-  --frost:#86c3dc; --good:#9cc46a; --bad:#e56a4c; --warn:#e4c25a;
+  --bg:#0f1113; --surface:#15181b; --surface-2:#1b1f23; --surface-3:#242a2f; --raise:#1e2227;
+  --line:#2b3137; --line-soft:#20252a;
+  --text:#ece6da; --muted:#a29c90; --faint:#6e6a63;
+  --accent:#f2a541; --accent-soft:rgba(242,165,65,.13); --accent-line:rgba(242,165,65,.45); --accent-ink:#1a1206; --link:#f6bb66;
+  --frost:#8cc8e3; --frost-soft:rgba(140,200,227,.12);
+  --good:#9cc46a; --bad:#ec6a4f; --warn:#e4c25a;
   --d-slash:#cfd3d8; --d-pierce:#c4ad84; --d-blunt:#a8977c; --d-fire:#ea6f3c; --d-frost:#86c9ee; --d-lightning:#ecd54e;
   --d-poison:#95c955; --d-spirit:#c8b6ff; --d-damage:#f1ece2; --d-chop:#b98246; --d-pickaxe:#8f96a3;
-  --shadow:0 18px 40px rgba(0,0,0,.45);
-  --serif:"Averia Serif Libre", Georgia, "Times New Roman", serif;
-  --sans:"Averia Sans Libre", "Segoe UI", system-ui, sans-serif;
+  --r0:#45a8f0; --r1:#e3cf4b; --r2:#b879f0; --r3:#2fcf9c; --r4:#ff8c3a; --r5:#e8534f;
+  --shadow:0 24px 60px rgba(0,0,0,.5);
+  --display:"Grenze", Georgia, "Times New Roman", serif;
+  --sans:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
   --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --top:60px; --side:236px; --detail:430px;
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme="dark"]){
     color-scheme: light;
-    --bg:#e8e6e1; --surface:#f6f5f1; --surface-2:#eeebe5; --surface-3:#e4e0d8;
-    --line:#cdc6b8; --line-soft:#dfd9ce;
-    --text:#221c15; --muted:#6a5f4e; --faint:#958a78;
-    --accent:#b2630d; --accent-soft:rgba(178,99,13,.12); --accent-ink:#fff8ee; --link:#9a5208;
-    --frost:#2c6c88; --good:#4e7c1f; --bad:#b33b21; --warn:#8a6a08;
+    --bg:#eeece7; --surface:#fbfaf7; --surface-2:#f3f1ec; --surface-3:#e6e2da; --raise:#ffffff;
+    --line:#d5cfc3; --line-soft:#e4dfd6;
+    --text:#1d1a16; --muted:#5f584d; --faint:#958c7e;
+    --accent:#b0600c; --accent-soft:rgba(176,96,12,.11); --accent-line:rgba(176,96,12,.45); --accent-ink:#fff8ee; --link:#9a4f06;
+    --frost:#2c6c88; --frost-soft:rgba(44,108,136,.1);
+    --good:#4e7c1f; --bad:#b33b21; --warn:#8a6a08;
     --d-slash:#5d646e; --d-pierce:#8a6d3b; --d-blunt:#6f604b; --d-fire:#c9471a; --d-frost:#2f86b3; --d-lightning:#a88d0a;
     --d-poison:#4f8a1c; --d-spirit:#6f55c9; --d-damage:#3b342b; --d-chop:#8a5a26; --d-pickaxe:#5b6270;
-    --shadow:0 18px 40px rgba(40,30,15,.18);
+    --r0:#1f7fc9; --r1:#a48c0c; --r2:#8a47c7; --r3:#13916a; --r4:#d0661a; --r5:#c2302c;
+    --shadow:0 24px 60px rgba(40,30,15,.18);
   }
 }
 :root[data-theme="light"]{
   color-scheme: light;
-  --bg:#e8e6e1; --surface:#f6f5f1; --surface-2:#eeebe5; --surface-3:#e4e0d8;
-  --line:#cdc6b8; --line-soft:#dfd9ce;
-  --text:#221c15; --muted:#6a5f4e; --faint:#958a78;
-  --accent:#b2630d; --accent-soft:rgba(178,99,13,.12); --accent-ink:#fff8ee; --link:#9a5208;
-  --frost:#2c6c88; --good:#4e7c1f; --bad:#b33b21; --warn:#8a6a08;
+  --bg:#eeece7; --surface:#fbfaf7; --surface-2:#f3f1ec; --surface-3:#e6e2da; --raise:#ffffff;
+  --line:#d5cfc3; --line-soft:#e4dfd6;
+  --text:#1d1a16; --muted:#5f584d; --faint:#958c7e;
+  --accent:#b0600c; --accent-soft:rgba(176,96,12,.11); --accent-line:rgba(176,96,12,.45); --accent-ink:#fff8ee; --link:#9a4f06;
+  --frost:#2c6c88; --frost-soft:rgba(44,108,136,.1);
+  --good:#4e7c1f; --bad:#b33b21; --warn:#8a6a08;
   --d-slash:#5d646e; --d-pierce:#8a6d3b; --d-blunt:#6f604b; --d-fire:#c9471a; --d-frost:#2f86b3; --d-lightning:#a88d0a;
   --d-poison:#4f8a1c; --d-spirit:#6f55c9; --d-damage:#3b342b; --d-chop:#8a5a26; --d-pickaxe:#5b6270;
-  --shadow:0 18px 40px rgba(40,30,15,.18);
+  --r0:#1f7fc9; --r1:#a48c0c; --r2:#8a47c7; --r3:#13916a; --r4:#d0661a; --r5:#c2302c;
+  --shadow:0 24px 60px rgba(40,30,15,.18);
 }
 :root[data-theme="dark"]{ color-scheme: dark; }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--bg)}
-body{margin:0; color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.45; padding-inline:16px; padding-block:0 40px}
-button{font:inherit; color:inherit}
+body{margin:0; color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased}
+button,select,input{font:inherit; color:inherit}
 a{color:var(--link)}
-:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
-.wrap{max-width:1500px; margin:0 auto}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:6px}
+.mono, td.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.dim{color:var(--faint)}
+.muted{color:var(--muted)}
 
-/* header */
-.top{display:grid; grid-template-columns:auto minmax(0,1fr); gap:14px 28px; align-items:center; padding-block:22px 14px}
-.brand{display:flex; gap:12px; align-items:center; min-width:0}
-.brand svg{flex:none; color:var(--accent)}
-.brand h1{font-family:var(--serif); font-weight:700; font-size:26px; line-height:1.05; margin:0; letter-spacing:.01em; text-wrap:balance}
-.brand p{margin:3px 0 0; color:var(--muted); font-size:12.5px}
-.search{position:relative; display:flex; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding-inline:12px; min-height:46px}
-.search:focus-within{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+/* ---------- app shell */
+.topbar{position:sticky; top:env(safe-area-inset-top, 0px); z-index:30; height:var(--top); display:flex; align-items:center; gap:14px;
+  padding-inline:16px; background:color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-soft)}
+.brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); flex:none; border:0; background:none; cursor:pointer; padding:0}
+.brand svg{color:var(--accent); flex:none}
+.brand b{font-family:var(--display); font-weight:600; font-size:22px; letter-spacing:.01em; line-height:1}
+.brand small{display:block; font-size:11px; color:var(--faint); letter-spacing:.04em; margin-top:2px}
+.search{flex:1; max-width:640px; margin-inline:auto; position:relative; display:flex; align-items:center; gap:8px; height:40px; padding-inline:12px;
+  background:var(--surface); border:1px solid var(--line); border-radius:10px}
+.search:focus-within{border-color:var(--accent-line); box-shadow:0 0 0 3px var(--accent-soft)}
 .search svg{flex:none; color:var(--muted)}
-.search input{flex:1; min-width:0; border:0; background:transparent; color:var(--text); font:inherit; font-size:16px; padding:10px 10px; outline:none}
+.search input{flex:1; min-width:0; border:0; background:transparent; font-size:15px; outline:none}
 .search input::placeholder{color:var(--faint)}
-.search kbd{font-family:var(--mono); font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:5px; padding:1px 6px}
-@media (max-width:760px){ .top{grid-template-columns:1fr} .search kbd{display:none} }
+.search kbd{font-family:var(--mono); font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:5px; padding:0 6px}
+.worldbtn{flex:none; display:flex; align-items:center; gap:8px; height:40px; padding:0 12px 0 8px; border-radius:10px; border:1px solid var(--line); background:var(--surface); cursor:pointer; font-size:12.5px; color:var(--muted)}
+.worldbtn:hover{border-color:var(--accent-line); color:var(--text)}
+.worldbtn .wtxt{white-space:nowrap}
+.navbtn{display:none; flex:none; width:40px; height:40px; border-radius:10px; border:1px solid var(--line); background:var(--surface); cursor:pointer; place-items:center; color:var(--muted)}
 
-/* chip rows */
-.chips{display:flex; flex-wrap:wrap; gap:6px; padding-block:4px}
-.chip{border:1px solid var(--line); background:var(--surface); color:var(--text); border-radius:999px; padding:5px 12px; cursor:pointer; font-size:13px; display:inline-flex; gap:6px; align-items:center; white-space:nowrap}
-.chip:hover{border-color:var(--accent)}
-.chip .ct{font-family:var(--mono); font-size:11px; color:var(--muted)}
-.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
-.chip[aria-pressed="true"] .ct{color:var(--accent-ink); opacity:.8}
-.chips.sub .chip{font-size:12.5px; padding:4px 10px; background:transparent}
-.chips.sub .chip[aria-pressed="true"]{background:var(--accent-soft); color:var(--text); border-color:var(--accent)}
-.chips.sub .chip[aria-pressed="true"] .ct{color:var(--muted)}
-.bar-row{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; padding-block:8px 12px; color:var(--muted); font-size:12.5px; border-bottom:1px solid var(--line-soft); margin-bottom:14px}
-.bar-row label{display:inline-flex; gap:6px; align-items:center; cursor:pointer}
-.bar-row select{font:inherit; color:var(--text); background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:4px 8px}
-.bar-row .spacer{flex:1}
+.shell{display:grid; grid-template-columns:var(--side) minmax(0,1fr); align-items:start}
+.shell.with-detail{grid-template-columns:var(--side) minmax(0,1fr) var(--detail)}
+.sidebar{position:sticky; top:calc(env(safe-area-inset-top, 0px) + var(--top)); height:calc(100dvh - var(--top) - env(safe-area-inset-top, 0px)); overflow-y:auto;
+  padding:14px 10px 30px 12px; border-right:1px solid var(--line-soft); scrollbar-width:thin}
+.main{min-width:0; padding:22px 28px 60px}
+.nav-h{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--faint); margin:18px 10px 6px; font-weight:600}
+.nav-i{display:flex; align-items:center; gap:10px; width:100%; border:0; background:none; text-align:left; padding:7px 10px; border-radius:8px; cursor:pointer; color:var(--muted); font-size:13.5px; font-weight:500}
+.nav-i svg{flex:none; width:17px; height:17px; color:var(--faint)}
+.nav-i .ct{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--faint)}
+.nav-i:hover{background:var(--surface-2); color:var(--text)}
+.nav-i[aria-current="page"]{background:var(--accent-soft); color:var(--text)}
+.nav-i[aria-current="page"] svg{color:var(--accent)}
+.nav-i.zero{opacity:.4}
+.nav-i.search-all{color:var(--text)}
+.sidebar .foot-note{margin:22px 10px 0; font-size:11.5px; color:var(--faint); line-height:1.45}
+.scrim{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:35}
 
-/* layout */
-.layout{display:grid; grid-template-columns:minmax(0,1fr) minmax(340px,420px); gap:20px; align-items:start}
-@media (max-width:1100px){ .layout{grid-template-columns:minmax(0,1fr)} }
+/* ---------- page head */
+.ph{display:grid; gap:10px; margin-bottom:18px}
+.eyebrow{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:600}
+.ph-title{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.ph h1{font-family:var(--display); font-weight:600; font-size:34px; line-height:1.05; margin:0; letter-spacing:.005em; text-wrap:balance}
+.ph .ct{font-family:var(--mono); font-size:13px; color:var(--faint)}
+.ph p.lede{margin:0; color:var(--muted); max-width:72ch; font-size:14px}
+.tools{display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; margin-top:4px}
+.ctl{height:32px; border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:0 10px; font-size:12.5px; color:var(--text); cursor:pointer}
+select.ctl{padding-right:26px; appearance:none; background-image:linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:calc(100% - 13px) 14px, calc(100% - 9px) 14px; background-size:4px 4px; background-repeat:no-repeat}
+.ctl:hover{border-color:var(--accent-line)}
+.toggle{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--muted); cursor:pointer; user-select:none}
+.toggle input{accent-color:var(--accent)}
+.tools .grow{flex:1}
+.iconbtn{border:1px solid var(--line); background:var(--surface); border-radius:8px; width:32px; height:32px; display:inline-grid; place-items:center; cursor:pointer; color:var(--muted); flex:none}
+.iconbtn:hover{color:var(--text); border-color:var(--accent-line)}
+.tabs{display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; border-bottom:1px solid var(--line-soft); margin-top:2px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none; border:0; background:none; padding:9px 12px 10px; cursor:pointer; color:var(--muted); font-size:13px; font-weight:500; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; display:inline-flex; gap:6px; align-items:baseline}
+.tab .ct{font-family:var(--mono); font-size:10.5px; color:var(--faint)}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{color:var(--text); border-bottom-color:var(--accent)}
+.subselect{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted)}
+.subselect select{max-width:min(360px, 70vw)}
 
-/* sections & tables */
-.sec{margin-bottom:26px}
-.sec-h{display:flex; align-items:baseline; gap:10px; margin:0 0 8px}
-.sec-h h2{font-family:var(--serif); font-size:19px; margin:0; font-weight:700; text-wrap:balance}
-.sec-h .ct{font-family:var(--mono); color:var(--muted); font-size:12px}
+/* ---------- sections & tables */
+.sec{margin-bottom:22px}
+.sec-h{display:flex; align-items:center; gap:10px; margin:0 0 8px; cursor:pointer; user-select:none; border-radius:8px; padding:2px 4px 2px 0}
+.sec-h h2{font-size:15.5px; font-weight:600; margin:0; letter-spacing:.005em}
+.sec-h .ct{font-family:var(--mono); color:var(--faint); font-size:11.5px}
 .sec-h .note{color:var(--faint); font-size:12px}
-.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+.sec-h:hover h2{color:var(--link)}
+.chev{flex:none; width:20px; height:20px; display:inline-grid; place-items:center; color:var(--faint); transition:transform .15s ease}
+.sec.closed .chev, .stage.closed .chev, .fold.closed .chev{transform:rotate(-90deg)}
+.sec.closed .tbl-wrap{display:none}
+.sec.closed{margin-bottom:8px}
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface)}
 table{border-collapse:collapse; width:100%; font-size:13px}
-th{position:sticky; top:0; background:var(--surface-2); text-align:left; font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding:8px 8px; border-bottom:1px solid var(--line); white-space:nowrap; cursor:pointer; user-select:none}
+th{background:var(--surface-2); text-align:left; font-weight:600; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:9px 10px; border-bottom:1px solid var(--line); white-space:nowrap; cursor:pointer; user-select:none}
 th:hover{color:var(--text)}
-th .sa{opacity:.9; color:var(--accent)}
+th .sa{color:var(--accent)}
 th.num, td.num{text-align:right}
-td{padding:7px 8px; border-bottom:1px solid var(--line-soft); vertical-align:middle}
+td{padding:8px 10px; border-bottom:1px solid var(--line-soft); vertical-align:middle}
 tr:last-child td{border-bottom:0}
 tbody tr{cursor:pointer}
 tbody tr:hover td{background:var(--surface-2)}
 tbody tr.on td{background:var(--accent-soft)}
-td.num, .mono{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12.5px}
-.more{display:block; width:100%; text-align:center; padding:8px; background:var(--surface-2); border:0; border-top:1px solid var(--line-soft); color:var(--link); cursor:pointer; font-size:12.5px; border-radius:0 0 10px 10px}
+td.num{font-size:12.5px}
+.more{display:block; width:100%; text-align:center; padding:9px; background:var(--surface-2); border:0; border-top:1px solid var(--line-soft); color:var(--link); cursor:pointer; font-size:12.5px; border-radius:0 0 12px 12px}
 .more:hover{background:var(--surface-3)}
-
-.nm{display:flex; gap:10px; align-items:center; min-width:180px}
-.nm b{font-family:var(--serif); font-weight:700; font-size:14px; display:block; line-height:1.2}
+.nm{display:flex; gap:10px; align-items:center; min-width:190px}
+.nm b{font-weight:600; font-size:13.5px; display:block; line-height:1.25}
 .nm small{color:var(--muted); font-size:11.5px; display:block}
-.tag{display:inline-block; font-size:10.5px; letter-spacing:.04em; padding:0 6px; border-radius:4px; border:1px solid var(--line); color:var(--muted); line-height:16px; vertical-align:1px}
+.tag{display:inline-block; font-size:10.5px; letter-spacing:.03em; padding:0 6px; border-radius:5px; border:1px solid var(--line); color:var(--muted); line-height:17px; vertical-align:1px; white-space:nowrap}
 .tag.mod{border-color:transparent; background:var(--surface-3)}
 .tag.boss{background:var(--bad); color:#fff; border-color:transparent}
 .tag.warn{color:var(--warn); border-color:currentColor}
+.tag.ok{color:var(--good); border-color:currentColor}
 
 /* icons */
 .ic{--s:28px; flex:none; display:inline-block; width:var(--s); height:var(--s); background-image:var(--icons); background-repeat:no-repeat;
   background-size:calc(var(--cols) * var(--s)) auto; background-position:calc(var(--x) * var(--s) * -1) calc(var(--y) * var(--s) * -1)}
-.ic.none{background:var(--surface-3); border-radius:6px; display:inline-grid; place-items:center; color:var(--faint); font-family:var(--serif); font-size:calc(var(--s) * .5)}
-.glyph{flex:none; display:inline-grid; place-items:center; width:var(--g); height:var(--g); border-radius:6px; background:var(--surface-3); color:var(--muted)}
+.ic.none{background:var(--surface-3); border-radius:6px; display:inline-grid; place-items:center; color:var(--faint); font-family:var(--display); font-size:calc(var(--s) * .5)}
+.glyph{flex:none; display:inline-grid; place-items:center; width:var(--g); height:var(--g); border-radius:7px; background:var(--surface-3); color:var(--muted)}
 .glyph svg{width:62%; height:62%}
-.ic.s18{--s:18px} .ic.s22{--s:22px} .ic.s36{--s:36px} .ic.s56{--s:56px}
+.ic.s18{--s:18px} .ic.s22{--s:22px} .ic.s36{--s:36px} .ic.s44{--s:44px} .ic.s56{--s:56px}
 
 .st{display:inline-flex; align-items:center; gap:6px; white-space:nowrap}
-.st em{font-style:normal; font-family:var(--mono); font-size:11.5px; color:var(--accent); border:1px solid var(--accent-soft); background:var(--accent-soft); border-radius:4px; padding:0 5px}
+.st em{font-style:normal; font-family:var(--mono); font-size:11px; color:var(--accent); background:var(--accent-soft); border-radius:4px; padding:0 5px}
 .st.hand{color:var(--muted)}
-.dim{color:var(--faint)}
-.mats{display:flex; flex-wrap:wrap; gap:3px 6px; min-width:110px; max-width:230px}
-.mat{display:inline-flex; align-items:center; gap:2px; border:0; background:none; padding:0; cursor:pointer; color:var(--text)}
+.mats{display:flex; flex-wrap:wrap; gap:3px 7px; min-width:110px; max-width:240px}
+.mat{display:inline-flex; align-items:center; gap:2px; border:0; background:none; padding:0; cursor:pointer}
 .mat b{font-family:var(--mono); font-weight:500; font-size:11.5px}
 .mat:hover b{color:var(--link)}
-
-.dmg{display:grid; grid-template-columns:auto; gap:3px; justify-items:end; min-width:96px}
-.dmg .nums{white-space:nowrap}
+.dmg{display:grid; gap:3px; justify-items:end; min-width:96px}
+.dmg .nums{white-space:nowrap; font-family:var(--mono); font-size:12.5px}
 .dmg .nums .arr{color:var(--faint); margin:0 3px}
 .dmg .nums .mx{color:var(--text); font-weight:500}
-.dbar{display:flex; height:6px; width:100%; max-width:150px; border-radius:3px; overflow:hidden; background:var(--surface-3)}
+.dbar{display:flex; height:5px; width:100%; max-width:150px; border-radius:3px; overflow:hidden; background:var(--surface-3)}
 .dbar i{display:block; height:100%}
 .d-slash{background:var(--d-slash)} .d-pierce{background:var(--d-pierce)} .d-blunt{background:var(--d-blunt)} .d-fire{background:var(--d-fire)}
 .d-frost{background:var(--d-frost)} .d-lightning{background:var(--d-lightning)} .d-poison{background:var(--d-poison)} .d-spirit{background:var(--d-spirit)}
@@ -146,103 +188,31 @@ td.num, .mono{font-family:var(--mono); font-variant-numeric:tabular-nums; font-s
 .dt::before{content:""; width:8px; height:8px; border-radius:2px; background:var(--c, var(--muted))}
 .up{color:var(--good); font-size:11px; margin-left:4px}
 .down{color:var(--bad); font-size:11px; margin-left:4px}
-
-/* detail panel */
-.detail{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 12px); max-height:calc(100dvh - 24px); overflow:auto; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow)}
-.detail .inner{padding:18px 18px 22px}
-.dhead{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:14px; align-items:start}
-.dhead h2{font-family:var(--serif); font-size:24px; line-height:1.1; margin:2px 0 4px; text-wrap:balance}
-.dhead .meta{display:flex; flex-wrap:wrap; gap:5px; align-items:center; color:var(--muted); font-size:12px}
-.dhead .ctl{display:flex; gap:4px}
-.iconbtn{border:1px solid var(--line); background:var(--surface-2); border-radius:8px; width:32px; height:32px; display:grid; place-items:center; cursor:pointer; color:var(--muted)}
-.iconbtn:hover{color:var(--text); border-color:var(--accent)}
-.desc{color:var(--muted); font-size:13px; margin:10px 0 0; white-space:pre-line}
-.card{border-top:1px solid var(--line-soft); margin-top:16px; padding-top:14px}
-.card h3{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:0 0 10px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:8px}
-.card h3 .aside{letter-spacing:0; text-transform:none; font-weight:400; color:var(--faint)}
-.recipe-line{display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin-bottom:10px}
-.reqs{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:6px}
-.req{display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--line-soft); border-radius:8px; padding:5px 8px; cursor:pointer; text-align:left; min-width:0}
-.req:hover{border-color:var(--accent)}
-.req .q{font-family:var(--mono); font-weight:500; color:var(--accent); font-size:13px}
-.req .rn{font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.levels{display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden}
-.levels button{border:0; background:transparent; padding:4px 10px; cursor:pointer; font-family:var(--mono); font-size:12px; color:var(--muted)}
-.levels button + button{border-left:1px solid var(--line)}
-.levels button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
-.kv{display:grid; grid-template-columns:repeat(auto-fill, minmax(135px,1fr)); gap:8px}
-.kv div{background:var(--surface-2); border-radius:8px; padding:7px 9px; min-width:0}
-.kv span{display:block; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
-.kv b{font-family:var(--mono); font-weight:500; font-size:15px}
-.kv b small{font-size:11px; color:var(--muted); font-weight:400}
-.dtable{width:100%; font-size:12.5px; border-collapse:collapse}
-.dtable th{position:static; background:none; padding:4px 6px; font-size:10.5px; cursor:default; border-bottom:1px solid var(--line)}
-.dtable td{padding:6px 6px; border-bottom:1px solid var(--line-soft); cursor:default}
-.dtable tr:hover td{background:none}
-.dtable .lvl{font-family:var(--mono); color:var(--accent); white-space:nowrap}
-.dbreak{display:grid; gap:6px}
-.dbreak .row{display:grid; grid-template-columns:86px minmax(0,1fr) 52px; gap:8px; align-items:center; font-size:12.5px}
-.dbreak .track{height:8px; background:var(--surface-3); border-radius:4px; overflow:hidden}
-.dbreak .track i{display:block; height:100%; border-radius:4px}
-.dbreak .v{font-family:var(--mono); text-align:right}
-.src{display:grid; gap:6px}
-.src .it{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:10px; align-items:center; background:var(--surface-2); border:1px solid var(--line-soft); border-radius:8px; padding:6px 9px; cursor:pointer; text-align:left}
-.src .it:hover{border-color:var(--accent)}
-.src .it .t{font-size:12.5px; min-width:0}
-.src .it .t small{display:block; color:var(--muted); font-size:11.5px}
-.src .it .r{font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right; white-space:nowrap}
-.src .k{font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--faint); margin:6px 0 0}
-.flow{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
-.flow .arrow{color:var(--faint)}
-.se{background:var(--surface-2); border-radius:8px; padding:9px 11px; font-size:12.5px; white-space:pre-line; border-left:3px solid var(--frost)}
-.se b{font-family:var(--serif); display:block; font-size:13.5px; margin-bottom:2px}
 .pillset{display:flex; flex-wrap:wrap; gap:5px}
 .pill{font-size:11.5px; border-radius:999px; padding:2px 9px; background:var(--surface-3); white-space:nowrap}
-.pill.good{background:color-mix(in srgb, var(--good) 20%, transparent); color:var(--good)}
-.pill.bad{background:color-mix(in srgb, var(--bad) 18%, transparent); color:var(--bad)}
-details.tip summary{cursor:pointer; color:var(--muted); font-size:12px}
-details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px; background:var(--surface-2); padding:10px; border-radius:8px; margin:8px 0 0; color:var(--text)}
-.grid-items{display:flex; flex-wrap:wrap; gap:5px}
-.gi{display:inline-flex; align-items:center; gap:5px; border:1px solid var(--line-soft); background:var(--surface-2); border-radius:7px; padding:3px 8px 3px 4px; font-size:12px; cursor:pointer; max-width:100%}
-.gi:hover{border-color:var(--accent)}
-.gi span.x{font-family:var(--mono); font-size:11px; color:var(--accent)}
-.lvlhead{font-family:var(--mono); font-size:11.5px; color:var(--accent); margin:10px 0 6px}
-.help p{margin:0 0 10px; color:var(--muted); font-size:13px}
-.help p b{color:var(--text)}
-.help h2{font-family:var(--serif); margin:0 0 10px; font-size:21px}
-.empty{padding:40px 16px; text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:12px}
-.empty b{color:var(--text)}
-.layout.nodetail{grid-template-columns:minmax(0,1fr)}
-.layout.nodetail .detail{display:none}
-@media (max-width:1100px){
-  .detail{position:fixed; inset:auto 0 0 0; top:auto; max-height:88dvh; border-radius:16px 16px 0 0; z-index:20; transform:translateY(105%); transition:transform .22s ease; padding-bottom:env(safe-area-inset-bottom, 0px)}
-  .detail.open{transform:none}
-  .layout.nodetail .detail{display:block}
-  .scrim{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:19}
-}
-@media (prefers-reduced-motion: reduce){ .detail{transition:none} }
-.foot{color:var(--faint); font-size:12px; margin-top:30px; border-top:1px solid var(--line-soft); padding-top:14px}
-.loading{padding:80px 0; text-align:center; color:var(--muted); font-family:var(--serif); font-size:18px}
-
-/* collapsible sections */
-.sec-h{cursor:pointer; user-select:none; border-radius:6px}
-.sec-h .chev{flex:none; width:18px; height:18px; display:inline-grid; place-items:center; color:var(--muted); transition:transform .15s ease; align-self:center}
-.sec.closed .chev{transform:rotate(-90deg)}
-.sec.closed .tbl-wrap{display:none}
-.sec.closed{margin-bottom:10px}
-.sec-h:hover h2{color:var(--link)}
-.groups-sep{align-self:center; font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); margin:0 2px 0 10px}
-.lnk{border:0; background:none; color:var(--link); cursor:pointer; font:inherit; font-size:12.5px; padding:0}
+.pill.good{background:color-mix(in srgb, var(--good) 18%, transparent); color:var(--good)}
+.pill.bad{background:color-mix(in srgb, var(--bad) 16%, transparent); color:var(--bad)}
+.tierp{display:inline-flex; align-items:center; gap:5px; font-size:11px; white-space:nowrap; padding:1px 8px; border-radius:999px; background:var(--surface-3); color:var(--muted)}
+.tierp.now{background:var(--accent); color:var(--accent-ink); font-weight:600}
+.tierp.done{opacity:.7}
+.stars{color:var(--accent); font-family:var(--mono); white-space:nowrap}
+.lnk{border:0; background:none; color:var(--link); cursor:pointer; font:inherit; padding:0; text-align:left}
 .lnk:hover{text-decoration:underline}
-.world-now{display:flex; flex-wrap:wrap; gap:5px; align-items:center}
-.world-now .pill{background:var(--surface-3); color:var(--text)}
-/* world panel */
-:root{--r0:#9aa3ad; --r1:#4f8fd6; --r2:#a35bd6; --r3:#e0a33a; --r4:#e0553a}
-.wpanel{display:grid; gap:16px}
-.wcard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; min-width:0}
-.wcard > h2{font-family:var(--serif); font-size:19px; margin:0 0 4px; text-wrap:balance}
-.wcard > .tip{color:var(--muted); font-size:12.5px; margin:0 0 10px; max-width:70ch}
-.wgrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px}
+.ok{color:var(--good)} .no{color:var(--bad)}
+.empty{padding:44px 18px; text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:14px}
+.empty b{color:var(--text)}
+.loading{padding:90px 0; text-align:center; color:var(--muted); font-family:var(--display); font-size:22px}
+.foot{color:var(--faint); font-size:12px; margin-top:34px; border-top:1px solid var(--line-soft); padding-top:14px; max-width:90ch}
+.callout{border:1px solid var(--accent-line); background:var(--accent-soft); padding:10px 13px; border-radius:10px; font-size:13px; margin:0 0 14px}
+.note{font-size:12px; color:var(--muted); margin:8px 0 0}
+
+/* ---------- panels (world, comfort, enchanting, journey) */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; min-width:0}
+.panel > h2{font-size:17px; font-weight:600; margin:0 0 4px; text-wrap:balance}
+.panel > .tip{color:var(--muted); font-size:13px; margin:0 0 12px; max-width:75ch}
+.stack{display:grid; gap:16px}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px}
+.grid3{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px}
 .seg{display:flex; flex-wrap:wrap; border:1px solid var(--line); border-radius:9px; overflow:hidden; width:fit-content; max-width:100%}
 .seg button{border:0; background:transparent; padding:6px 11px; cursor:pointer; font-size:12.5px; color:var(--muted); line-height:1.2; text-align:left}
 .seg button + button{border-left:1px solid var(--line)}
@@ -251,98 +221,244 @@ details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px;
 .seg button .yours{display:block; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; opacity:.8}
 .effects{margin:10px 0 0; padding:0; list-style:none; display:grid; gap:4px; font-size:13px}
 .effects li{padding-left:14px; position:relative}
-.effects li::before{content:""; position:absolute; left:2px; top:.55em; width:6px; height:6px; border-radius:2px; background:var(--accent)}
+.effects li::before{content:""; position:absolute; left:2px; top:.6em; width:6px; height:6px; border-radius:2px; background:var(--accent)}
 .range{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
 .range input[type=range]{accent-color:var(--accent); width:200px; max-width:60vw}
 .prob{display:grid; gap:4px}
 .prob .row{display:grid; grid-template-columns:62px minmax(0,1fr) 64px; gap:8px; align-items:center; font-size:12.5px}
-.prob .track{height:10px; background:var(--surface-3); border-radius:5px; overflow:hidden}
-.prob .track i{display:block; height:100%; background:var(--accent); border-radius:5px; min-width:2px}
+.prob .track{height:8px; background:var(--surface-3); border-radius:4px; overflow:hidden}
+.prob .track i{display:block; height:100%; background:var(--accent); border-radius:4px; min-width:2px}
 .prob .v{font-family:var(--mono); text-align:right}
-.stars{color:var(--accent); font-family:var(--mono); white-space:nowrap}
 .wtable{width:100%; border-collapse:collapse; font-size:12.5px}
-.wtable th{position:static; background:none; padding:5px 6px; cursor:default; font-size:10.5px; border-bottom:1px solid var(--line)}
-.wtable td{padding:6px 6px; border-bottom:1px solid var(--line-soft); cursor:default; vertical-align:top}
+.wtable th{background:none; padding:5px 7px; cursor:default; font-size:10.5px; border-bottom:1px solid var(--line)}
+.wtable td{padding:6px 7px; border-bottom:1px solid var(--line-soft); cursor:default; vertical-align:top}
 .wtable tr:hover td{background:none}
 .wtable td.num, .wtable th.num{text-align:right; font-family:var(--mono)}
 .cond{font-size:12px; color:var(--muted)}
 .cond b{color:var(--text)}
-.ok{color:var(--good)} .no{color:var(--bad)}
 .rar{display:flex; height:8px; border-radius:4px; overflow:hidden; background:var(--surface-3); min-width:110px}
 .rar i{display:block; height:100%}
-.r0{background:var(--r0)} .r1{background:var(--r1)} .r2{background:var(--r2)} .r3{background:var(--r3)} .r4{background:var(--r4)}
+.r0{background:var(--r0)} .r1{background:var(--r1)} .r2{background:var(--r2)} .r3{background:var(--r3)} .r4{background:var(--r4)} .r5{background:var(--r5)}
 .legend{display:flex; flex-wrap:wrap; gap:10px; font-size:11.5px; color:var(--muted); margin-top:6px}
 .legend span::before{content:""; display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:4px; background:var(--c)}
-.note{font-size:12px; color:var(--muted); margin:8px 0 0}
-.callout{border-left:3px solid var(--accent); background:var(--accent-soft); padding:8px 11px; border-radius:6px; font-size:12.5px; margin:0 0 10px}
 .wx{display:grid; gap:5px}
 .wx .row{display:grid; grid-template-columns:130px minmax(0,1fr) 48px; gap:8px; align-items:center; font-size:12.5px}
+.kv{display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:8px}
+.kv > div{background:var(--surface-2); border-radius:9px; padding:8px 10px; min-width:0}
+.kv span{display:block; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+.kv b{font-family:var(--mono); font-weight:500; font-size:15px}
+.kv b small{font-size:11px; color:var(--muted); font-weight:400}
+.grid-items{display:flex; flex-wrap:wrap; gap:5px}
+.gi{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line-soft); background:var(--surface-2); border-radius:8px; padding:3px 9px 3px 4px; font-size:12.5px; cursor:pointer; max-width:100%; text-align:left}
+.gi:hover{border-color:var(--accent-line)}
+.gi .x{font-family:var(--mono); font-size:11px; color:var(--accent)}
+.gi.me{border-color:var(--accent); background:var(--accent-soft)}
+.gi .sub{font-size:11px; color:var(--faint)}
+.lvlhead{font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:12px 0 6px; font-weight:600}
 
-/* progression tiers */
-.tierp{display:inline-block; font-size:11px; white-space:nowrap; padding:1px 7px; border-radius:999px; background:var(--surface-3); color:var(--muted)}
-.tierp.now{background:var(--accent); color:var(--accent-ink)}
-.tierp.done{opacity:.75}
-.path{display:grid; gap:6px}
-.path .step{display:grid; grid-template-columns:104px minmax(0,1fr); gap:8px; align-items:start}
-.path .step > .tierp{justify-self:start; margin-top:4px}
-.path .gi.me{border-color:var(--accent); background:var(--accent-soft)}
-/* class guides */
-.cgrid{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px}
-.ccard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; display:grid; gap:8px; align-content:start}
-.ccard h2{font-family:var(--serif); font-size:19px; margin:0}
-.ccard .w{color:var(--muted); font-size:12.5px}
-.perks{display:grid; gap:6px; margin:0; padding:0; list-style:none; font-size:12.5px}
-.perks li{display:grid; grid-template-columns:44px minmax(0,1fr); gap:8px}
-.perks .lv{font-family:var(--mono); color:var(--accent); font-size:11.5px; padding-top:1px}
-.stage{background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden}
-.stage.now{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft)}
-.stage-h{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:12px 16px; cursor:pointer; user-select:none}
-.stage-h h3{font-family:var(--serif); font-size:18px; margin:0; text-wrap:balance}
-.stage-h .chev{transition:transform .15s ease; color:var(--muted)}
-.stage.closed .chev{transform:rotate(-90deg)}
-.stage.closed .stage-b{display:none}
-.stage-b{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px 20px; padding:0 16px 16px}
-.stage-b .blk h4{font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
-.stage-b .blk p{margin:0 0 6px; font-size:12.5px}
-.done-mark{color:var(--good); font-size:12px}
-/* comfort planner */
-.cplan{display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:10px}
+/* comfort */
+.cplan{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:10px}
 .cplan label{display:grid; gap:4px; font-size:12px; color:var(--muted)}
-.cplan select{font:inherit; font-size:12.5px; color:var(--text); background:var(--surface-2); border:1px solid var(--line); border-radius:7px; padding:5px 7px; max-width:100%}
-.cplan .chk{display:flex; gap:6px; align-items:center; color:var(--text)}
-.ctotal{display:flex; flex-wrap:wrap; gap:14px 28px; align-items:baseline; margin-top:12px}
+.cplan select{font-size:12.5px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:5px 7px; max-width:100%}
+.chk{display:flex; gap:6px; align-items:center; color:var(--text)}
+.ctotal{display:flex; flex-wrap:wrap; gap:14px 28px; align-items:baseline; margin-top:14px}
 .ctotal b{font-family:var(--mono); font-size:26px; color:var(--accent)}
+
+/* ---------- overview */
+.hero{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:20px 22px 18px; display:grid; gap:14px}
+.hero h2{font-family:var(--display); font-size:28px; font-weight:600; margin:0; line-height:1.1; text-wrap:balance}
+.hero .sub{color:var(--muted); font-size:13.5px; margin:0}
+.rail{display:grid; grid-template-columns:repeat(8, minmax(74px, 1fr)); gap:0; overflow-x:auto; padding:6px 2px 4px; scrollbar-width:thin}
+.stop{position:relative; display:grid; justify-items:center; gap:6px; border:0; background:none; cursor:pointer; padding:0 4px; color:var(--muted); min-width:74px}
+.stop::before{content:""; position:absolute; top:22px; left:-50%; right:50%; height:2px; background:var(--line)}
+.stop:first-child::before{display:none}
+.stop.done::before, .stop.now::before{background:var(--accent-line)}
+.stop .dot{position:relative; z-index:1; width:44px; height:44px; border-radius:50%; display:grid; place-items:center; background:var(--surface-2); border:2px solid var(--line)}
+.stop.done .dot{border-color:var(--accent-line)}
+.stop.now .dot{border-color:var(--accent); box-shadow:0 0 0 5px var(--accent-soft)}
+.stop .dot .ic{--s:26px}
+.stop .dot .glyph{background:none}
+.stop .lab{font-size:12px; font-weight:600; color:var(--text); text-align:center; line-height:1.2}
+.stop .bn{font-size:11px; color:var(--faint); text-align:center; line-height:1.2}
+.stop.future .lab{color:var(--muted); font-weight:500}
+.stop .check{position:absolute; right:-3px; bottom:-3px; width:16px; height:16px; border-radius:50%; background:var(--accent); color:var(--accent-ink); display:grid; place-items:center; font-size:10px; font-weight:700}
+.stop:hover .lab{color:var(--link)}
+.tiles{display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:10px}
+.tile{display:grid; grid-template-columns:auto minmax(0,1fr); gap:3px 10px; align-items:center; text-align:left; border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:11px 12px; cursor:pointer}
+.tile:hover{border-color:var(--accent-line); background:var(--surface-2)}
+.tile .glyph{grid-row:span 2; --g:36px}
+.tile b{font-size:13.5px; font-weight:600}
+.tile small{font-family:var(--mono); font-size:11px; color:var(--faint)}
+.tile.new b{color:var(--text)}
+.big{font-family:var(--mono); font-size:24px; color:var(--accent)}
+.h3{font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 8px; font-weight:600}
+.headrow{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; margin:6px 0 10px}
+.headrow h2{font-size:17px; font-weight:600; margin:0}
+
+/* ---------- journey */
+.classbar{display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; scrollbar-width:thin}
+.cpick{flex:none; border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:6px 13px; cursor:pointer; font-size:13px; color:var(--muted)}
+.cpick:hover{border-color:var(--accent-line); color:var(--text)}
+.cpick[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:600}
+.perks{display:grid; gap:6px; margin:0; padding:0; list-style:none; font-size:12.5px}
+.perks li{display:grid; grid-template-columns:46px minmax(0,1fr); gap:8px}
+.perks .lv{font-family:var(--mono); color:var(--accent); font-size:11.5px; padding-top:1px}
+.stages{display:grid; gap:12px}
+.stage{display:grid; grid-template-columns:44px minmax(0,1fr); gap:0 14px}
+.stage .num{position:relative; display:grid; justify-items:center}
+.stage .num span{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; font-family:var(--mono); font-size:13px; background:var(--surface-2); border:1px solid var(--line); color:var(--muted); z-index:1}
+.stage .num::after{content:""; position:absolute; top:36px; bottom:-14px; width:2px; background:var(--line-soft)}
+.stage:last-child .num::after{display:none}
+.stage.now .num span{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600}
+.stage.done .num span{border-color:var(--accent-line); color:var(--accent)}
+.stage-card{background:var(--surface); border:1px solid var(--line); border-radius:14px; overflow:hidden; min-width:0}
+.stage.now .stage-card{border-color:var(--accent-line); box-shadow:0 0 0 3px var(--accent-soft)}
+.stage-h{display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:12px 16px; cursor:pointer; user-select:none}
+.stage-h h3{font-family:var(--display); font-size:21px; font-weight:600; margin:0; text-wrap:balance}
+.stage-h .when{font-size:12px; color:var(--muted)}
+.stage-h .when.now{color:var(--accent); font-weight:600}
+.stage.closed .stage-b{display:none}
+.stage-b{display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px 22px; padding:4px 16px 16px}
+.blk h4{font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); margin:0 0 7px; font-weight:600}
+.blk p{margin:0 0 6px; font-size:13px}
+.blk .wtype{font-size:12px; color:var(--muted); margin:8px 0 4px}
+.blk .wtype:first-of-type{margin-top:0}
+.ccard{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; gap:10px; align-content:start}
+.ccard h2{font-family:var(--display); font-size:22px; font-weight:600; margin:0}
+.ccard .w{color:var(--muted); font-size:12.5px}
+
+/* ---------- enchanting */
+.rh{display:inline-flex; align-items:center; gap:5px}
+.rh::before{content:""; width:8px; height:8px; border-radius:50%; background:var(--c)}
+.rv{font-family:var(--mono); font-size:12px; white-space:nowrap}
+.fxd{color:var(--muted); font-size:12px; margin-top:2px; max-width:56ch}
+.steps{display:grid; gap:14px; counter-reset:step}
+.step{display:grid; grid-template-columns:34px minmax(0,1fr); gap:12px}
+.step > .n{width:30px; height:30px; border-radius:50%; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center; font-family:var(--mono); font-size:13px; font-weight:600; border:1px solid var(--accent-line)}
+.step h3{margin:3px 0 6px; font-size:16px; font-weight:600}
+.step p{margin:0 0 8px; color:var(--muted); font-size:13px; max-width:75ch}
+.mat-cards{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:10px}
+.mcard{border:1px solid var(--line-soft); background:var(--surface-2); border-radius:12px; padding:11px 12px; display:grid; gap:6px; align-content:start}
+.mcard b{font-size:13.5px}
+.mcard p{margin:0; font-size:12.5px; color:var(--muted)}
+.swatch{display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:6px; border:1px solid var(--line)}
+.fold{border:1px solid var(--line-soft); border-radius:10px; margin-top:8px; background:var(--surface-2)}
+.fold > .fold-h{display:flex; align-items:center; gap:8px; padding:8px 10px; cursor:pointer; user-select:none; font-size:13px; font-weight:600}
+.fold.closed > .fold-b{display:none}
+.fold > .fold-b{padding:0 10px 10px}
+.legcard{border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:12px 14px; display:grid; gap:6px; align-content:start}
+.legcard h3{margin:0; font-family:var(--display); font-size:19px; font-weight:600; color:var(--r3)}
+.legcard.mythic h3{color:var(--r4)}
+.legcard p{margin:0; font-size:12.5px; color:var(--muted)}
+
+/* ---------- detail panel */
+.detail{position:sticky; top:calc(env(safe-area-inset-top, 0px) + var(--top)); height:calc(100dvh - var(--top) - env(safe-area-inset-top, 0px)); overflow-y:auto; background:var(--surface);
+  border-left:1px solid var(--line); scrollbar-width:thin; overscroll-behavior:contain}
+.shell:not(.with-detail) .detail{display:none}
+.dh{padding:14px 20px 4px}
+.dh-ctl{display:flex; justify-content:space-between; gap:6px; margin-bottom:8px}
+.dh-id{display:grid; grid-template-columns:auto minmax(0,1fr); gap:14px; align-items:center}
+.dh-id .kind{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600}
+.dh-id h2{font-family:var(--display); font-weight:600; font-size:28px; line-height:1.05; margin:2px 0 6px; text-wrap:balance}
+.dh-id .meta{display:flex; flex-wrap:wrap; gap:5px; align-items:center}
+.desc{color:var(--muted); font-size:13px; margin:12px 0 0; white-space:pre-line}
+.dnav{position:sticky; top:0; z-index:2; display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; padding:8px 16px; background:color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line-soft)}
+.dnav::-webkit-scrollbar{display:none}
+.dnav button{flex:none; border:0; background:none; font-size:12px; color:var(--muted); padding:4px 9px; border-radius:999px; cursor:pointer; white-space:nowrap}
+.dnav button:hover{background:var(--surface-2); color:var(--text)}
+.inner{padding-bottom:30px}
+.inner > .card{margin-left:20px; margin-right:20px}
+.card{border-top:1px solid var(--line-soft); margin-top:16px; padding-top:14px; scroll-margin-top:52px}
+.dh + .card, .dnav + .card{border-top:0; margin-top:8px}
+.card h3{font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); margin:0 0 10px; font-weight:600; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap}
+.card h3 .aside{letter-spacing:0; text-transform:none; font-weight:400; color:var(--faint)}
+.recipe-line{display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin-bottom:10px}
+.reqs{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:6px}
+.req{display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--line-soft); border-radius:9px; padding:5px 8px; cursor:pointer; text-align:left; min-width:0}
+.req:hover{border-color:var(--accent-line)}
+.req .q{font-family:var(--mono); font-weight:500; color:var(--accent); font-size:13px}
+.req .rn{font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.levels{display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.levels button{border:0; background:transparent; padding:3px 9px; cursor:pointer; font-family:var(--mono); font-size:12px; color:var(--muted)}
+.levels button + button{border-left:1px solid var(--line)}
+.levels button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+.dtable{width:100%; font-size:12.5px; border-collapse:collapse}
+.dtable th{background:none; padding:4px 6px; font-size:10.5px; cursor:default; border-bottom:1px solid var(--line)}
+.dtable td{padding:6px 6px; border-bottom:1px solid var(--line-soft); cursor:default}
+.dtable tr:hover td{background:none}
+.dtable .lvl{font-family:var(--mono); color:var(--accent); white-space:nowrap}
+.dbreak{display:grid; gap:6px}
+.dbreak .row{display:grid; grid-template-columns:86px minmax(0,1fr) 56px; gap:8px; align-items:center; font-size:12.5px}
+.dbreak .track{height:7px; background:var(--surface-3); border-radius:4px; overflow:hidden}
+.dbreak .track i{display:block; height:100%; border-radius:4px}
+.dbreak .v{font-family:var(--mono); text-align:right}
+.src{display:grid; gap:6px}
+.src .it{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:10px; align-items:center; background:var(--surface-2); border:1px solid var(--line-soft); border-radius:9px; padding:6px 9px; cursor:pointer; text-align:left}
+.src .it:hover{border-color:var(--accent-line)}
+.src .it .t{font-size:12.5px; min-width:0}
+.src .it .t small{display:block; color:var(--muted); font-size:11.5px}
+.src .it .r{font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right; white-space:nowrap}
+.src .k{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin:6px 0 0}
+.flow{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.flow .arrow{color:var(--faint)}
+.se{background:var(--surface-2); border-radius:9px; padding:9px 11px; font-size:12.5px; white-space:pre-line; border:1px solid var(--line-soft)}
+.se b{display:block; font-size:13.5px; margin-bottom:2px}
+details.tip summary{cursor:pointer; color:var(--muted); font-size:12px}
+details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px; background:var(--surface-2); padding:10px; border-radius:8px; margin:8px 0 0}
+.path{display:grid; gap:6px}
+.path .step2{display:grid; grid-template-columns:104px minmax(0,1fr); gap:8px; align-items:start}
+.path .step2 > .tierp{justify-self:start; margin-top:4px}
+.help p{margin:0 0 10px; color:var(--muted); font-size:13px}
+.help p b{color:var(--text)}
+
+/* ---------- responsive */
+@media (max-width:1279px){
+  .shell.with-detail{grid-template-columns:var(--side) minmax(0,1fr)}
+  .detail{position:fixed; top:0; right:0; bottom:0; height:auto; width:min(460px, 100vw); z-index:40; box-shadow:var(--shadow); transform:translateX(105%); transition:transform .2s ease;
+    padding-top:env(safe-area-inset-top, 0px); padding-bottom:env(safe-area-inset-bottom, 0px)}
+  .shell:not(.with-detail) .detail{display:block}
+  .detail.open{transform:none}
+}
+@media (max-width:999px){
+  .shell, .shell.with-detail{grid-template-columns:minmax(0,1fr)}
+  .navbtn{display:grid}
+  .sidebar{position:fixed; top:0; left:0; bottom:0; height:auto; width:min(290px, 86vw); z-index:40; background:var(--surface); box-shadow:var(--shadow);
+    transform:translateX(-105%); transition:transform .2s ease; padding-top:calc(env(safe-area-inset-top, 0px) + 14px)}
+  .sidebar.open{transform:none}
+  .main{padding:18px 16px 50px}
+  .brand small{display:none}
+  .worldbtn .wtxt{display:none}
+  .search kbd{display:none}
+}
+@media (max-width:560px){
+  .brand b{display:none}
+  .ph h1{font-size:28px}
+  .topbar{gap:8px}
+}
+@media (prefers-reduced-motion: reduce){ .detail, .sidebar, .chev{transition:none} }
 </style>
 
-<div class="wrap">
-  <header class="top">
-    <div class="brand">
-      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path fill="currentColor" d="M6 12h22c0 3.5 2.3 5 6 5v3c-4.2 0-7-1.2-8.5-3.6L24 18v4h-3v6h6v4H11v-4h6v-6h-3v-4c-4.4 0-8-2.4-8-6Z"/><path fill="currentColor" opacity=".45" d="M5 34h30v2H5z"/></svg>
-      <div><h1>Valheim Crafting Atlas</h1><p id="meta">Loading game data…</p></div>
-    </div>
-    <label class="search" for="q">
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="m21 21-4.8-4.8M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/></svg>
-      <input id="q" type="search" placeholder="Search anything: greatsword, iron, forge, mead, troll…" autocomplete="off" spellcheck="false" aria-label="Search items, building pieces, stations and creatures">
-      <kbd>/</kbd>
-    </label>
-  </header>
-  <nav class="chips" id="groups" aria-label="Categories"></nav>
-  <nav class="chips sub" id="classes" aria-label="Sub-categories"></nav>
-  <div class="bar-row">
-    <label for="mod">Mod <select id="mod"><option value="">All mods</option></select></label>
-    <label><input type="checkbox" id="nosrc"> Show items with no known source</label>
-    <span class="spacer"></span>
-    <span class="world-now" id="worldnow"></span>
-    <button class="lnk" data-collapse="1">Collapse all</button>
-    <button class="lnk" data-collapse="0">Expand all</button>
-    <button class="lnk" data-help>How to read this</button>
-    <span id="count"></span>
-  </div>
-  <div class="layout">
+<header class="topbar">
+  <button class="navbtn" data-navtoggle aria-label="Browse sections"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <button class="brand" data-view="home" aria-label="Overview">
+    <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"><path fill="currentColor" d="M6 12h22c0 3.5 2.3 5 6 5v3c-4.2 0-7-1.2-8.5-3.6L24 18v4h-3v6h6v4H11v-4h6v-6h-3v-4c-4.4 0-8-2.4-8-6Z"/><path fill="currentColor" opacity=".45" d="M5 34h30v2H5z"/></svg>
+    <span><b>Valheim Atlas</b><small id="meta">Loading game data…</small></span>
+  </button>
+  <label class="search" for="q">
+    <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="m21 21-4.8-4.8M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/></svg>
+    <input id="q" type="search" placeholder="Search items, pieces, creatures, enchantments…" autocomplete="off" spellcheck="false" aria-label="Search the atlas">
+    <kbd>/</kbd>
+  </label>
+  <button class="worldbtn" id="worldbtn" data-view="world" title="World settings"></button>
+</header>
+<div class="shell" id="shell">
+  <nav class="sidebar" id="nav" aria-label="Sections"></nav>
+  <main class="main" id="main">
+    <div id="head"></div>
     <section id="results" aria-live="polite"><div class="loading">Unpacking the forge…</div></section>
-    <aside class="detail" id="detail" aria-label="Details"></aside>
-  </div>
-  <p class="foot" id="foot"></p>
+    <p class="foot" id="foot"></p>
+  </main>
+  <aside class="detail" id="detail" aria-label="Details"></aside>
 </div>
 <script>
 (() => {
@@ -353,29 +469,60 @@ const STATION_ORDER = ["piece_workbench","forge","piece_cauldron","piece_stonecu
 const BIOME = {Meadows:"Meadows",BlackForest:"Black Forest",Swamp:"Swamp",Mountain:"Mountains",Plains:"Plains",Mistlands:"Mistlands",AshLands:"Ashlands",DeepNorth:"Deep North",Ocean:"Ocean"};
 const MODNAME = {VeryWeak:"Very weak",Weak:"Weak",SlightlyWeak:"Slightly weak",SlightlyResistant:"Slightly resistant",Resistant:"Resistant",VeryResistant:"Very resistant",Immune:"Immune",Ignore:"Immune"};
 const BOSSKEY = {defeated_eikthyr:"Eikthyr",defeated_gdking:"The Elder",defeated_bonemass:"Bonemass",defeated_dragon:"Moder",defeated_goblinking:"Yagluth",defeated_queen:"The Queen",defeated_fader:"Fader"};
-const SRCK = {drop:"Dropped by",mine:"Mined from",chop:"Chopped from",break:"Found by breaking",chest:"Found in",pick:"Picked from",fish:"Caught",trade:"Sold by",other:"From"};
+const SRCK = {drop:"Dropped by",mine:"Mined from",chop:"Chopped from",break:"Found by breaking",chest:"Found in",pick:"Picked from",fish:"Caught",trade:"Sold by",sacrifice:"Sacrifice at the Enchanting Table",convert:"Convert at the Enchanting Table",other:"From"};
 const CONVK = {smelter:"Smelted",cooking:"Cooked",fermenter:"Fermented",incinerator:"Obliterated",incineratorDefault:"Obliterated",beehive:"Produced",sap:"Collected",plant:"Grown"};
 const CAT_ORDER = ["Misc","Crafting","Building","Heavy building","Furniture"];
-
-let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {}, TRADERS = {}, BOSS_BY_KEY = {};
-const S = {q:"", group:"weapons", cls:null, mod:"", nosrc:false, sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}};
-// World settings the numbers are shown under. Starts as the exported world; the World tab changes it.
-const W = {opt:{}, base:{}, players:1, night:false};
-const WORLD_GROUPS = ["creatures","bosses","events","locations","biomes","classes","world"];
 const COMFORT_NAMES = {Fire:"Fires", Bed:"Beds", Chair:"Seating", Table:"Tables", Banner:"Banners", Carpet:"Rugs & carpets", Lantern:"Lanterns", Garland:"Garlands", Decor:"Decor", Display:"Displays", Leisure:"Leisure", None:"Unique pieces"};
 const CLASS_STYLE = {Wizard:"caster", Warlock:"caster", Assassin:"light", Archer:"light", Brawler:"light"};
 const BIOME_ORDER = ["Meadows","BlackForest","Swamp","Mountain","Plains","Mistlands","AshLands","DeepNorth","Ocean"];
 const PROGRESSION = ["defeated_eikthyr","defeated_gdking","defeated_bonemass","defeated_dragon","defeated_goblinking","defeated_queen","defeated_fader","defeated_frozenking"];
 const THEME_NAMES = {Crypt:"Crypt",SunkenCrypt:"Sunken crypt",Cave:"Frost cave",ForestCrypt:"Burial chambers",GoblinCamp:"Fuling village",MeadowsVillage:"Village",MeadowsFarm:"Farm",DvergerTown:"Infested mine",DvergerBoss:"Infested citadel",ForestCryptHildir:"Smouldering tomb",CaveHildir:"Howling cavern",PlainsFortHildir:"Sealed tower",AshlandRuins:"Ashlands ruins",FortressRuins:"Fortress ruins",Hole:"The hole",NorthVillage:"Northern village",MorkHalla:"Morkhalla"};
+const SHIELD_CLS = new Set(["shields","towershields","bucklers"]);
+const RARITY_VAR = ["--r0","--r1","--r2","--r3","--r4","--r5"];
+// Sidebar: sections in the order people look for them. Labels fall back to the data's group names.
+const NAV = [
+  {k:"home", n:"Overview", ic:"home"},
+  {k:"journey", n:"Journey", ic:"route"},
+  {h:"Gear"}, {k:"weapons", ic:"sword"}, {k:"armor", ic:"helm"}, {k:"shields", ic:"shield"}, {k:"ammo", n:"Ammo", ic:"arrow"}, {k:"tools", ic:"pick"},
+  {h:"Supplies"}, {k:"food", ic:"food"}, {k:"meads", ic:"flask"}, {k:"materials", ic:"ore"}, {k:"other", n:"Other items", ic:"bag"},
+  {h:"Build & craft"}, {k:"building", n:"Building pieces", ic:"hammer"}, {k:"comfort", n:"Comfort", ic:"fire"}, {k:"stations", n:"Crafting stations", ic:"anvil"}, {k:"processing", ic:"pot"},
+  {h:"Magic"}, {k:"enchant", n:"Enchanting", ic:"rune"},
+  {h:"World"}, {k:"bosses", ic:"skull"}, {k:"creatures", ic:"paw"}, {k:"biomes", ic:"biome"}, {k:"locations", ic:"pin"}, {k:"events", n:"Raids", ic:"raid"}, {k:"world", n:"World settings", ic:"sliders"},
+];
+const NAV_SECTION = {};
+{ let h = ""; for (const n of NAV){ if (n.h) h = n.h; else NAV_SECTION[n.k] = h; } }
+const LEDE = {
+  weapons:"Every weapon with where it's crafted, what it costs and its damage from ★1 to fully upgraded.",
+  armor:"Armor pieces with upgrade ranges, set bonuses, resistances and movement penalties.",
+  shields:"Shields, bucklers and tower shields with block power, parry bonus and weight.",
+  ammo:"Arrows, bolts and throwables with their damage.",
+  tools:"Pickaxes, axes, farming, fishing and building tools, with the tool tier each one can harvest.",
+  food:"Food with health, stamina and eitr, how long it lasts and where it's cooked.",
+  meads:"Meads, potions and consumables with their effects.",
+  materials:"Every material: where it comes from and everything it's used in.",
+  other:"Trophies, fish and everything else.",
+  building:"Every building piece from every hammer, with materials, required station and comfort.",
+  stations:"Crafting stations, their upgrades and what each level unlocks.",
+  processing:"Smelting, cooking, fermenting, planting and every other conversion.",
+  creatures:"Every creature with health, weaknesses, drops and where it spawns.",
+  bosses:"Bosses in progression order: how to summon them and what beating them changes.",
+  events:"Raids that can hit your base, when they unlock and who attacks.",
+  locations:"Dungeons, altars, traders and points of interest with their creatures and loot.",
+  biomes:"Biomes with their spawn tables, star chances, weather and resources.",
+};
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const norm = s => String(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+const norm = s => String(s || "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 const compact = s => norm(s).replace(/ /g, "");
 const sing = w => w.length > 3 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w;
 const fmt = (v, d = 1) => v == null || v === "" ? "" : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("en-US");
 const pct = v => (v > 0 ? "+" : "") + Math.round(v * 100) + "%";
-
 function store(k, v){ try{ if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
+
+let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {}, TRADERS = {}, BOSS_BY_KEY = {};
+const S = {q:"", view:"home", prevView:"home", cls:null, mod:"", nosrc:false, tier:"all", sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}, klass:null, eslot:"", comfortPick:null, comfortRoof:true};
+// World settings the numbers are shown under. Starts as the exported world; World settings changes it.
+const W = {opt:{}, base:{}, players:1, night:false};
 
 // ---------- icons
 function icon(i, size = "", name = ""){
@@ -384,7 +531,6 @@ function icon(i, size = "", name = ""){
   const c = D.icons.cols;
   return `<span class="ic${cls}" style="--x:${i % c};--y:${Math.floor(i / c)}" aria-hidden="true"></span>`;
 }
-const item = id => D.items[id];
 const iname = id => (D.items[id] && D.items[id].n) || (D.pieces[id] && D.pieces[id].n) || prettify(id);
 const iicon = (id, size) => { const o = D.items[id] || D.pieces[id]; return icon(o ? o.i : -1, size, iname(id)); };
 function prettify(p){ return String(p || "").replace(/_/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\s+/g, " ").trim(); }
@@ -397,7 +543,7 @@ const GLYPH = {
   drop:'<path d="M4 3c1.8 3 1.8 7 0 10M8 2c2 4 2 8 0 12M12 3c1.8 3 1.8 7 0 10"/>',
   break:'<path d="M8 2v3.5M8 10.5V14M2 8h3.5M10.5 8H14M3.8 3.8l2.4 2.4M9.8 9.8l2.4 2.4M12.2 3.8 9.8 6.2M3.8 12.2l2.4-2.4"/>',
   chest:'<path d="M2 7h12v6H2zM2 7c0-2.8 2-4 6-4s6 1.2 6 4M7 8.2h2V10H7z"/>',
-  pick:'<path d="M8 14V7.5M8 7.5C5 7.5 3 5.4 3 2.5c3 0 5 2 5 5zM8 10c1.6-1.4 3.6-1.6 5.2.2-1.8 1.4-3.6 1.4-5.2-.2z"/>',
+  pick:'<path d="M2.5 13.5l7-7M5 4.2c3-2 6.8-1.8 9 1.3-3-1-5.8-.8-7.8 1z"/>',
   fish:'<path d="M2 8c3-4 7-4 10 0-3 4-7 4-10 0zM12 8l2.6-2.6v5.2z"/>',
   trade:'<circle cx="8" cy="8" r="5.6"/><path d="M8 4.8v6.4M9.8 6.3H7.4a1 1 0 0 0 0 2h1.2a1 1 0 0 1 0 2H6.2"/>',
   other:'<circle cx="8" cy="8" r="5"/>',
@@ -406,18 +552,42 @@ const GLYPH = {
   dungeon:'<path d="M2.5 13.5V7l5.5-4.5L13.5 7v6.5M6 13.5V10a2 2 0 0 1 4 0v3.5"/>',
   biome:'<path d="M1.5 13.5l4.5-7 3 4.5 2-3 3.5 5.5z"/>',
   trader:'<circle cx="8" cy="8" r="5.6"/><path d="M8 4.8v6.4M9.8 6.3H7.4a1 1 0 0 0 0 2h1.2a1 1 0 0 1 0 2H6.2"/>',
-  rune:'<path d="M5 2.5h6l1 11H4zM8 5v6M6.5 6.5L8 8l1.5-1.5"/>'
+  rune:'<path d="M5 2.5h6l1 11H4zM8 5v6M6.5 6.5L8 8l1.5-1.5"/>',
+  sacrifice:'<path d="M5 2.5h6l1 11H4zM8 5v6M6.5 6.5L8 8l1.5-1.5"/>',
+  convert:'<path d="M3 5.5h8.5l-2-2M13 10.5H4.5l2 2"/>',
+  home:'<path d="M2.5 7.5 8 3l5.5 4.5M4 6.5v6.5h8V6.5M6.8 13v-3.2h2.4V13"/>',
+  route:'<circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><path d="M5 12.5h4.5a2 2 0 0 0 0-4h-3a2 2 0 0 1 0-4H11"/>',
+  sword:'<path d="M13.5 2.5 7 9M13.5 2.5v3l-6 6M13.5 2.5h-3l-6 6M4 9.5l2.5 2.5M3.5 11 2.5 13.5 5 12.5"/>',
+  helm:'<path d="M3 11V8a5 5 0 0 1 10 0v3M3 11h10M8 3v5M5.5 11v2.5M10.5 11v2.5"/>',
+  shield:'<path d="M8 2.5 13 4.5v4c0 3-2.3 4.6-5 5.5-2.7-.9-5-2.5-5-5.5v-4z"/>',
+  arrow:'<path d="M2.5 13.5 12 4M12 4h-3M12 4v3M4.5 13.5l-2 0 0-2M5.5 12.5l-3-3"/>',
+  food:'<path d="M9.5 3.5a3.5 3.5 0 0 1 2.5 6l-1.5 1.5-3.5-3.5 1.5-1.5a3.5 3.5 0 0 1 1-2.5zM7 7.5 3 11.5a1.4 1.4 0 0 0 2 2l4-4"/>',
+  flask:'<path d="M6.5 2.5h3M7 2.5v4L3.5 12a1.2 1.2 0 0 0 1 1.8h7a1.2 1.2 0 0 0 1-1.8L9 6.5v-4M5 10h6"/>',
+  ore:'<path d="M3 11 5 5l4-2 4 3 .5 5-4.5 2.5z"/><path d="M5 5l3 3 5-2M8 8l1 5.5"/>',
+  bag:'<path d="M4 5.5h8l1 8H3zM6 5.5V4a2 2 0 0 1 4 0v1.5"/>',
+  hammer:'<path d="M7 5 3 9l2 2 4-4M6 3.5 9 2.5l4.5 4.5-1 3L9 6.5"/>',
+  fire:'<path d="M8 14c-3 0-4.5-2-4.5-4.2C3.5 7 6 6 6.5 3c2 1.3 3 3 3 4.5.6-.6 1-1.4 1-2.3 1.5 1.2 2 2.8 2 4.6C12.5 12 11 14 8 14z"/>',
+  anvil:'<path d="M2.5 5h9c0 2-1.5 3-3.5 3v2h2v2.5H5V10h2V8C4.5 8 2.5 7 2.5 5zM11.5 5h2"/>',
+  pot:'<path d="M3 7h10v3.5A3.5 3.5 0 0 1 9.5 14h-3A3.5 3.5 0 0 1 3 10.5zM2 7h12M6 4.5c0-1 1-1 1-2M9 4.5c0-1 1-1 1-2"/>',
+  skull:'<path d="M4 10.5C2.8 9.6 2.5 8.4 2.5 7a5.5 5.5 0 0 1 11 0c0 1.4-.3 2.6-1.5 3.5v2H4z"/><circle cx="6" cy="7.5" r="1.2"/><circle cx="10" cy="7.5" r="1.2"/>',
+  paw:'<circle cx="4.5" cy="6" r="1.3"/><circle cx="7" cy="3.8" r="1.3"/><circle cx="10" cy="4" r="1.3"/><circle cx="12" cy="6.6" r="1.3"/><path d="M8.3 7.5c2 0 3.7 2.5 3.4 4.5-.3 1.6-2 1.4-3.4.8-1.4.6-3.1.8-3.4-.8-.3-2 1.4-4.5 3.4-4.5z"/>',
+  sliders:'<path d="M3 4.5h10M3 8h10M3 11.5h10"/><circle cx="6" cy="4.5" r="1.4"/><circle cx="10.5" cy="8" r="1.4"/><circle cx="5" cy="11.5" r="1.4"/>',
+  star:'<path d="M8 2.5l1.7 3.5 3.8.5-2.8 2.6.7 3.8L8 11.1 4.6 12.9l.7-3.8L2.5 6.5l3.8-.5z"/>',
 };
 function glyph(k, size = 22){
-  if (typeof size === "string") size = {s18:18, s22:22, s36:36, s56:56}[size] || 28;
+  if (typeof size === "string") size = {s18:18, s22:22, s36:36, s44:44, s56:56}[size] || 28;
   return `<span class="glyph" style="--g:${size}px" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${GLYPH[k] || GLYPH.other}</svg></span>`;
 }
+const navIcon = k => `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GLYPH[k] || GLYPH.other}</svg>`;
 function crIcon(id, size = ""){
   const c = D.creatures[id];
   const t = c && (c.dr || []).map(d => d[0]).find(x => D.items[x] && D.items[x].c === "trophies");
   if (!t) return glyph("drop", size || 28);
   return icon(D.items[t].i, size, c ? c.n : id);
 }
+const crName = p => (D.creatures[p] && D.creatures[p].n) || prettify(p);
+const dash = `<span class="dim">—</span>`;
+
 // ---------- progression tiers (0 = Meadows ... 7 = Deep North)
 const tierName = t => t == null ? "" : (BIOME[(D.stages || {}).biomes[t]] || prettify((D.stages || {}).biomes[t]));
 function worldStage(){
@@ -431,24 +601,41 @@ function tierPill(t){
   const now = worldStage();
   return `<span class="tierp${t === now ? " now" : t < now ? " done" : ""}" title="${t === now ? "Your world is here" : t < now ? "Earlier than your world" : "Ahead of your world"}">${esc(tierName(t))}</span>`;
 }
-function keyStat(o){
-  const q = o.q && o.q[o.q.length - 1];
-  if (!q) return o.food ? (o.food.hp || 0) + (o.food.stam || 0) + (o.food.eitr || 0) : 0;
-  return q.arm || (q.dmg ? dsum(q.dmg) : 0) || q.blk || 0;
+// The number that ranks gear of one type: block for shields, armor for armor, summed damage for weapons.
+function statQ(o, q){
+  const e = o.q && o.q[Math.max(1, Math.min(q, o.q.length)) - 1];
+  if (!e) return o.food ? (o.food.hp || 0) + (o.food.stam || 0) + (o.food.eitr || 0) : 0;
+  if (SHIELD_CLS.has(o.c)) return e.blk || 0;
+  return e.arm || (e.dmg ? dsum(e.dmg) : 0) || e.blk || 0;
 }
-const statLabel = o => { const q = o.q && o.q[o.q.length - 1] || {}; return q.arm ? "armor" : q.dmg && dsum(q.dmg) ? "damage" : q.blk ? "block" : ""; };
+const keyStat = o => statQ(o, o.q ? o.q.length : 1);
+const statLabel = o => SHIELD_CLS.has(o.c) ? "block" : (() => { const q = o.q && o.q[o.q.length - 1] || {}; return q.arm ? "armor" : q.dmg && dsum(q.dmg) ? "damage" : q.blk ? "block" : ""; })();
+// Highest upgrade level reachable at a tier (upgrade materials and station upgrades can come later than the item).
+function reachQ(o, t){
+  const mq = o.q ? o.q.length : 1;
+  if (!o.qt) return mq;
+  let best = 1;
+  o.qt.forEach((v, i) => { if (v != null && v <= t) best = i + 1; });
+  return best;
+}
+const statAt = (o, t) => statQ(o, reachQ(o, t));
 // Craftable items of one class, in progression order.
 const PROG_CACHE = {};
 function progressionOf(cls){
   if (PROG_CACHE[cls]) return PROG_CACHE[cls];
-  const all = Object.entries(D.items).filter(([id, o]) => o.c === cls && o.tier != null && !o.ns && RBI[id] && keyStat(o) > 2);
-  // Drop novelty pieces (tankards, drinking horns...) that are far weaker than the rest of their type.
+  // Ballista missiles sit with the bolts but only fit the ballista turret.
+  let all = Object.entries(D.items).filter(([id, o]) => o.c === cls && o.tier != null && !o.ns && RBI[id] && keyStat(o) > 2 && !/^TurretBolt/.test(id));
+  // Drop novelty pieces (tankards, drinking horns) that are far weaker than the rest of their type,
+  // and one-purpose outliers (the Butcher Knife's 1000 damage only works on your own tame animals).
   const stats = all.map(x => keyStat(x[1])).sort((a, b) => a - b);
   const median = stats.length ? stats[Math.floor(stats.length / 2)] : 0;
-  return PROG_CACHE[cls] = all.filter(x => keyStat(x[1]) >= median * 0.2).sort((a, b) => a[1].tier - b[1].tier || keyStat(b[1]) - keyStat(a[1]));
+  all = all.filter(x => keyStat(x[1]) >= median * 0.2);
+  for (;;){
+    const s = all.map(x => keyStat(x[1])).sort((a, b) => b - a);
+    if (s.length > 2 && s[0] > s[1] * 3) all = all.filter(x => keyStat(x[1]) < s[0]); else break;
+  }
+  return PROG_CACHE[cls] = all.sort((a, b) => a[1].tier - b[1].tier || keyStat(b[1]) - keyStat(a[1]));
 }
-const crName = p => (D.creatures[p] && D.creatures[p].n) || prettify(p);
-const dash = `<span class="dim">—</span>`;
 function keyText(k){
   const lk = String(k || "").toLowerCase();
   if (BOSS_BY_KEY[lk]) return crName(BOSS_BY_KEY[lk]) + " defeated";
@@ -487,7 +674,7 @@ const playerCount = () => Math.max(1, Math.min(W.players, (D.world && D.world.sc
 function hpScale(){ return 1 + ((D.world && D.world.scale.hpPerPlayer) || 0.3) * (playerCount() - 1); }
 function dmgScale(){ return (1 + ((D.world && D.world.scale.dmgPerPlayer) || 0.04) * (playerCount() - 1)) * rates().enemydamage / 100; }
 function scaleAmt(a, item, kind){
-  const nonScaled = (D.items[item] && D.items[item].c === "trophies") || kind === "trade";
+  const nonScaled = (D.items[item] && D.items[item].c === "trophies") || kind === "trade" || kind === "sacrifice" || kind === "convert";
   const r = nonScaled ? 1 : resRate();
   if (!a) return "";
   const lo = a[0] * r, hi = a[1] * r;
@@ -510,7 +697,6 @@ function starDist(biome, night, boss, table){
     out.push([L - 1, Math.max(0, prev - a)]);
     prev = a;
   }
-  if (t.length && t[0][0] > 1){ /* conditional tables start above level 1 */ }
   return out.filter(x => x[1] > 0.00005);
 }
 function starMult(stars, boss){
@@ -537,9 +723,7 @@ function stationLevel(r, q){
   return Math.max(1, r.l) + q - 1;
 }
 const maxQ = o => (o.q ? o.q.length : 1);
-const qv = (o, q, k) => { const e = o.q && o.q[Math.min(q, o.q.length) - 1]; return e ? e[k] : undefined; };
 const dsum = (d, keys = COMBAT) => { let s = 0; if (d) for (const k of keys) s += d[k] || 0; return s; };
-const isTool = o => ["pickaxes"].includes(o.c) || (o.q && o.q[0] && o.q[0].dmg && !dsum(o.q[0].dmg) && (o.q[0].dmg.chop || o.q[0].dmg.pickaxe));
 
 // ---------- boot
 async function boot(){
@@ -567,20 +751,18 @@ async function boot(){
   }
   index();
   const m = D.meta || {};
-  $("#meta").textContent = [m.profile, (m.mods || []).length + " mods", m.game ? "Valheim " + m.game : "", m.generated ? "exported " + new Date(m.generated).toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) : ""].filter(Boolean).join(" · ");
-  const sel = $("#mod");
-  for (const md of D.modsUsed) sel.insertAdjacentHTML("beforeend", `<option value="${esc(md)}">${esc(md)}</option>`);
-  $("#foot").dataset.x = "";
-  $("#foot").innerHTML = `Read straight from your game (${esc(m.mode === "game" ? "in-world export, server settings applied" : "main-menu export")}): ${Object.keys(D.items).length.toLocaleString()} items, ${D.recipes.length.toLocaleString()} recipes, ${Object.keys(D.pieces).length.toLocaleString()} building pieces, ${D.conversions.length} processing recipes, ${Object.keys(D.creatures).length} creatures. Damage is base weapon damage; skill level and combat mods change what actually lands.`;
-  const saved = store("atlas.group");
-  if (saved && GRP[saved]) S.group = saved;
+  $("#meta").textContent = [m.profile, (m.mods || []).length + " mods", m.game ? "Valheim " + m.game : ""].filter(Boolean).join(" · ");
+  $("#foot").innerHTML = `Read straight from your game (${esc(m.mode === "game" ? "in-world export, server settings applied" : "main-menu export")}${m.generated ? ", " + esc(new Date(m.generated).toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"})) : ""}): ${Object.keys(D.items).length.toLocaleString()} items, ${D.recipes.length.toLocaleString()} recipes, ${Object.keys(D.pieces).length.toLocaleString()} building pieces, ${D.conversions.length} processing recipes, ${Object.keys(D.creatures).length} creatures${D.enchant ? ", " + Object.keys(D.enchant.fx).length + " enchantments" : ""}. Damage is base weapon damage; skill level and combat mods change what actually lands.`;
+  const saved = store("atlas.view");
+  if (saved && (NAV.some(n => n.k === saved))) S.view = saved;
+  S.klass = store("atlas.class") || null;
+  try{ S.collapsed = JSON.parse(store("atlas.collapsed") || "{}") || {}; }catch(err){ S.collapsed = {}; }
   worldInit();
   wire();
   fromHash();
   render();
-  if (!S.sel) renderDetail();
+  if (S.sel) renderDetail();
 }
-
 function worldInit(){
   if (!D.world) return;
   const have = new Set((D.world.keys || []).map(k => k.toLowerCase()));
@@ -591,17 +773,16 @@ function worldInit(){
   }
   const sp = +store("atlas.players");
   if (sp > 0) W.players = sp;
-  renderWorldNow();
+  renderWorldBtn();
 }
-function renderWorldNow(){
-  const el = $("#worldnow");
+function renderWorldBtn(){
+  const el = $("#worldbtn");
   if (!el || !D.world) return;
-  const bits = D.world.modifiers.filter(m => ["Combat","Resources","Raids"].includes(m.id)).map(m => {
-    const o = m.opts.find(x => x.v === W.opt[m.id]);
-    return `<span class="pill">${esc(m.n)}: ${esc(o ? o.n : "Normal")}</span>`;
-  });
+  const pick = id => { const m = D.world.modifiers.find(x => x.id === id); const o = m && m.opts.find(x => x.v === W.opt[id]); return o ? o.n : ""; };
   const changed = Object.keys(W.opt).some(k => W.opt[k] !== W.base[k]);
-  el.innerHTML = `<span>${changed ? "Showing a what-if world:" : "Numbers use your world:"}</span>${bits.join("")}<span class="pill">${W.players} player${W.players > 1 ? "s" : ""}</span><button class="lnk" data-group="world">${changed ? "Adjust" : "Change"}</button>`;
+  const r = rates();
+  el.innerHTML = `${tierPill(worldStage())}<span class="wtxt">${changed ? "What-if: " : ""}${esc(pick("Combat") || "Normal")} · ×${fmt(r.resourcerate / 100, 1)} resources${W.players > 1 ? " · " + W.players + " players" : ""}</span>`;
+  el.title = "World settings: " + D.world.modifiers.map(m => m.n + " " + pick(m.id)).join(", ");
 }
 function index(){
   D.recipes.forEach((r, i) => {
@@ -623,8 +804,8 @@ function index(){
   });
   for (const c of D.classes) CLS[c.k] = c;
   for (const g of D.groups) GRP[g.k] = g;
-
-  // entities
+  GRP.enchant = {k:"enchant", n:"Enchanting"};
+  GRP.comfort = {k:"comfort", n:"Comfort"};
   for (const [id, o] of Object.entries(D.items)){
     const cl = CLS[o.c] || {n:o.c, g:"other", a:""};
     const d0 = o.q && o.q[o.q.length - 1] && o.q[o.q.length - 1].dmg;
@@ -637,9 +818,8 @@ function index(){
     const g = D.stations[id] ? "stations" : "building";
     const c = g === "stations" ? "stations" : "b|" + (p.tool || "") + "|" + p.cat;
     ENT.push({k:g === "stations" ? "station" : "piece", id, o:p, g, c, mod:p.m, name:p.n, nameN:norm(p.n), nameC:compact(p.n),
-      tags:norm([tool, p.cat, p.m, "build building piece", p.cfg || "", g === "stations" ? "station crafting" : ""].join(" ")), tool, cat:p.cat});
+      tags:norm([tool, p.cat, p.m, "build building piece", p.cfg || "", p.cf ? "comfort" : "", g === "stations" ? "station crafting" : ""].join(" ")), tool, cat:p.cat});
     if (g === "stations"){
-      // stations are also buildable pieces
       ENT.push({k:"piece", id, o:p, g:"building", c:"b|" + (p.tool || "") + "|" + p.cat, mod:p.m, name:p.n, nameN:norm(p.n), nameC:compact(p.n),
         tags:norm([tool, p.cat, p.m, "build building piece station"].join(" ")), tool, cat:p.cat, dup:true});
     }
@@ -678,13 +858,25 @@ function index(){
     ENT.push({k:"creature", id, o:cr, g:"creatures", c:cr.boss ? "cr|boss" : "cr|" + ((cr.b || ["Unknown"])[0]), mod:cr.m, name:cr.n, nameN:norm(cr.n), nameC:compact(cr.n),
       tags:norm(["creature monster enemy", biomes(cr.b), cr.boss ? "boss" : "", cr.fac || "", cr.m].join(" ")), multi:(cr.b || [])});
   }
+  if (D.enchant){
+    for (const [id, f] of Object.entries(D.enchant.fx)){
+      ENT.push({k:"ench", id, o:f, g:"enchant", c:"en|" + (slotsOf(f)[0] || "any"), mod:"Epic Loot", name:f.n, nameN:norm(f.n), nameC:compact(f.n),
+        tags:norm(["enchantment enchant magic effect epic loot", f.d, (f.t || []).join(" "), (f.sk || []).join(" ")].join(" "))});
+    }
+  }
 }
 
 // ---------- filtering & search
+function tierOk(e){
+  if (S.tier === "all" || !(e.k === "item" || e.k === "piece" || e.k === "station")) return true;
+  const t = e.o.tier;
+  if (t == null) return false;
+  return S.tier === "mine" ? t <= worldStage() : t === +S.tier;
+}
 function visible(e){
   if (S.mod && e.mod && e.mod !== S.mod) return false;
   if (!S.nosrc && e.ns) return false;
-  return true;
+  return tierOk(e);
 }
 function score(e, qN, qC, toks){
   if (!qC) return 1;
@@ -700,23 +892,23 @@ function score(e, qN, qC, toks){
   if (toks.every(t => e.nameN.includes(t) || words.has(t) || words.has(sing(t)))) return 300;
   return 0;
 }
-function searchResults(){
+// Which list a view shows: most views are one entity group; comfort is the building group's comfort pieces.
+const viewGroup = v => v === "comfort" ? "building" : v;
+function searchResults(group){
   const qN = norm(S.q), qC = qN.replace(/ /g, ""), toks = qN.split(" ").filter(Boolean);
   const out = [];
   for (const e of ENT){
     if (e.dup && qC) continue;
     if (!visible(e)) continue;
-    if (S.group !== "all" && e.g !== S.group) continue;
-    if (S.cls && !classMatch(e, S.cls)) continue;
+    if (group && e.g !== group) continue;
     const sc = score(e, qN, qC, toks);
     if (sc > 0) out.push([sc, e]);
   }
-  // fallback: ingredients
   if (qC && out.length < 3){
     const ids = new Set(Object.entries(D.items).filter(([id, o]) => compact(o.n) === qC || compact(o.n) === sing(qC)).map(([id]) => id));
     if (ids.size){
       for (const e of ENT){
-        if (!visible(e) || out.some(x => x[1] === e)) continue;
+        if (!visible(e) || out.some(x => x[1] === e) || (group && e.g !== group)) continue;
         const reqs = e.k === "item" ? (RBI[e.id] || []).flatMap(r => r.r.map(x => x[0])) : e.k === "piece" ? e.o.r.map(x => x[0]) : [];
         if (reqs.some(x => ids.has(x))) out.push([100, e]);
       }
@@ -732,7 +924,6 @@ function classMatch(e, cls){
   if (cls === "b|comfort") return e.g === "building" && e.o.cf > 0 && !e.dup;
   return false;
 }
-
 // ---------- column definitions
 function nameCell(e, sub){
   const o = e.o;
@@ -741,7 +932,7 @@ function nameCell(e, sub){
   if (o.m && o.m !== "Valheim") tags.push(`<span class="tag mod">${esc(o.m)}</span>`);
   if (o.ns) tags.push(`<span class="tag warn">no known source</span>`);
   const i = e.k === "conv" ? (D.items[o.out[0][0]] || {}).i : o.i;
-  const ic = e.k === "creature" || e.k === "boss" ? crIcon(e.id) : e.k === "loc" ? locIcon(e.o) : e.k === "biome" ? glyph("biome") : e.k === "event" ? glyph("raid") : icon(i, "", e.name);
+  const ic = e.k === "creature" || e.k === "boss" ? crIcon(e.id) : e.k === "loc" ? locIcon(e.o) : e.k === "biome" ? glyph("biome") : e.k === "event" ? glyph("raid") : e.k === "ench" ? glyph("rune") : icon(i, "", e.name);
   return `<div class="nm">${ic}<div><b>${esc(e.name)}</b><small>${sub || ""} ${tags.join(" ")}</small></div></div>`;
 }
 function itemSub(e){
@@ -800,7 +991,7 @@ const col = {
   mats: {h:"Materials", cell:e => { const r = (RBI[e.id] || [])[0]; return matsCell(r && r.r) + (r && r.a > 1 ? `<small class="dim"> makes ${r.a}</small>` : ""); }, sv:e => { const r = (RBI[e.id] || [])[0]; return r ? r.r.reduce((s, q) => s + q[1], 0) : 0; }},
   dmg: {h:"Damage ★1 → max", n:1, cell:(e, ctx) => dmgCell(e.o, ctx), sv:e => lastQ(e.o, "dmg") ? dsum(lastQ(e.o, "dmg")) : 0},
   tooldmg: {h:"Chop / Pick", n:1, cell:(e, ctx) => dmgCell(e.o, ctx, ["chop","pickaxe"]), sv:e => lastQ(e.o, "dmg") ? dsum(lastQ(e.o, "dmg"), ["chop","pickaxe"]) : 0},
-  tier: {h:"Tier", n:1, cell:e => e.o.x && e.o.x.tier != null ? fmt(e.o.x.tier, 0) : `<span class="dim">—</span>`, sv:e => (e.o.x && e.o.x.tier) || 0},
+  tier: {h:"Tool tier", n:1, cell:e => e.o.x && e.o.x.tier != null ? fmt(e.o.x.tier, 0) : `<span class="dim">—</span>`, sv:e => (e.o.x && e.o.x.tier) || 0},
   block: {h:"Block", n:1, cell:e => rangeCell(e.o, "blk"), sv:e => lastQ(e.o, "blk")},
   armor: {h:"Armor ★1 → max", n:1, cell:e => rangeCell(e.o, "arm"), sv:e => lastQ(e.o, "arm")},
   dur: {h:"Durability", n:1, cell:e => rangeCell(e.o, "dur"), sv:e => lastQ(e.o, "dur")},
@@ -914,7 +1105,7 @@ col.chp.h = "Health";
 col.chp.cell = e => fmt(e.o.hp * hpScale(), 0);
 col.cmmo = {h:"MMO lvl", n:1, cell:e => D.mmo && D.mmo[e.id] ? D.mmo[e.id][0] : dash, sv:e => D.mmo && D.mmo[e.id] ? D.mmo[e.id][0] : 0};
 col.drops.cell = e => matsCell((e.o.dr || []).map(d => [d[0], scaleAmt([d[1], d[2]], d[0])]));
-col.tierc = {h:"Tier", cell:e => tierPill(e.o.tier), sv:e => (e.o.tier ?? 9) * 1e6 + keyStat(e.o)};
+col.tierc = {h:"Tier", cell:e => tierPill(e.o.tier), sv:e => (e.o.tier ?? 9) * 1e6 - keyStat(e.o)};
 col.cfv = {h:"Comfort", n:1, cell:e => `<b class="mono">+${e.o.cf}</b>`, sv:e => e.o.cf || 0};
 col.cfg = {h:"Group", cell:e => esc(COMFORT_NAMES[e.o.cfg || "None"] || e.o.cfg), sv:e => e.o.cfg || ""};
 col.ptier = {h:"Tier", cell:e => tierPill(e.o.tier), sv:e => e.o.tier ?? 9};
@@ -977,59 +1168,17 @@ function convFlow(c, big){
   const side = arr => arr.length ? arr.map(x => `<button class="gi" data-go="item:${esc(x[0])}">${iicon(x[0], s)}${esc(iname(x[0]))}${x[1] > 1 ? `<span class="x">×${x[1]}</span>` : ""}</button>`).join("") : `<span class="dim">${c.k === "plant" ? "Plant" : "Nothing"}</span>`;
   return `<div class="flow">${side(c.in)}<span class="arrow">→</span>${side(c.out)}</div>`;
 }
+COLS.materials = ["item","tierc","src","used","stack","wt"];
+COLS.other = ["item","tierc","src","used","wt"];
+COLS.building = ["piece","pmats","needs","comfort","php","ptier"];
+COLS.enchant = ["enn","engoes","enr0","enr1","enr2","enr3","enr4","enr5"];
+DEFAULT_SORT.enchant = ["enn", 1];
+DEFAULT_SORT.materials = ["tierc", 1];
+col.enn = {h:"Enchantment", cell:e => `<div class="nm">${glyph("rune")}<div><b>${esc(e.o.n)}</b><div class="fxd">${esc(firstLine(e.o.d))}</div></div></div>`, sv:e => e.name};
+col.engoes = {h:"Goes on", cell:e => `<div class="pillset" style="min-width:170px;max-width:240px">${goesOn(e.o).map(x => `<span class="pill">${esc(x)}</span>`).join("")}</div>`, sv:e => goesOn(e.o).join()};
+[0, 1, 2, 3, 4, 5].forEach(i => { col["enr" + i] = {h:["Magic","Rare","Epic","Legendary","Mythic","Ancient"][i], n:1, cell:e => rangeText(e.o, i), sv:e => (e.o.v && e.o.v[i]) ? e.o.v[i][1] : -1}; });
 
-// ---------- render: chips
-function counts(){
-  const g = {all:0}, c = {};
-  const qN = norm(S.q), qC = qN.replace(/ /g, ""), toks = qN.split(" ").filter(Boolean);
-  for (const e of ENT){
-    if (!visible(e)) continue;
-    if (qC && (e.dup || !score(e, qN, qC, toks))) continue;
-    if (!e.dup){ g[e.g] = (g[e.g] || 0) + 1; g.all++; }
-    else g[e.g] = (g[e.g] || 0) + 1;
-    if (e.g === S.group && e.g === "building" && e.o.cf > 0 && !e.dup) c["b|comfort"] = (c["b|comfort"] || 0) + 1;
-    if (e.g === S.group){
-      const pre = e.k === "creature" ? "cr|" : e.k === "loc" ? "lo|" : e.k === "boss" ? "bo|" : null;
-      if (pre && e.multi){ for (const b of e.multi) c[pre + b] = (c[pre + b] || 0) + 1; if (e.k === "creature" && e.o.boss) c["cr|boss"] = (c["cr|boss"] || 0) + 1; }
-      else c[e.c] = (c[e.c] || 0) + 1;
-    }
-  }
-  return {g, c};
-}
-function renderChips(ct){
-  const gs = [{k:"all", n:"Everything"}].concat(D.groups);
-  const chip = g => `<button class="chip" data-group="${g.k}" aria-pressed="${S.group === g.k}">${esc(g.n)}${g.k === "world" || g.k === "classes" ? "" : ` <span class="ct">${(ct.g[g.k] || 0).toLocaleString()}</span>`}</button>`;
-  const show = g => g.k === "all" || ct.g[g.k] || ((g.k === "world" || (g.k === "classes" && D.playerClasses)) && !S.q);
-  $("#groups").innerHTML = gs.filter(g => show(g) && !WORLD_GROUPS.includes(g.k)).map(chip).join("") +
-    `<span class="groups-sep">World</span>` + gs.filter(g => show(g) && WORLD_GROUPS.includes(g.k)).map(chip).join("");
-  let subs = [];
-  if (S.group === "building"){
-    const keys = Object.keys(ct.c);
-    const toolOrder = t => t === "Hammer" ? 0 : 1;
-    keys.sort((a, b) => {
-      const [, ta, ca] = a.split("|"), [, tb, cb] = b.split("|");
-      const na = iname(ta), nb = iname(tb);
-      return toolOrder(na) - toolOrder(nb) || na.localeCompare(nb) || (CAT_ORDER.indexOf(ca) + 1 || 99) - (CAT_ORDER.indexOf(cb) + 1 || 99) || ca.localeCompare(cb);
-    });
-    subs = keys.filter(k => k !== "b|comfort").map(k => { const [, t, c] = k.split("|"); const tn = t ? iname(t) : "Other"; return {k, n:tn === "Hammer" ? c : `${tn} · ${c}`}; });
-    if (ct.c["b|comfort"]) subs.unshift({k:"b|comfort", n:"Comfort"});
-  } else if (S.group === "processing"){
-    subs = Object.keys(ct.c).map(k => ({k, n:k.slice(2)})).sort((a, b) => a.n.localeCompare(b.n));
-  } else if (["creatures","locations","bosses"].includes(S.group)){
-    const order = BIOME_ORDER;
-    subs = Object.keys(ct.c).map(k => ({k, n:k === "cr|boss" ? "Bosses" : (BIOME[k.slice(3)] || (k.slice(3) === "None" ? "Anywhere" : prettify(k.slice(3))))}))
-      .sort((a, b) => (a.k === "cr|boss" ? -1 : b.k === "cr|boss" ? 1 : (order.indexOf(a.k.slice(3)) + 1 || 99) - (order.indexOf(b.k.slice(3)) + 1 || 99)));
-  } else if (S.group === "classes" && D.playerClasses){
-    subs = D.playerClasses.classes.map(c => ({k:c.id, n:c.n}));
-  } else if (!["all","stations","events","biomes","world","classes"].includes(S.group)){
-    subs = D.classes.filter(c => c.g === S.group && ct.c[c.k]).map(c => ({k:c.k, n:c.n}));
-  }
-  $("#classes").hidden = subs.length < 2;
-  $("#classes").innerHTML = subs.length < 2 ? "" : [`<button class="chip" data-cls="" aria-pressed="${!S.cls}">All</button>`].concat(subs.map(s =>
-    `<button class="chip" data-cls="${esc(s.k)}" aria-pressed="${S.cls === s.k}">${esc(s.n)}${ct.c[s.k] != null ? ` <span class="ct">${ct.c[s.k]}</span>` : ""}</button>`)).join("");
-}
-
-// ---------- render: results
+// ---------- lists
 function sectionHTML(key, title, ents, gkey, note){
   const cols = COLS[gkey] || COLS.other;
   const [sk, sd] = S.sort[key] || S.sort[gkey] || DEFAULT_SORT[gkey] || ["item", 1];
@@ -1040,76 +1189,114 @@ function sectionHTML(key, title, ents, gkey, note){
     return (typeof va === "string" ? va.localeCompare(vb) : va - vb) * sd || a.name.localeCompare(b.name);
   });
   const ctx = {max:0};
-  const toolKeys = gkey === "tools" ? ["chop","pickaxe"] : COMBAT;
-  for (const e of ents){ if (e.k === "item" && e.o.q){ ctx.max = Math.max(ctx.max, dsum(e.o.q[e.o.q.length - 1].dmg, COMBAT), gkey === "tools" ? dsum(e.o.q[e.o.q.length - 1].dmg, toolKeys) : 0); } }
+  for (const e of ents){ if (e.k === "item" && e.o.q){ ctx.max = Math.max(ctx.max, dsum(e.o.q[e.o.q.length - 1].dmg, COMBAT), gkey === "tools" ? dsum(e.o.q[e.o.q.length - 1].dmg, ["chop","pickaxe"]) : 0); } }
   const limit = S.open[key] ? 1e9 : (S.cls || ents.length <= 40 ? 400 : 25);
   const rows = sorted.slice(0, limit).map(e => {
-    const on = S.sel && S.sel.k === e.k && S.sel.id === e.id ? " class=\"on\"" : "";
+    const on = S.sel && S.sel.k === e.k && S.sel.id === e.id ? ` class="on"` : "";
     return `<tr data-go="${e.k}:${esc(e.id)}"${on}>${cols.map(c => `<td${col[c].n ? ` class="num"` : ""}>${col[c].cell(e, ctx)}</td>`).join("")}</tr>`;
   }).join("");
   const head = cols.map(c => `<th${col[c].n ? ` class="num"` : ""} data-sort="${c}" data-sec="${esc(key)}" aria-sort="${c === sk ? (sd > 0 ? "ascending" : "descending") : "none"}">${esc(col[c].h)}${c === sk ? ` <span class="sa">${sd > 0 ? "▲" : "▼"}</span>` : ""}</th>`).join("");
   const more = sorted.length > limit ? `<button class="more" data-more="${esc(key)}">Show all ${sorted.length.toLocaleString()}</button>` : "";
   const closed = !!S.collapsed[key];
-  return `<section class="sec${closed ? " closed" : ""}" data-sec-key="${esc(key)}"><div class="sec-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}"><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M6 9l6 6 6-6"/></svg></span><h2>${esc(title)}</h2><span class="ct">${ents.length.toLocaleString()}</span>${note ? `<span class="note">${note}</span>` : ""}</div>
+  return `<section class="sec${closed ? " closed" : ""}" data-sec-key="${esc(key)}"><div class="sec-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}">${CHEV}<h2>${esc(title)}</h2><span class="ct">${ents.length.toLocaleString()}</span>${note ? `<span class="note">${note}</span>` : ""}</div>
     <div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>${more}</div></section>`;
 }
-function render(){
-  const ct = counts();
-  if (S.group !== "all" && !ct.g[S.group] && S.q) S.group = "all";
-  renderChips(ct);
-  const res = searchResults();
+const CHEV = `<span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M6 9l6 6 6-6"/></svg></span>`;
+function subsOf(view, ents){
+  const c = {};
+  for (const e of ents){
+    const pre = e.k === "creature" ? "cr|" : e.k === "loc" ? "lo|" : null;
+    if (pre && e.multi){ for (const b of e.multi) c[pre + b] = (c[pre + b] || 0) + 1; if (e.k === "creature" && e.o.boss) c["cr|boss"] = (c["cr|boss"] || 0) + 1; }
+    else c[e.c] = (c[e.c] || 0) + 1;
+  }
+  let subs = [];
+  if (view === "building"){
+    const keys = Object.keys(c);
+    const toolOrder = t => t === "Hammer" ? 0 : 1;
+    keys.sort((a, b) => {
+      const [, ta, ca] = a.split("|"), [, tb, cb] = b.split("|");
+      const na = iname(ta), nb = iname(tb);
+      return toolOrder(na) - toolOrder(nb) || na.localeCompare(nb) || (CAT_ORDER.indexOf(ca) + 1 || 99) - (CAT_ORDER.indexOf(cb) + 1 || 99) || ca.localeCompare(cb);
+    });
+    subs = keys.map(k => { const [, t, cc] = k.split("|"); const tn = t ? iname(t) : "Other"; return {k, n:tn === "Hammer" ? cc : `${tn} · ${cc}`}; });
+  } else if (view === "processing"){
+    subs = Object.keys(c).map(k => ({k, n:k.slice(2)})).sort((a, b) => a.n.localeCompare(b.n));
+  } else if (view === "creatures" || view === "locations"){
+    subs = Object.keys(c).map(k => ({k, n:k === "cr|boss" ? "Bosses" : (BIOME[k.slice(3)] || (k.slice(3) === "None" ? "Anywhere" : prettify(k.slice(3))))}))
+      .sort((a, b) => (a.k === "cr|boss" ? -1 : b.k === "cr|boss" ? 1 : (BIOME_ORDER.indexOf(a.k.slice(3)) + 1 || 99) - (BIOME_ORDER.indexOf(b.k.slice(3)) + 1 || 99)));
+  } else if (!["stations","events","biomes","bosses","comfort","search"].includes(view)){
+    subs = D.classes.filter(x => x.g === view && c[x.k]).map(x => ({k:x.k, n:x.n}));
+  }
+  return subs.map(s => ({...s, ct:c[s.k] || 0}));
+}
+function subnavHTML(subs){
+  if (subs.length < 2) return "";
+  if (subs.length > 12){
+    return `<div class="subselect"><label for="f-sub">Show</label><select class="ctl" id="f-sub"><option value="">Everything (${subs.reduce((t, s) => t + s.ct, 0).toLocaleString()})</option>${subs.map(s => `<option value="${esc(s.k)}"${S.cls === s.k ? " selected" : ""}>${esc(s.n)} (${s.ct})</option>`).join("")}</select></div>`;
+  }
+  return `<div class="tabs" role="tablist"><button class="tab" role="tab" data-cls="" aria-selected="${!S.cls}">All</button>${subs.map(s => `<button class="tab" role="tab" data-cls="${esc(s.k)}" aria-selected="${S.cls === s.k}">${esc(s.n)}<span class="ct">${s.ct}</span></button>`).join("")}</div>`;
+}
+const LIST_TIER_VIEWS = new Set(["weapons","armor","shields","ammo","tools","food","meads","materials","other","building","comfort","stations","search"]);
+function toolsHTML(view){
+  const bits = [];
+  if (LIST_TIER_VIEWS.has(view)){
+    const now = worldStage();
+    bits.push(`<select class="ctl" id="f-tier" aria-label="Progression tier"><option value="all">All tiers</option><option value="mine"${S.tier === "mine" ? " selected" : ""}>Up to my tier (${esc(tierName(now))})</option>${(D.stages.biomes || []).map((b, t) => `<option value="${t}"${String(S.tier) === String(t) ? " selected" : ""}>${esc(tierName(t))} only</option>`).join("")}</select>`);
+  }
+  if (!["biomes","events","enchant"].includes(view)) bits.push(`<select class="ctl" id="f-mod" aria-label="Mod"><option value="">All mods</option>${D.modsUsed.map(m => `<option value="${esc(m)}"${S.mod === m ? " selected" : ""}>${esc(m)}</option>`).join("")}</select>`);
+  if (["materials","other","search","weapons","armor","tools","food","meads","shields","ammo"].includes(view)) bits.push(`<label class="toggle"><input type="checkbox" id="f-nosrc"${S.nosrc ? " checked" : ""}> Include items with no known source</label>`);
+  bits.push(`<span class="grow"></span>`);
+  bits.push(`<button class="iconbtn" data-collapse="1" title="Collapse all sections" aria-label="Collapse all sections"><svg width="15" height="15" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M7 10l5-5 5 5M7 19l5-5 5 5"/></svg></button>`);
+  bits.push(`<button class="iconbtn" data-collapse="0" title="Expand all sections" aria-label="Expand all sections"><svg width="15" height="15" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M7 5l5 5 5-5M7 14l5 5 5-5"/></svg></button>`);
+  bits.push(`<button class="iconbtn" data-help title="How to read the atlas" aria-label="How to read the atlas">?</button>`);
+  return `<div class="tools">${bits.join("")}</div>`;
+}
+function pageHead({eyebrow, title, count, lede, tools, sub}){
+  return `<div class="ph">${eyebrow ? `<div class="eyebrow">${esc(eyebrow)}</div>` : ""}<div class="ph-title"><h1>${esc(title)}</h1>${count != null ? `<span class="ct">${count.toLocaleString()}</span>` : ""}</div>${lede ? `<p class="lede">${lede}</p>` : ""}${tools || ""}${sub || ""}</div>`;
+}
+const viewLabel = v => (NAV.find(n => n.k === v) || {}).n || (GRP[v] && GRP[v].n) || prettify(v);
+function listView(v){
+  const group = v === "search" ? null : viewGroup(v);
+  const res = searchResults(group);
   for (const [sc, e] of res) e._sc = sc;
-  const ents = res.map(x => x[1]);
-  $("#count").textContent = S.q ? `${ents.filter(e => !e.dup).length.toLocaleString()} matches for “${S.q}”` : "";
-  let html = "";
-  if (S.group === "classes" && !S.q){
-    $("#results").innerHTML = S.cls ? classGuide(S.cls) : classOverview();
-    return;
-  }
-  if (S.group === "building" && S.cls === "b|comfort" && !S.q){
-    $("#results").innerHTML = comfortPanel(ents);
-    return;
-  }
-  if (S.group === "world" && !S.q){
-    $("#results").innerHTML = worldPanel();
-    return;
-  }
+  let all = res.map(x => x[1]);
+  if (v === "comfort") all = all.filter(e => e.o.cf > 0 && !e.dup);
+  const subs = v === "search" ? [] : subsOf(v, all);
+  if (S.cls && !subs.some(s => s.k === S.cls)) S.cls = null;
+  const ents = S.cls ? all.filter(e => classMatch(e, S.cls)) : all;
+  const subLabel = S.cls ? (subs.find(s => s.k === S.cls) || {}).n : null;
+  const title = v === "search" ? `Results for “${S.q}”` : subLabel || viewLabel(v);
+  const count = ents.filter(e => !e.dup).length;
+  let lede = v === "search" ? "Grouped by section. Pick a section on the left to narrow it down." : LEDE[v] || "";
+  if (S.tier !== "all") lede += ` <span class="tag ok">${S.tier === "mine" ? "Up to " + esc(tierName(worldStage())) : esc(tierName(+S.tier)) + " only"}</span> <button class="lnk" data-tier-clear>Show all tiers</button>`;
+  let html = pageHead({eyebrow:v === "search" ? "Search" : NAV_SECTION[v] || "", title, count, lede, tools:toolsHTML(v), sub:subnavHTML(subs)});
+  if (v === "comfort") return html + comfortBody(ents);
   if (!ents.length){
-    html = `<div class="empty"><b>Nothing matches “${esc(S.q)}”.</b><br>Try a shorter word, a weapon type like <i>atgeir</i>, a material like <i>bronze</i>, or clear the mod filter.</div>`;
-  } else if (S.group === "all"){
-    const byG = {};
-    for (const e of ents) if (!e.dup || !S.q) (byG[e.g] ||= []).push(e);
-    const best = k => Math.max(...byG[k].map(e => e._sc || 0));
-    const gorder = D.groups.map(g => g.k).filter(k => byG[k]);
-    if (S.q) gorder.sort((a, b) => best(b) - best(a) || 0);
-    for (const k of gorder) html += sectionHTML("g:" + k, GRP[k].n, byG[k], k);
-  } else if (S.cls || S.q || ["stations","processing"].includes(S.group)){
-    const title = S.cls ? ($(`#classes [data-cls="${CSS.escape(S.cls)}"]`)?.firstChild?.textContent.trim() || GRP[S.group].n) : GRP[S.group].n;
-    html = sectionHTML("c:" + S.group + ":" + (S.cls || ""), title, ents, S.group, classNote());
-  } else {
-    // whole group: one section per class
-    const byC = {};
-    for (const e of ents) (byC[e.c] ||= []).push(e);
-    const keys = Object.keys(byC);
-    const order = [...$("#classes").querySelectorAll("[data-cls]")].map(b => b.dataset.cls).filter(Boolean);
-    keys.sort((a, b) => (order.indexOf(a) + 1 || 999) - (order.indexOf(b) + 1 || 999));
-    if (["creatures","locations","bosses"].includes(S.group)){
-      const pre = {creatures:"cr|", locations:"lo|", bosses:"bo|"}[S.group];
-      const byB = {};
-      for (const e of ents) for (const b of (e.multi && e.multi.length ? e.multi : ["Unknown"])) (byB[b] ||= []).push(e);
-      const bk = Object.keys(byB).sort((a, b) => (BIOME_ORDER.indexOf(a) + 1 || 99) - (BIOME_ORDER.indexOf(b) + 1 || 99));
-      if (S.group === "bosses") html += sectionHTML("c:bosses:all", "All bosses in progression order", ents, "bosses", "Health shown for " + W.players + " player" + (W.players > 1 ? "s" : "") + " nearby.");
-      else for (const b of bk) html += sectionHTML("c:" + S.group + ":" + b, BIOME[b] || (b === "None" || b === "All" ? "Anywhere" : b === "Unknown" ? "No natural spawns (dungeons, raids, summons)" : prettify(b)), byB[b], S.group);
-    } else if (["events","biomes"].includes(S.group)){
-      html = sectionHTML("c:" + S.group + ":", GRP[S.group].n, ents, S.group, S.group === "events" ? raidNote() : "");
-    } else {
-      for (const k of keys){
-        const label = $(`#classes [data-cls="${CSS.escape(k)}"]`)?.firstChild?.textContent.trim() || (CLS[k] && CLS[k].n) || k;
-        html += sectionHTML("c:" + S.group + ":" + k, label, byC[k], S.group);
-      }
-    }
+    return html + `<div class="empty"><b>${S.q ? `Nothing matches “${esc(S.q)}” here.` : "Nothing to show with these filters."}</b><br>${S.q ? "Try a shorter word, a weapon type like <i>atgeir</i>, or a material like <i>bronze</i>." : ""} ${S.tier !== "all" || S.mod ? `<button class="lnk" data-filters-clear>Clear the filters</button>` : ""}</div>`;
   }
-  $("#results").innerHTML = html;
+  if (v === "search"){
+    const byG = {};
+    for (const e of ents) if (!e.dup) (byG[e.g] ||= []).push(e);
+    const best = k => Math.max(...byG[k].map(e => e._sc || 0));
+    const order = Object.keys(byG).sort((a, b) => best(b) - best(a));
+    for (const k of order) html += sectionHTML("g:" + k, (GRP[k] || {}).n || viewLabel(k), byG[k], k);
+    return html;
+  }
+  if (S.cls || S.q || ["stations","processing","events","biomes","bosses"].includes(v) || subs.length < 2){
+    const note = v === "bosses" ? "Health shown for " + W.players + " player" + (W.players > 1 ? "s" : "") + " nearby." : v === "events" ? raidNote() : classNote(v);
+    return html + sectionHTML("c:" + v + ":" + (S.cls || ""), subLabel || viewLabel(v), ents, group, note);
+  }
+  if (v === "creatures" || v === "locations"){
+    const byB = {};
+    for (const e of ents) for (const b of (e.multi && e.multi.length ? e.multi : ["Unknown"])) (byB[b] ||= []).push(e);
+    const bk = Object.keys(byB).sort((a, b) => (BIOME_ORDER.indexOf(a) + 1 || 99) - (BIOME_ORDER.indexOf(b) + 1 || 99));
+    for (const b of bk) html += sectionHTML("c:" + v + ":" + b, BIOME[b] || (b === "None" || b === "All" ? "Anywhere" : b === "Unknown" ? "No natural spawns (dungeons, raids, summons)" : prettify(b)), byB[b], group);
+    return html;
+  }
+  const byC = {};
+  for (const e of ents) (byC[e.c] ||= []).push(e);
+  for (const s of subs) if (byC[s.k]) html += sectionHTML("c:" + v + ":" + s.k, s.n, byC[s.k], group);
+  return html;
 }
 function raidNote(){
   const r = rates().eventrate / 100, R = D.world && D.world.raid;
@@ -1118,70 +1305,297 @@ function raidNote(){
   const every = R.interval * r, p = R.chance / r;
   return `A raid roll happens every ${fmt(every, 0)} min near your base with a ${fmt(p, 1)}% chance, about one raid every ${fmt(every / (p / 100) / 60, 1)} h of play.`;
 }
-function classNote(){
-  if (S.group === "weapons") return "Base damage summed across damage types; bar shows the mix at max level.";
-  if (S.group === "armor") return "Armor ★1 → fully upgraded.";
-  if (S.group === "building") return "Station = must be within its build range.";
+function classNote(v){
+  if (v === "weapons") return "Damage is summed across types; the bar shows the mix at max level.";
+  if (v === "building") return "Station means it must be built within that station's range.";
   return "";
 }
 
+// ---------- sidebar
+function navCounts(){
+  const qN = norm(S.q), qC = qN.replace(/ /g, ""), toks = qN.split(" ").filter(Boolean);
+  const g = {all:0};
+  for (const e of ENT){
+    if (e.dup || !visible(e)) continue;
+    if (qC && !score(e, qN, qC, toks)) continue;
+    g[e.g] = (g[e.g] || 0) + 1;
+    g.all++;
+    if (e.g === "building" && e.o.cf > 0) g.comfort = (g.comfort || 0) + 1;
+  }
+  return g;
+}
+function renderNav(ct){
+  let h = "";
+  if (S.q) h += `<button class="nav-i search-all" data-view="search" aria-current="${S.view === "search" ? "page" : "false"}">${navIcon("star")}<span>All results</span><span class="ct">${(ct.all || 0).toLocaleString()}</span></button>`;
+  for (const n of NAV){
+    if (n.h){ h += `<div class="nav-h">${esc(n.h)}</div>`; continue; }
+    if (n.k === "journey" && !D.playerClasses) continue;
+    if (n.k === "enchant" && !D.enchant) continue;
+    if (n.k === "world" && !D.world) continue;
+    const label = n.n || (GRP[n.k] && GRP[n.k].n) || prettify(n.k);
+    const count = ["home","journey","world"].includes(n.k) ? null : (ct[n.k] || 0);
+    if (count === 0 && !S.q && !["enchant"].includes(n.k)) continue;
+    h += `<button class="nav-i${S.q && count === 0 ? " zero" : ""}" data-view="${n.k}" aria-current="${S.view === n.k ? "page" : "false"}">${navIcon(n.ic)}<span>${esc(label)}</span>${count != null ? `<span class="ct">${count.toLocaleString()}</span>` : ""}</button>`;
+  }
+  h += `<p class="foot-note">Press <b>/</b> to search from anywhere. Click any row or icon to open its details.</p>`;
+  $("#nav").innerHTML = h;
+}
+
+// ---------- router
+function render(){
+  const ct = navCounts();
+  renderNav(ct);
+  const v = S.view;
+  let html;
+  if (v === "home") html = homeView();
+  else if (v === "journey") html = journeyView();
+  else if (v === "world") html = worldView();
+  else if (v === "enchant") html = enchantView();
+  else html = listView(v);
+  $("#results").innerHTML = html;
+  if (v === "comfort") updateComfort();
+}
+function go(view, opts = {}){
+  S.view = view;
+  S.cls = opts.cls ?? null;
+  S.open = {};
+  if (opts.tier !== undefined) S.tier = opts.tier;
+  else if (S.tier !== "mine") S.tier = "all";
+  if (!["search"].includes(view)) store("atlas.view", view);
+  closeNav();
+  if (S.sel) closeDetail();
+  render();
+  if (!opts.keepScroll) window.scrollTo(0, 0);
+}
+
+// ---------- overview
+function homeView(){
+  const now = worldStage(), st = D.stages;
+  const boss = st.bosses[now], bc = boss && D.creatures[boss], bi = boss && D.bosses[boss];
+  const done = st.bosses.slice(0, now).filter(Boolean).map(crName);
+  const rail = st.biomes.map((b, t) => {
+    const bp = st.bosses[t], state = t < now ? "done" : t === now ? "now" : "future";
+    return `<button class="stop ${state}" data-journey="${t}" title="${esc(tierName(t) + (bp ? " → " + crName(bp) : ""))}"><span class="dot">${bp ? crIcon(bp, "s22") : glyph("biome", 26)}${t < now ? `<span class="check" aria-hidden="true">✓</span>` : ""}</span><span class="lab">${esc(tierName(t))}</span><span class="bn">${bp ? esc(crName(bp)) : ""}</span></button>`;
+  }).join("");
+  let h = `<div class="stack">`;
+  h += `<section class="hero"><div><div class="eyebrow">Your world</div><h2>${bc ? `You're in the ${esc(tierName(now))}. ${esc(bc.n)} is next.` : `You're in the ${esc(tierName(now))}.`}</h2>
+    <p class="sub">${done.length ? esc(done.join(", ")) + " defeated." : "No bosses defeated yet."} Tiers below come from where each material can be gathered; your world's progress decides which stage is highlighted.</p></div>
+    <div class="rail" role="list">${rail}</div></section>`;
+  // next boss / world / class
+  let nb = "";
+  if (bc){
+    const L = D.locations[((bi && (bi.altars || bi.lairs)) || [])[0]];
+    const weak = Object.entries(bc.wk || {}).filter(([k, v]) => /Weak/.test(v)).map(([k]) => DNAME[k] || prettify(k));
+    nb = `<div class="panel"><div class="h3">Next boss</div><div class="nm" style="margin-bottom:10px">${crIcon(boss, "s44")}<div><b style="font-family:var(--display);font-size:22px;font-weight:600">${esc(bc.n)}</b><small>${esc(L ? L.n + " · " + biomes(L.b) : tierName(now))}</small></div></div>
+      <div class="kv"><div><span>Health</span><b>${fmt(bc.hp * hpScale(), 0)}</b></div>${bi && bi.summon && bi.summon.item ? `<div><span>Summon with</span><b style="font-family:var(--sans);font-size:13px">${bi.summon.n} × ${esc(iname(bi.summon.item))}</b></div>` : ""}</div>
+      ${weak.length ? `<p class="note">Weak to <b>${esc(weak.join(", "))}</b>.</p>` : ""}
+      <div class="tools" style="margin-top:12px"><button class="ctl" data-go="boss:${esc(boss)}">Boss details</button><button class="ctl" data-journey="${now}">Plan this stage</button></div></div>`;
+  }
+  const pick = id => { const m = (D.world && D.world.modifiers || []).find(x => x.id === id); const o = m && m.opts.find(x => x.v === W.opt[id]); return o ? o.n : "Normal"; };
+  const wc = D.world ? `<div class="panel"><div class="h3">World settings</div><div class="kv"><div><span>Combat</span><b style="font-family:var(--sans);font-size:14px">${esc(pick("Combat"))}</b></div><div><span>Resources</span><b>×${fmt(rates().resourcerate / 100, 1)}</b></div><div><span>Raids</span><b style="font-family:var(--sans);font-size:14px">${esc(pick("Raids"))}</b></div><div><span>Death</span><b style="font-family:var(--sans);font-size:14px">${esc(pick("DeathPenalty"))}</b></div></div><p class="note">${raidNote()}</p><div class="tools" style="margin-top:10px"><button class="ctl" data-view="world">Change settings or players</button></div></div>` : "";
+  let cc = "";
+  if (D.playerClasses){
+    const P = D.playerClasses, c = S.klass && P.classes.find(x => x.id === S.klass);
+    const picks = c ? c.classes.flatMap(k => progressionOf(k).filter(([id, o]) => o.tier === now)).sort((a, b) => statAt(b[1], now) - statAt(a[1], now)).slice(0, 3) : [];
+    cc = `<div class="panel"><div class="h3">Your class</div>${c ? `<p style="margin:0 0 8px"><b style="font-family:var(--display);font-size:22px;font-weight:600">${esc(c.n)}</b> <span class="muted">${esc(c.w)}</span></p>${picks.length ? `<div class="lvlhead">Good right now</div><div class="grid-items">${picks.map(x => gearChip(x, now)).join("")}</div>` : ""}<div class="tools" style="margin-top:12px"><button class="ctl" data-view="journey">Open the ${esc(c.n)} journey</button></div>` : `<p class="muted" style="margin:0 0 10px">Pick your class to get a gear plan for every boss.</p>`}
+      <div class="lvlhead">${c ? "Switch class" : "Classes"}</div><div class="grid-items">${P.classes.map(x => `<button class="gi${x.id === S.klass ? " me" : ""}" data-klass="${esc(x.id)}">${esc(x.n)}</button>`).join("")}</div></div>`;
+  }
+  h += `<div class="grid3">${nb}${cc}${wc}</div>`;
+  // new at this tier
+  const cats = ["weapons","armor","shields","ammo","tools","food","meads","building"];
+  const newCt = {};
+  for (const e of ENT){ if (e.dup || e.ns) continue; if ((e.k === "item" || e.k === "piece") && e.o.tier === now && cats.includes(e.g)) newCt[e.g] = (newCt[e.g] || 0) + 1; }
+  const icFor = k => (NAV.find(n => n.k === k) || {}).ic;
+  h += `<section><div class="headrow"><h2>New in the ${esc(tierName(now))} tier</h2><span class="muted" style="font-size:12.5px">Everything that becomes craftable at your stage</span></div><div class="tiles">${cats.filter(k => newCt[k]).map(k => `<button class="tile new" data-view="${k}" data-tier="${now}">${glyph(icFor(k), 36)}<b>${esc(viewLabel(k))}</b><small>${newCt[k]} new</small></button>`).join("")}</div></section>`;
+  // browse
+  const ct = navCounts();
+  h += `<section><div class="headrow"><h2>Browse</h2></div><div class="tiles">${NAV.filter(n => n.k && n.k !== "home" && !(n.k === "journey" && !D.playerClasses) && !(n.k === "enchant" && !D.enchant)).map(n => `<button class="tile" data-view="${n.k}">${glyph(n.ic, 36)}<b>${esc(n.n || (GRP[n.k] && GRP[n.k].n) || prettify(n.k))}</b><small>${ct[n.k] ? ct[n.k].toLocaleString() : n.k === "journey" ? D.playerClasses.classes.length + " classes" : n.k === "world" ? "sliders & stars" : n.k === "enchant" ? Object.keys(D.enchant.fx).length + " enchantments" : ""}</small></button>`).join("")}</div></section>`;
+  return h + `</div>`;
+}
+
+// ---------- journey (class guides)
+const classById = id => D.playerClasses && D.playerClasses.classes.find(c => c.id === id);
+function gearChip([id, o], t, showStat = true){
+  const q = reachQ(o, t), mq = maxQ(o);
+  const later = mq > 1 && q < mq ? (o.qt || [])[q] : null;
+  return `<button class="gi" data-go="item:${esc(id)}"${later != null ? ` title="★${q + 1} needs the ${esc(tierName(later))} tier"` : ""}>${icon(o.i, "s22", o.n)}${esc(o.n)}${mq > 1 && q < mq ? `<span class="sub">★${q}</span>` : ""}${showStat ? `<span class="x">${fmt(statAt(o, t), 0)}</span>` : ""}</button>`;
+}
+function bestAt(classes, t, n = 2){
+  const at = [], before = [];
+  for (const k of classes) for (const [id, o] of progressionOf(k)){ if (o.tier === t) at.push([id, o]); else if (o.tier < t) before.push([id, o]); }
+  const sc = x => statAt(x[1], t);
+  at.sort((a, b) => sc(b) - sc(a));
+  before.sort((a, b) => sc(b) - sc(a));
+  const keep = before[0] && (!at.length || sc(before[0]) > sc(at[0])) ? before[0] : null;
+  return {list:at.slice(0, n), keep};
+}
+function bestHTML(label, b, t){
+  if (!b.list.length && !b.keep) return "";
+  let h = `<div class="wtype">${esc(label)}</div>`;
+  if (!b.list.length) return h + `<div class="grid-items">${gearChip(b.keep, t)}</div><p class="note" style="margin-top:4px">Nothing new here. Keep upgrading it.</p>`;
+  h += `<div class="grid-items">${b.list.map(x => gearChip(x, t)).join("")}</div>`;
+  if (b.keep) h += `<p class="note" style="margin-top:4px">Your <button class="lnk" data-go="item:${esc(b.keep[0])}">${esc(b.keep[1].n)}</button> still hits harder here (${fmt(statAt(b.keep[1], t), 0)} vs ${fmt(statAt(b.list[0][1], t), 0)}).</p>`;
+  return h;
+}
+function armorPick(style, slot, t){
+  const score = ([id, o]) => { const arm = statAt(o, t), x = o.x || {}; return style === "caster" ? (x.eitrRegen || 0) * 1000 + arm : style === "light" ? arm + (x.move || 0) * 300 : arm; };
+  const cand = Object.entries(D.items).filter(([id, o]) => o.c === slot && o.tier != null && o.tier <= t && !o.ns && RBI[id]);
+  if (!cand.length) return null;
+  const top = Math.max(...cand.map(x => x[1].tier));
+  return cand.filter(x => x[1].tier === top).sort((a, b) => score(b) - score(a))[0];
+}
+function foodPicks(t, caster){
+  const foods = Object.entries(D.items).filter(([id, o]) => o.c === "food" && o.food && o.tier != null && o.tier <= t && !o.ns && (RBI[id] || PROD[id]));
+  const f = o => o.food;
+  const out = [], used = new Set();
+  const take = (label, score) => {
+    const best = foods.filter(x => !used.has(x[0])).sort((a, b) => score(f(b[1])) - score(f(a[1])))[0];
+    if (best){ used.add(best[0]); out.push([label, best]); }
+  };
+  take("Health", x => (x.hp || 0) * 2 + (x.stam || 0));
+  take("Stamina", x => (x.stam || 0) * 2 + (x.hp || 0));
+  if (caster) take("Eitr", x => (x.eitr || 0) * 3 + (x.hp || 0));
+  else take("Balanced", x => (x.hp || 0) + (x.stam || 0) + (x.regen || 0) * 5);
+  return out;
+}
+function journeyView(){
+  const P = D.playerClasses;
+  if (!P) return `<div class="empty">No class data in this export.</div>`;
+  const c = S.klass && classById(S.klass);
+  let h = pageHead({eyebrow:"Journey", title:c ? c.n + " journey" : "Journey", lede:c ? `${esc(c.w)}. Stage by stage, the strongest gear you can craft for this class, what to eat, and how to prepare for each boss.` : `Pick your class. Each journey walks the boss order with the best gear for that class at every stage.`});
+  h += `<div class="classbar" role="group" aria-label="Class">${P.classes.map(x => `<button class="cpick" data-klass="${esc(x.id)}" aria-pressed="${x.id === S.klass}">${esc(x.n)}</button>`).join("")}${c ? `<button class="cpick" data-klass="" aria-pressed="false">All classes</button>` : ""}</div>`;
+  return h + `<div style="margin-top:16px">${c ? classGuide(c) : classOverview()}</div>`;
+}
+function classOverview(){
+  const P = D.playerClasses, now = worldStage();
+  const cards = P.classes.map(c => {
+    const picks = c.classes.flatMap(k => progressionOf(k).filter(([id, o]) => o.tier === now)).sort((a, b) => statAt(b[1], now) - statAt(a[1], now)).slice(0, 3);
+    return `<div class="ccard"><h2>${esc(c.n)}</h2><div class="w">${esc(c.w)}</div>
+      <ul class="perks">${c.perks.map(pk => `<li><span class="lv">Lv ${pk.lvl}</span><span><b>${esc(pk.n)}</b> <span class="dim">${esc(pk.d)}</span></span></li>`).join("")}</ul>
+      ${picks.length ? `<div class="lvlhead">Good right now · ${esc(tierName(now))}</div><div class="grid-items">${picks.map(x => gearChip(x, now)).join("")}</div>` : ""}
+      <div><button class="ctl" data-klass="${esc(c.id)}">Open the ${esc(c.n)} journey</button></div></div>`;
+  }).join("");
+  return `<p class="note" style="margin:0 0 12px">Your server runs ${esc(P.source.replace(/\s+v?[\d.]+$/, ""))}: choose a class at the Class Obelisk and it gains ${esc(P.bonus)}, plus a perk every 10 levels.</p><div class="grid3">${cards}</div>`;
+}
+function classGuide(c){
+  const style = CLASS_STYLE[c.id] || "heavy";
+  const now = worldStage();
+  const stages = D.stages;
+  let h = `<div class="panel" style="margin-bottom:14px"><div class="h3">Perks</div><ul class="perks">${c.perks.map(pk => `<li><span class="lv">Lv ${pk.lvl}</span><span><b>${esc(pk.n)}</b> <span class="dim">${esc(pk.d)}</span></span></li>`).join("")}</ul>
+    <p class="note">Picks are the strongest gear you can craft at each stage, compared at the highest upgrade you can reach there. A ★ number on a pick means the next upgrade needs a later stage's materials or station upgrades. Numbers are damage, block or armor.</p></div><div class="stages">`;
+  for (let t = 0; t < stages.biomes.length; t++){
+    const boss = stages.bosses[t], bc = boss && D.creatures[boss], bi = boss && D.bosses[boss];
+    const key = "stage:" + c.id + ":" + t;
+    const closed = S.collapsed[key] ?? (t < now);
+    let body = "";
+    // weapons
+    let wpn = "";
+    if (c.id === "Bulwark"){
+      for (const k of c.classes) wpn += bestHTML((CLS[k] || {}).n || k, bestAt([k], t, 2), t);
+      wpn += bestHTML("One-handed weapon", bestAt(["swords","axes","maces","spears","knives"], t, 2), t);
+    } else {
+      for (const k of c.classes) wpn += bestHTML((CLS[k] || {}).n || k, bestAt([k], t, 2), t);
+      if (c.id === "Archer") wpn += bestHTML("Ammo", bestAt(["arrows","bolts"], t, 2), t);
+    }
+    if (!wpn) wpn = `<p class="dim">No ${esc(c.w.toLowerCase())} to craft yet. Level another weapon until the next stage.</p>`;
+    body += `<div class="blk"><h4>${c.id === "Bulwark" ? "Shields & weapon" : "Weapons"}</h4>${wpn}</div>`;
+    // armor
+    const arm = ["helmets","chest","legs","capes"].map(sl => armorPick(style, sl, t)).filter(Boolean);
+    const sets = {};
+    for (const [id, o] of arm) if (o.set) sets[o.set] = (sets[o.set] || 0) + 1;
+    const setNote = Object.entries(sets).filter(([k, n]) => n >= 2).map(([k]) => setLabel(arm.find(x => x[1].set === k)[1]));
+    body += `<div class="blk"><h4>Armor${style === "caster" ? " · eitr regen first" : style === "light" ? " · light & fast" : ""}</h4><div class="grid-items">${arm.map(x => gearChip(x, t)).join("")}</div>${setNote.length ? `<p class="note">${esc(setNote.join(", "))} bonus with these pieces.</p>` : ""}</div>`;
+    // food
+    const foods = foodPicks(t, style === "caster");
+    if (foods.length) body += `<div class="blk"><h4>Food · one of each</h4>${foods.map(([lab, [id, o]]) => `<div class="wtype">${esc(lab)}</div><div class="grid-items"><button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}<span class="x">${fmt(o.food.hp || 0, 0)}/${fmt(o.food.stam || 0, 0)}${o.food.eitr ? "/" + fmt(o.food.eitr, 0) : ""}</span></button></div>`).join("")}<p class="note">Health / stamina${foods.some(f => f[1][1].food.eitr) ? " / eitr" : ""}.</p></div>`;
+    // boss
+    if (bc){
+      const types = [...new Set((bc.atk || []).map(a => a[2]).filter(x => ["fire","frost","poison","lightning","spirit"].includes(x)))];
+      const meads = Object.entries(D.items).filter(([id, o]) => o.c === "meads" && o.tier != null && o.tier <= t && o.cons && D.ses[o.cons] && types.some(ty => new RegExp(DNAME[ty] + "[^\\n]*resist|resist[^\\n]*" + DNAME[ty], "i").test(D.ses[o.cons].t + " " + D.ses[o.cons].n))).slice(0, 2);
+      const heal = Object.entries(D.items).filter(([id, o]) => o.c === "meads" && o.tier != null && o.tier <= t && o.cons && D.ses[o.cons] && /heal/i.test(D.ses[o.cons].n + D.ses[o.cons].t)).sort((a, b) => b[1].tier - a[1].tier)[0];
+      const weak = Object.entries(bc.wk || {}).filter(([k, v]) => /Weak/.test(v)).map(([k]) => DNAME[k] || prettify(k));
+      const L = D.locations[((bi && (bi.altars || bi.lairs)) || [])[0]];
+      let bb = `<p><button class="lnk" data-go="boss:${esc(boss)}">${esc(bc.n)}</button>${bi && bi.summon && bi.summon.item ? `, summoned with ${bi.summon.n} × <button class="lnk" data-go="item:${esc(bi.summon.item)}">${esc(iname(bi.summon.item))}</button>` : bi && bi.door ? `, behind a door opened by the <button class="lnk" data-go="item:${esc(bi.door)}">${esc(iname(bi.door))}</button>` : ""}${L ? ` at ${/^the /i.test(L.n) ? "" : "the "}<button class="lnk" data-go="loc:${esc(((bi.altars || bi.lairs) || [])[0])}">${esc(L.n)}</button>` : ""}.</p>`;
+      if (weak.length) bb += `<p>Weak to <b>${esc(weak.join(", "))}</b>.</p>`;
+      if (types.length) bb += `<p>Hits with ${esc(types.map(x => DNAME[x]).join(", ").toLowerCase())} damage.</p>`;
+      const bring = meads.concat(heal ? [heal] : []);
+      if (bring.length) bb += `<div class="grid-items">${bring.map(x => gearChip(x, t, false)).join("")}</div>`;
+      body += `<div class="blk"><h4>Boss</h4>${bb}</div>`;
+      const rewards = (bc.dr || []).map(d => d[0]).filter(x => D.items[x] && D.items[x].c !== "trophies" && x !== "Coins");
+      const unlocks = [...new Set(rewards.flatMap(x => (USED[x] || []).filter(u => u.t === "recipe").map(u => u.r.it)))].slice(0, 4);
+      if (rewards.length) body += `<div class="blk"><h4>What it unlocks</h4><div class="grid-items">${rewards.slice(0, 3).map(x => `<button class="gi" data-go="item:${esc(x)}">${iicon(x, "s22")}${esc(iname(x))}</button>`).join("")}</div>${unlocks.length ? `<p class="note">Used to craft ${unlocks.map(x => `<button class="lnk" data-go="item:${esc(x)}">${esc(iname(x))}</button>`).join(", ")}.</p>` : ""}${t + 1 < stages.biomes.length ? `<p class="note">Then head to the ${esc(tierName(t + 1))}.</p>` : ""}</div>`;
+    }
+    const state = t < now ? "done" : t === now ? "now" : "future";
+    h += `<section class="stage ${state}${closed ? " closed" : ""}" id="stage-${t}" data-sec-key="${esc(key)}"><div class="num"><span>${t + 1}</span></div><div class="stage-card"><div class="stage-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}">${CHEV}<h3>${esc(tierName(t))}${bc ? " → " + esc(bc.n) : ""}</h3>${t < now ? `<span class="when">Done in your world</span>` : t === now ? `<span class="when now">You are here</span>` : ""}</div><div class="stage-b">${body}</div></div></section>`;
+  }
+  return h + `</div>`;
+}
 // ---------- detail panel
 // mode: "link" follows a link inside the detail panel (Back returns here), "fresh" starts a new trail
 // from the lists, "back" retraces the trail without recording it.
 function select(k, id, mode = "link"){
   if (mode === "fresh") S.hist = [];
-  else if (mode === "link" && S.sel && !(S.sel.k === k && S.sel.id === id)) S.hist.push(S.sel);
+  else if (mode === "link" && S.sel && S.sel.k !== "help" && !(S.sel.k === k && S.sel.id === id)) S.hist.push(S.sel);
   if (k === "conv"){ const c = D.conversions[+id]; if (c && c.out[0]) { k = "item"; id = c.out[0][0]; } }
   if (k === "piece" && D.stations[id] && !D.pieces[id]) k = "station";
   S.sel = {k, id};
   S.lvl = 1;
-  if (k === "item" && D.items[id]) S.lvl = 1;
   renderDetail();
   document.querySelectorAll("#results tr.on").forEach(tr => tr.classList.remove("on"));
   document.querySelectorAll(`#results tr[data-go="${CSS.escape(k + ":" + id)}"]`).forEach(tr => tr.classList.add("on"));
-  const hk = {item:"i", piece:"p", station:"s", creature:"c", boss:"b", event:"e", loc:"l", biome:"m"}[k];
+  const hk = {item:"i", piece:"p", station:"s", creature:"c", boss:"b", event:"e", loc:"l", biome:"m", ench:"x"}[k];
   if (hk && /^[A-Za-z0-9._~-]+$/.test(id)) { try{ history.replaceState(null, "", "#" + hk + "." + id); }catch(e){} }
-  $(".layout").classList.remove("nodetail");
-  openSheet(true);
+  openDetail();
 }
-// Hide the side panel and forget the selection, so a new category starts clean.
+function openDetail(){
+  $("#shell").classList.add("with-detail");
+  $("#detail").classList.add("open");
+  if (matchMedia("(max-width:1279px)").matches) scrim("detail", closeDetail);
+}
+// Hide the side panel and forget the selection, so a new section starts clean.
 function closeDetail(){
   S.sel = null;
   S.hist = [];
   document.querySelectorAll("#results tr.on").forEach(tr => tr.classList.remove("on"));
   if (location.hash){ try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){} }
-  $(".layout").classList.add("nodetail");
-  openSheet(false);
+  $("#shell").classList.remove("with-detail");
+  $("#detail").classList.remove("open");
+  unscrim("detail");
 }
 function showHelp(){
-  S.sel = null;
+  S.sel = {k:"help", id:""};
   S.hist = [];
   renderDetail();
-  $(".layout").classList.remove("nodetail");
-  openSheet(true);
+  openDetail();
 }
-function openSheet(on){
-  const d = $("#detail");
-  d.classList.toggle("open", on);
-  const scrim = $(".scrim");
-  if (on && matchMedia("(max-width:1100px)").matches && !scrim){ const s = document.createElement("div"); s.className = "scrim"; s.addEventListener("click", () => openSheet(false)); document.body.appendChild(s); }
-  if (!on && scrim) scrim.remove();
+function scrim(kind, onClick){
+  if (document.querySelector(`.scrim[data-for="${kind}"]`)) return;
+  const s = document.createElement("div");
+  s.className = "scrim"; s.dataset.for = kind;
+  s.addEventListener("click", onClick);
+  document.body.appendChild(s);
 }
+function unscrim(kind){ const s = document.querySelector(`.scrim[data-for="${kind}"]`); if (s) s.remove(); }
+function openNav(){ $("#nav").classList.add("open"); scrim("nav", closeNav); }
+function closeNav(){ $("#nav").classList.remove("open"); unscrim("nav"); }
 function fromHash(){
   const h = decodeURIComponent(location.hash.slice(1));
-  const m = /^([ipscbelm])\.(.+)$/.exec(h);
+  const v = /^v\.([a-z]+)$/.exec(h);
+  if (v && NAV.some(n => n.k === v[1])){ S.view = v[1]; return; }
+  const m = /^([ipscbelmx])\.(.+)$/.exec(h);
   if (!m) return;
-  const k = {i:"item", p:"piece", s:"station", c:"creature", b:"boss", e:"event", l:"loc", m:"biome"}[m[1]];
+  const k = {i:"item", p:"piece", s:"station", c:"creature", b:"boss", e:"event", l:"loc", m:"biome", x:"ench"}[m[1]];
   const ok = (k === "item" && D.items[m[2]]) || (k === "piece" && D.pieces[m[2]]) || (k === "station" && D.stations[m[2]]) || (k === "creature" && D.creatures[m[2]])
-    || (k === "boss" && D.bosses[m[2]]) || (k === "event" && evById(m[2])) || (k === "loc" && D.locations[m[2]]) || (k === "biome" && D.biomes[m[2]]);
-  if (ok){ S.sel = {k, id:m[2]}; renderDetail(); }
+    || (k === "boss" && D.bosses[m[2]]) || (k === "event" && evById(m[2])) || (k === "loc" && D.locations[m[2]]) || (k === "biome" && D.biomes[m[2]]) || (k === "ench" && D.enchant && D.enchant.fx[m[2]]);
+  if (ok){ S.sel = {k, id:m[2]}; openDetail(); }
 }
-function dhead(i, name, metaBits, desc){
-  const ic = i === -2 && S.sel ? crIcon(S.sel.id, "s56") : i === -3 ? glyph("raid", 56) : i === -4 && S.sel ? locIcon(D.locations[S.sel.id], "s56") : i === -5 ? glyph("biome", 56) : icon(i, "s56", name);
-  return `<div class="dhead">${ic}<div><h2>${esc(name)}</h2><div class="meta">${metaBits.filter(Boolean).join("")}</div></div>
-    <div class="ctl">${S.hist.length ? `<button class="iconbtn" data-back title="Back" aria-label="Back"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M15 6l-6 6 6 6"/></svg></button>` : ""}
-    <button class="iconbtn sheet-close" data-close title="Close" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>
-    ${desc ? `<p class="desc">${esc(desc)}</p>` : ""}`;
+const KIND = {item:"Item", piece:"Building piece", station:"Crafting station", creature:"Creature", boss:"Boss", event:"Raid", loc:"Location", biome:"Biome", ench:"Enchantment"};
+function dhead(i, name, metaBits, desc, kind){
+  const ic = i === -2 && S.sel ? crIcon(S.sel.id, "s56") : i === -3 ? glyph("raid", 56) : i === -4 && S.sel ? locIcon(D.locations[S.sel.id], "s56") : i === -5 ? glyph("biome", 56) : i === -6 ? glyph("rune", 56) : icon(i, "s56", name);
+  return `<div class="dh"><div class="dh-ctl">${S.hist.length ? `<button class="iconbtn" data-back title="Back" aria-label="Back"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M15 6l-6 6 6 6"/></svg></button>` : `<span></span>`}
+    <button class="iconbtn" data-close title="Close" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="dh-id">${ic}<div><div class="kind">${esc(kind || KIND[S.sel && S.sel.k] || "")}</div><h2>${esc(name)}</h2><div class="meta">${metaBits.filter(Boolean).join("")}</div></div></div>
+    ${desc ? `<p class="desc">${esc(desc)}</p>` : ""}</div><!--DNAV-->`;
 }
 const tag = (t, cls = "") => t ? `<span class="tag ${cls}">${esc(t)}</span>` : "";
 function reqGrid(reqs, q = 1, r = null){
@@ -1201,7 +1615,7 @@ function itemDetail(id){
   if (!o) return `<div class="inner"><p>Unknown item ${esc(id)}.</p></div>`;
   const cl = CLS[o.c];
   const recs = RBI[id] || [];
-  let h = `<div class="inner">` + dhead(o.i, o.n, [tag(cl && cl.n), o.m !== "Valheim" ? tag(o.m, "mod") : tag("Vanilla"), o.sk ? tag(o.sk + " skill") : "", o.nt ? tag("Not teleportable", "warn") : ""], o.d);
+  let h = `<div class="inner">` + dhead(o.i, o.n, [o.tier != null ? tierPill(o.tier) : "", o.m !== "Valheim" ? tag(o.m, "mod") : tag("Vanilla"), o.sk ? tag(o.sk + " skill") : "", o.nt ? tag("Not teleportable", "warn") : ""], o.d, cl ? cl.n : "Item");
 
   // how to craft
   if (recs.length){
@@ -1223,7 +1637,8 @@ function itemDetail(id){
       let rows = "";
       for (let q = 1; q <= mq; q++){
         const e = o.q[q - 1] || {}, p = o.q[q - 2] || null;
-        rows += `<tr><td class="lvl">★${q}</td>
+        const qtier = o.qt ? o.qt[q - 1] : o.tier;
+        rows += `<tr><td class="lvl">★${q}</td><td>${qtier != null ? tierPill(qtier) : dash}</td>
           <td>${r0 ? (r0.s ? `Lv ${stationLevel(r0, q)}` : "Hand") : "—"}</td>
           <td>${r0 ? inlineReqs(r0.r, q, r0) : "—"}</td>
           ${hasD ? `<td class="num">${fmt(dsum(e.dmg))}${p ? delta(dsum(p.dmg), dsum(e.dmg)) : ""}</td>` : ""}
@@ -1233,7 +1648,7 @@ function itemDetail(id){
           ${hasU ? `<td class="num">${fmt(e.dur, 0)}${p ? delta(p.dur, e.dur) : ""}</td>` : ""}</tr>`;
       }
       h += `<div class="card"><h3>Upgrades <span class="aside">${r0 && r0.s ? "station level needed per item level" : ""}</span></h3>
-        <div style="overflow-x:auto"><table class="dtable"><thead><tr><th>Item</th><th>Station</th><th>${r0 ? "Cost" : ""}</th>${hasD ? "<th class=num>Damage</th>" : ""}${hasT && !hasD ? "<th class=num>Chop/Pick</th>" : ""}${hasA ? "<th class=num>Armor</th>" : ""}${hasB ? "<th class=num>Block</th>" : ""}${hasU ? "<th class=num>Durability</th>" : ""}</tr></thead><tbody>${rows}</tbody></table></div></div>`;
+        <div style="overflow-x:auto"><table class="dtable"><thead><tr><th>Item</th><th>Tier</th><th>Station</th><th>${r0 ? "Cost" : ""}</th>${hasD ? "<th class=num>Damage</th>" : ""}${hasT && !hasD ? "<th class=num>Chop/Pick</th>" : ""}${hasA ? "<th class=num>Armor</th>" : ""}${hasB ? "<th class=num>Block</th>" : ""}${hasU ? "<th class=num>Durability</th>" : ""}</tr></thead><tbody>${rows}</tbody></table></div></div>`;
     }
     // stats at level
     const lv = Math.min(S.lvl, mq), e = o.q[lv - 1] || {};
@@ -1307,6 +1722,7 @@ function itemDetail(id){
   }
 
   h += pathCard(id, o);
+  h += enchantCard(id, o);
 
   // where to get
   const prod = PROD[id] || [], srcs = D.sources[id] || [];
@@ -1358,7 +1774,7 @@ function tierHint(t, k){
 function pieceDetail(id){
   const p = D.pieces[id];
   if (!p) return `<div class="inner">Unknown piece.</div>`;
-  let h = `<div class="inner">` + dhead(p.i, p.n, [p.tool ? tag(iname(p.tool)) : "", tag(p.cat), p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla")], p.d);
+  let h = `<div class="inner">` + dhead(p.i, p.n, [p.tier != null ? tierPill(p.tier) : "", p.tool ? tag(iname(p.tool)) : "", tag(p.cat), p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla")], p.d, p.cf ? "Building piece · comfort" : "Building piece");
   h += `<div class="card"><h3>Build cost</h3>${reqGrid(p.r)}${p.s ? `<div class="recipe-line" style="margin:10px 0 0"><span class="dim">Must be in range of</span><button class="gi" data-go="station:${esc(p.s)}">${stIcon(p.s)}${esc(stName(p.s))}</button></div>` : ""}</div>`;
   const kv = [];
   if (p.cf) kv.push(`<div style="grid-column:span 2"><span>Comfort</span><b>+${p.cf}</b> <small class="dim">${p.cfg ? "only your best " + esc((COMFORT_NAMES[p.cfg] || p.cfg).toLowerCase()) + " piece within 10 m counts" : "counts once, on top of every group"}</small> <button class="lnk" data-comfort-view>Comfort planner</button></div>`);
@@ -1627,7 +2043,7 @@ function biomeDetail(id){
       const dist = starDist(id, false, false, t.table) || [];
       cond += `<p class="note">After ${esc(keyText(key))}: levels ${t.min}–${t.max} (${esc(t.style)} curve), most often ${starLabel(dist.reduce((a, x) => x[1] > a[1] ? x : a, [0, 0])[0])}.</p>`;
     }
-    h += `<div class="card"><h3>Star chances <span class="aside">StarLevelSystem</span></h3><div class="wgrid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><div><div class="lvlhead">Day</div><div class="prob">${bar(day)}</div></div><div><div class="lvlhead">Night ×${fmt(D.sls.night, 2)}</div><div class="prob">${bar(night)}</div></div></div>${cond}</div>`;
+    h += `<div class="card"><h3>Star chances <span class="aside">StarLevelSystem</span></h3><div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px"><div><div class="lvlhead">Day</div><div class="prob">${bar(day)}</div></div><div><div class="lvlhead">Night ×${fmt(D.sls.night, 2)}</div><div class="prob">${bar(night)}</div></div></div>${cond}</div>`;
   }
   if (b.weather){
     h += `<div class="card"><h3>Weather</h3><div class="wx">${b.weather.slice().sort((x, y) => y[1] - x[1]).map(w => `<div class="row"><span>${esc(prettify(w[0]))}${w[2].length ? `<br><small class="dim">${esc(w[2].join(", "))}</small>` : ""}</span><span class="dbreak"><span class="track"><i class="d-frost" style="width:${w[1]}%"></i></span></span><span class="mono" style="text-align:right">${pctS(w[1])}</span></div>`).join("")}</div></div>`;
@@ -1673,27 +2089,27 @@ function worldPanel(){
   const r = rates();
   const have = new Set((D.world.keys || []).map(k => k.toLowerCase().split(" ")[0]));
   const changed = Object.keys(W.opt).some(k => W.opt[k] !== W.base[k]);
-  let h = `<div class="wpanel"><div class="wcard"><h2>World & difficulty</h2><p class="tip">These are the world modifiers from Valheim's world settings. Your world's choice is marked. Pick another option to see how numbers across the atlas change: creature health and damage, drop amounts, and how often raids come.</p>
+  let h = `<div class="stack"><div class="panel"><h2>Players nearby</h2>
     ${changed ? `<div class="callout">Showing a what-if world. <button class="lnk" data-w-reset>Back to your world</button></div>` : ""}
     <div class="range"><label for="w-players"><b>Players nearby</b></label><input type="range" id="w-players" min="1" max="10" value="${W.players}"><span class="mono">${W.players}</span>
       <span class="dim">Creatures get +${fmt(D.world.scale.hpPerPlayer * 100, 0)}% health and +${fmt(D.world.scale.dmgPerPlayer * 100, 0)}% damage per extra player within ${fmt(D.world.scale.range, 0)} m, up to ${D.world.scale.maxPlayers}.</span></div></div>
-    <div class="wgrid">`;
+    <div class="grid2">`;
   for (const m of D.world.modifiers){
     const cur = W.opt[m.id], opt = m.opts.find(o => o.v === cur);
-    h += `<div class="wcard"><h2>${esc(m.n)}</h2><p class="tip">${esc(m.tip || "")}</p><div class="seg" role="group" aria-label="${esc(m.n)}">${m.opts.map(o => `<button data-w-mod="${esc(m.id)}" data-w-opt="${esc(o.v)}" aria-pressed="${o.v === cur}">${esc(o.n)}${o.v === W.base[m.id] ? `<span class="yours">your world</span>` : ""}</button>`).join("")}</div>
+    h += `<div class="panel"><h2>${esc(m.n)}</h2><p class="tip">${esc(m.tip || "")}</p><div class="seg" role="group" aria-label="${esc(m.n)}">${m.opts.map(o => `<button data-w-mod="${esc(m.id)}" data-w-opt="${esc(o.v)}" aria-pressed="${o.v === cur}">${esc(o.n)}${o.v === W.base[m.id] ? `<span class="yours">your world</span>` : ""}</button>`).join("")}</div>
       <ul class="effects">${opt && opt.keys.length ? opt.keys.map(k => `<li>${esc(keyEffect(k))}</li>`).join("") : `<li>Vanilla behaviour</li>`}${opt && opt.tip ? `<li class="dim">${esc(opt.tip)}</li>` : ""}</ul></div>`;
   }
   h += `</div>`;
-  h += `<div class="wcard"><h2>What this means right now</h2><div class="kv">
+  h += `<div class="panel"><h2>What this means right now</h2><div class="kv">
     <div><span>You deal</span><b>${r.playerdamage}%</b></div><div><span>Enemies deal</span><b>${fmt(dmgScale() * 100, 0)}%</b><small class="dim"> incl. players</small></div>
     <div><span>Enemy health</span><b>×${fmt(hpScale(), 2)}</b></div><div><span>Drops & resources</span><b>×${fmt(r.resourcerate / 100, 2)}</b></div>
     <div><span>Enemy speed & size</span><b>${r.enemyspeedsize}%</b></div><div><span>Skill loss on death</span><b>${r.skillreductionrate}%</b></div></div>
     <p class="note">${raidNote()}</p></div>`;
   const possible = (D.events || []).filter(eventPossible);
-  h += `<div class="wcard"><h2>Raids that can hit you now</h2><p class="tip">Based on your world's progress: ${esc([...have].filter(k => /defeated|killed/.test(k)).map(keyText).join(", ") || "no bosses yet")}.</p>
+  h += `<div class="panel"><h2>Raids that can hit you now</h2><p class="tip">Based on your world's progress: ${esc([...have].filter(k => /defeated|killed/.test(k)).map(keyText).join(", ") || "no bosses yet")}.</p>
     <div class="grid-items">${possible.map(e => `<button class="gi" data-go="event:${esc(e.id)}">${glyph("raid", 22)}${esc(e.n)}<span class="x">${dur(e.dur)}</span></button>`).join("") || `<span class="dim">None yet</span>`}</div></div>`;
   if (D.world.toggles.length){
-    h += `<div class="wcard"><h2>Other world options</h2><div style="overflow-x:auto"><table class="wtable"><tbody>${D.world.toggles.map(t => `<tr><td><b>${esc(t.n)}</b><div class="cond">${esc(t.tip || "")}</div></td><td class="num">${have.has((t.key || "").toLowerCase()) ? `<span class="ok">On</span>` : `<span class="dim">Off</span>`}</td></tr>`).join("")}</tbody></table></div></div>`;
+    h += `<div class="panel"><h2>Other world options</h2><div style="overflow-x:auto"><table class="wtable"><tbody>${D.world.toggles.map(t => `<tr><td><b>${esc(t.n)}</b><div class="cond">${esc(t.tip || "")}</div></td><td class="num">${have.has((t.key || "").toLowerCase()) ? `<span class="ok">On</span>` : `<span class="dim">Off</span>`}</td></tr>`).join("")}</tbody></table></div></div>`;
   }
   if (D.sls){
     const s = D.sls;
@@ -1703,12 +2119,12 @@ function worldPanel(){
       const plus = d.filter(x => x[0] >= 3).reduce((t, x) => t + x[1], 0);
       return `<tr><td><button class="lnk" data-go="biome:${esc(b)}">${esc(BIOME[b])}</button></td><td class="num">${s.caps[b] != null ? s.caps[b] + "★" : s.maxLevel + "★"}</td><td class="num">${pctS(at(0))}</td><td class="num">${pctS(at(1))}</td><td class="num">${pctS(at(2))}</td><td class="num">${pctS(plus)}</td></tr>`;
     }).join("");
-    h += `<div class="wcard"><h2>Creature stars</h2><p class="tip">StarLevelSystem replaces Valheim's star rolls. Each spawn rolls once against its chance table (${esc(s.source)}), capped per biome. ${s.distanceOn ? "Distance from the center adds chance." : "The distance bonus is off in your config."}</p>
+    h += `<div class="panel"><h2>Creature stars</h2><p class="tip">StarLevelSystem replaces Valheim's star rolls. Each spawn rolls once against its chance table (${esc(s.source)}), capped per biome. ${s.distanceOn ? "Distance from the center adds chance." : "The distance bonus is off in your config."}</p>
       <div class="seg" style="margin-bottom:10px"><button data-w-night="0" aria-pressed="${!W.night}">Day</button><button data-w-night="1" aria-pressed="${W.night}">Night ×${fmt(s.night, 2)}</button></div>
       <div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Biome</th><th class="num">Cap</th><th class="num">No star</th><th class="num">★</th><th class="num">★★</th><th class="num">★★★+</th></tr></thead><tbody>${biomesRows}</tbody></table></div>
       <p class="note">Each star: +${fmt(s.hpPerLevel * 100, 0)}% health, +${fmt(s.dmgPerLevel * 100, 0)}% damage, and about ×(level × ${fmt(s.loot.scale, 2)}) loot. Bosses: +${fmt(s.bossHpPerLevel * 100, 0)}% health per star, up to ${s.maxBossLevel}★. After later bosses fall, some biomes switch to higher tables; open a biome to see them.</p></div>`;
   }
-  h += `<div class="wcard"><h2>How the numbers work</h2><ul class="effects">
+  h += `<div class="panel"><h2>How the numbers work</h2><ul class="effects">
     <li>Resources above ×1 roll world loot tables (rocks, trees, chests) that many times; creature drops are multiplied directly.</li>
     <li>Health and damage from nearby players stack with the Combat setting and with stars.</li>
     <li>Raids need a base: 3 or more of your structures near a player, in a biome the raid allows, with the right bosses killed.</li>
@@ -1730,12 +2146,12 @@ function pathCard(id, o){
   if (better) tip += `<p class="note" style="margin:0 0 8px">Same tier, more ${label}: <button class="lnk" data-go="item:${esc(better[0])}">${esc(better[1].n)}</button> (${fmt(keyStat(better[1]), 0)} vs ${fmt(mine, 0)}).</p>`;
   if (next) tip += `<p style="margin:0 0 10px">Next up: <button class="lnk" data-go="item:${esc(next[0])}">${esc(next[1].n)}</button> in the ${esc(tierName(next[1].tier))} tier, ${fmt(keyStat(next[1]), 0)} ${label}${mine ? ` (${keyStat(next[1]) >= mine ? "+" : ""}${fmt((keyStat(next[1]) / mine - 1) * 100, 0)}%)` : ""} at max level.</p>`;
   else tip += `<p class="note" style="margin:0 0 10px">This is the top tier for ${esc(cl.n.toLowerCase())}.</p>`;
-  const rows = tiers.map(t => `<div class="step">${tierPill(t)}<div class="grid-items">${byT[t].slice(0, 4).map(([pid, po]) => `<button class="gi${pid === id ? " me" : ""}" data-go="item:${esc(pid)}">${icon(po.i, "s22", po.n)}${esc(po.n)}<span class="x">${fmt(keyStat(po), 0)}</span></button>`).join("")}${byT[t].length > 4 ? `<span class="dim" style="font-size:12px">+${byT[t].length - 4}</span>` : ""}</div></div>`).join("");
+  const rows = tiers.map(t => `<div class="step2">${tierPill(t)}<div class="grid-items">${byT[t].slice(0, 4).map(([pid, po]) => `<button class="gi${pid === id ? " me" : ""}" data-go="item:${esc(pid)}">${icon(po.i, "s22", po.n)}${esc(po.n)}<span class="x">${fmt(keyStat(po), 0)}</span></button>`).join("")}${byT[t].length > 4 ? `<span class="dim" style="font-size:12px">+${byT[t].length - 4}</span>` : ""}</div></div>`).join("");
   return `<div class="card"><h3>Upgrade path <span class="aside">${esc(cl.n)} by tier · ${label} at max level</span></h3>${tip}<div class="path">${rows}</div></div>`;
 }
 
 // ---------- comfort
-function comfortPanel(ents){
+function comfortBody(ents){
   const R = (D.world && D.world.rested) || {base:480, per:60, radius:10};
   const pieces = ents.filter(e => e.o.cf > 0);
   const groups = {};
@@ -1751,14 +2167,13 @@ function comfortPanel(ents){
   }
   const uniq = (groups.None || []).slice().sort((a, b) => b.o.cf - a.o.cf);
   if (uniq.length) plan += `<div class="cplan-u" style="display:grid;gap:4px;font-size:12px;color:var(--muted)">Unique pieces${uniq.map(e => `<label class="chk"><input type="checkbox" data-comfort-u="${esc(e.id)}"${(saved["u:" + e.id] ?? true) ? " checked" : ""}> ${esc(e.name)} (+${e.o.cf})</label>`).join("")}</div>`;
-  let h = `<div class="wpanel"><div class="wcard"><h2>Comfort</h2><p class="tip">Comfort decides how long the Rested buff lasts: ${fmt(R.base / 60, 0)} min, plus ${fmt(R.per / 60, 0)} min for every point above 1. You start at 1, get +1 under a roof, and then each comfort piece within ${R.radius} m adds its value while you're sheltered. Within a group only your single best piece counts, so a second chair adds nothing. Unique pieces each count once.</p>
+  let h = `<div class="stack"><div class="panel"><h2>Comfort planner</h2><p class="tip">Comfort decides how long the Rested buff lasts: ${fmt(R.base / 60, 0)} min, plus ${fmt(R.per / 60, 0)} min for every point above 1. You start at 1, get +1 under a roof, and then each comfort piece within ${R.radius} m adds its value while you're sheltered. Within a group only your single best piece counts, so a second chair adds nothing. Unique pieces each count once.</p>
     <div class="cplan">${plan}</div>
     <div class="ctotal"><label class="chk" style="font-size:13px"><input type="checkbox" id="comfort-roof"${S.comfortRoof === false ? "" : " checked"}> Under a roof</label><span>Comfort <b id="comfort-total">–</b></span><span>Rested lasts <b id="comfort-time">–</b></span></div>
     <p class="note">The planner starts with the best piece of every group. Each group below is sorted by comfort.</p></div>`;
   for (const g of order){
     h += sectionHTML("comfort:" + g, COMFORT_NAMES[g] || g, groups[g], "comfort", g === "None" ? "Each different piece adds its comfort." : "Only the best one near you counts.");
   }
-  setTimeout(updateComfort, 0);
   return h + `</div>`;
 }
 function updateComfort(){
@@ -1777,119 +2192,251 @@ function updateComfort(){
   $("#comfort-time").textContent = dur(R.base + (total - 1) * R.per);
 }
 
-// ---------- class guides
-const classById = id => D.playerClasses && D.playerClasses.classes.find(c => c.id === id);
-function classOverview(){
-  const P = D.playerClasses;
-  if (!P) return `<div class="empty">No class data in this export.</div>`;
-  const cards = P.classes.map(c => {
-    const now = worldStage();
-    const picks = c.classes.flatMap(k => progressionOf(k).filter(([id, o]) => o.tier === now)).sort((a, b) => keyStat(b[1]) - keyStat(a[1])).slice(0, 3);
-    return `<div class="ccard"><h2>${esc(c.n)}</h2><div class="w">${esc(c.w)}</div>
-      <ul class="perks">${c.perks.map(pk => `<li><span class="lv">Lv ${pk.lvl}</span><span><b>${esc(pk.n)}</b> <span class="dim">${esc(pk.d)}</span></span></li>`).join("")}</ul>
-      ${picks.length ? `<div class="lvlhead">Good right now (${esc(tierName(now))})</div><div class="grid-items">${picks.map(([id, o]) => `<button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}</button>`).join("")}</div>` : ""}
-      <div><button class="chip" data-cls="${esc(c.id)}">Open the ${esc(c.n)} guide</button></div></div>`;
-  }).join("");
-  return `<div class="wpanel"><div class="wcard"><h2>Class guides</h2><p class="tip">Your server runs ${esc(P.source)}: pick a class at the Class Obelisk and it gains ${esc(P.bonus)}, plus a perk every 10 levels. Each guide walks the boss order with the best gear for that class at every tier, picked from the atlas data. Your world is in the <b>${esc(tierName(worldStage()))}</b> tier.</p></div><div class="cgrid">${cards}</div></div>`;
-}
-function bestAt(classes, t, score, n){
-  const at = [], before = [];
-  for (const k of classes) for (const [id, o] of progressionOf(k)){ if (o.tier === t) at.push([id, o]); else if (o.tier < t) before.push([id, o]); }
-  const sc = score || (x => keyStat(x[1]));
-  at.sort((a, b) => sc(b) - sc(a));
-  if (at.length) return {list:at.slice(0, n || 3), carried:false};
-  before.sort((a, b) => b[1].tier - a[1].tier || sc(b) - sc(a));
-  return {list:before.slice(0, 1), carried:true};
-}
-function armorPick(style, slot, t){
-  const score = ([id, o]) => { const arm = keyStat(o), x = o.x || {}; return style === "caster" ? (x.eitrRegen || 0) * 1000 + arm : style === "light" ? arm + (x.move || 0) * 300 : arm; };
-  const cand = Object.entries(D.items).filter(([id, o]) => o.c === slot && o.tier != null && o.tier <= t && !o.ns && RBI[id]);
-  cand.sort((a, b) => b[1].tier - a[1].tier || score(b) - score(a));
-  const top = cand.filter(x => x[1].tier === (cand[0] || [0, {tier:0}])[1].tier).sort((a, b) => score(b) - score(a));
-  return top[0];
-}
-function chipsOf(list, stat){
-  return list.map(([id, o]) => `<button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}${stat ? `<span class="x">${fmt(keyStat(o), 0)}</span>` : ""}</button>`).join("");
-}
-function classGuide(cid){
-  const c = classById(cid);
-  if (!c) return classOverview();
-  const style = CLASS_STYLE[c.id] || "heavy";
-  const now = worldStage();
-  const stages = D.stages;
-  let h = `<div class="wpanel"><div class="wcard"><h2>${esc(c.n)}</h2><p class="tip">${esc(c.w)}. ${esc(D.playerClasses.bonus)}.</p>
-    <ul class="perks">${c.perks.map(pk => `<li><span class="lv">Lv ${pk.lvl}</span><span><b>${esc(pk.n)}</b> <span class="dim">${esc(pk.d)}</span></span></li>`).join("")}</ul>
-    <p class="note">Picks are the strongest craftable gear of each tier by base stats at max level. Tiers come from where the materials are found.</p></div>`;
-  for (let t = 0; t < stages.biomes.length; t++){
-    const boss = stages.bosses[t], bc = boss && D.creatures[boss], bi = boss && D.bosses[boss];
-    const key = "stage:" + cid + ":" + t;
-    const closed = S.collapsed[key] ?? (t < now);
-    let body = "";
-    // weapons
-    let wpn = "";
-    if (c.id === "Bulwark"){
-      const sh = bestAt(c.classes, t, null, 3);
-      const one = bestAt(["swords","axes","maces","spears","knives"], t, null, 2);
-      wpn += `<p>${sh.carried ? "Keep your " : ""}Shield:</p><div class="grid-items">${chipsOf(sh.list, true)}</div><p style="margin-top:8px">With a one-handed weapon:</p><div class="grid-items">${chipsOf(one.list, true)}</div>`;
-    } else {
-      for (const k of c.classes){
-        const b = bestAt([k], t, null, 2);
-        if (!b.list.length) continue;
-        wpn += `<p>${esc((CLS[k] || {}).n || k)}${b.carried ? ` <span class="dim">· nothing new here, keep</span>` : ""}</p><div class="grid-items" style="margin-bottom:6px">${chipsOf(b.list, true)}</div>`;
-      }
-      if (c.id === "Archer"){
-        const ammo = bestAt(["arrows","bolts"], t, null, 2);
-        if (ammo.list.length) wpn += `<p>Ammo</p><div class="grid-items">${chipsOf(ammo.list, true)}</div>`;
-      }
-      if (!wpn) wpn = `<p class="dim">No ${esc(c.w.toLowerCase())} to craft yet. Level another weapon until the next tier.</p>`;
-    }
-    body += `<div class="blk"><h4>Weapons</h4>${wpn}</div>`;
-    // armor
-    const arm = ["helmets","chest","legs","capes"].map(sl => armorPick(style, sl, t)).filter(Boolean);
-    const sets = {};
-    for (const [id, o] of arm) if (o.set) sets[o.set] = (sets[o.set] || 0) + 1;
-    const setNote = Object.entries(sets).filter(([k, n]) => n >= 2).map(([k]) => { const any = arm.find(x => x[1].set === k)[1]; return setLabel(any); });
-    body += `<div class="blk"><h4>Armor${style === "caster" ? " · eitr first" : style === "light" ? " · light" : ""}</h4><div class="grid-items">${chipsOf(arm, true)}</div>${setNote.length ? `<p class="note">${esc(setNote.join(", "))} bonus with these pieces.</p>` : ""}</div>`;
-    // food
-    const fsc = ([id, o]) => { const f = o.food || {}; return style === "caster" ? (f.eitr || 0) * 2 + (f.hp || 0) : (f.hp || 0) + (f.stam || 0); };
-    const foods = Object.entries(D.items).filter(([id, o]) => o.c === "food" && o.tier != null && o.tier <= t && !o.ns && (RBI[id] || PROD[id])).sort((a, b) => fsc(b) - fsc(a)).slice(0, 3);
-    if (foods.length) body += `<div class="blk"><h4>Food</h4><div class="grid-items">${foods.map(([id, o]) => `<button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}<span class="x">${fmt(o.food.hp || 0, 0)}/${fmt(o.food.stam || 0, 0)}${o.food.eitr ? "/" + fmt(o.food.eitr, 0) : ""}</span></button>`).join("")}</div><p class="note">Health / stamina${style === "caster" ? " / eitr" : ""}.</p></div>`;
-    // boss
-    if (bc){
-      const types = [...new Set((bc.atk || []).map(a => a[2]).filter(x => ["fire","frost","poison","lightning","spirit"].includes(x)))];
-      const meads = Object.entries(D.items).filter(([id, o]) => o.c === "meads" && o.tier != null && o.tier <= t && o.cons && D.ses[o.cons] && types.some(ty => new RegExp(DNAME[ty] + "[^\\n]*resist|resist[^\\n]*" + DNAME[ty], "i").test(D.ses[o.cons].t + " " + D.ses[o.cons].n))).slice(0, 2);
-      const heal = Object.entries(D.items).filter(([id, o]) => o.c === "meads" && o.tier != null && o.tier <= t && o.cons && D.ses[o.cons] && /heal/i.test(D.ses[o.cons].n + D.ses[o.cons].t)).sort((a, b) => b[1].tier - a[1].tier)[0];
-      const weak = Object.entries(bc.wk || {}).filter(([k, v]) => /Weak/.test(v)).map(([k]) => DNAME[k] || prettify(k));
-      let bb = `<p><button class="lnk" data-go="boss:${esc(boss)}">${esc(bc.n)}</button>${bi && bi.summon && bi.summon.item ? `, summoned with ${bi.summon.n} × <button class="lnk" data-go="item:${esc(bi.summon.item)}">${esc(iname(bi.summon.item))}</button>` : bi && bi.door ? `, behind a door opened by the <button class="lnk" data-go="item:${esc(bi.door)}">${esc(iname(bi.door))}</button>` : ""}.</p>`;
-      if (weak.length) bb += `<p>Weak to <b>${esc(weak.join(", "))}</b>.</p>`;
-      if (types.length) bb += `<p>Hits with ${esc(types.map(x => DNAME[x]).join(", ").toLowerCase())} damage.</p>`;
-      const bring = meads.concat(heal ? [heal] : []);
-      if (bring.length) bb += `<div class="grid-items">${chipsOf(bring, false)}</div>`;
-      body += `<div class="blk"><h4>Boss</h4>${bb}</div>`;
-      const rewards = (bc.dr || []).map(d => d[0]).filter(x => D.items[x] && D.items[x].c !== "trophies" && x !== "Coins");
-      const unlocks = [...new Set(rewards.flatMap(x => (USED[x] || []).filter(u => u.t === "recipe").map(u => u.r.it)))].slice(0, 4);
-      if (rewards.length) body += `<div class="blk"><h4>What it unlocks</h4><div class="grid-items">${rewards.slice(0, 3).map(x => `<button class="gi" data-go="item:${esc(x)}">${iicon(x, "s22")}${esc(iname(x))}</button>`).join("")}</div>${unlocks.length ? `<p class="note">Used to craft ${unlocks.map(x => `<button class="lnk" data-go="item:${esc(x)}">${esc(iname(x))}</button>`).join(", ")}.</p>` : ""}${t + 1 < stages.biomes.length ? `<p class="note">Then head to the ${esc(tierName(t + 1))}.</p>` : ""}</div>`;
-    }
-    h += `<section class="stage${t === now ? " now" : ""}${closed ? " closed" : ""}" data-sec-key="${esc(key)}"><div class="stage-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}"><span class="chev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M6 9l6 6 6-6"/></svg></span>${tierPill(t)}<h3>${esc(tierName(t))}${bc ? " → " + esc(bc.n) : ""}</h3>${t < now ? `<span class="done-mark">done in your world</span>` : t === now ? `<span class="done-mark" style="color:var(--accent)">you are here</span>` : ""}</div><div class="stage-b">${body}</div></section>`;
-  }
-  return h + `</div>`;
+// ---------- world settings view
+function worldView(){
+  return pageHead({eyebrow:"World", title:"World settings", lede:"Valheim's world modifiers, with your world's choices marked. Pick another option to see a what-if world: creature health and damage, drop amounts and raid timing across the atlas follow what you pick."}) + worldPanel();
 }
 
+// ---------- Epic Loot enchanting
+const RAR = ["Magic","Rare","Epic","Legendary","Mythic","Ancient"];
+const ANY_GEAR = ["OneHandedWeapon","TwoHandedWeapon","TwoHandedWeaponLeft","Bow","Shield","Helmet","Chest","Legs","Shoulder","Utility","Trinket","Tool","Torch"];
+const EL_SLOTS = [
+  ["weapons", "Melee weapons", t => ["OneHandedWeapon","TwoHandedWeapon","TwoHandedWeaponLeft"].some(x => t.includes(x))],
+  ["bows", "Bows & crossbows", t => ["Bow","Bows","Crossbows"].some(x => t.includes(x))],
+  ["staffs", "Staffs", t => t.includes("Staff")],
+  ["shields", "Shields", t => t.includes("Shield")],
+  ["helmet", "Helmets", t => t.includes("Helmet")],
+  ["chest", "Chest", t => t.includes("Chest")],
+  ["legs", "Legs", t => t.includes("Legs")],
+  ["cape", "Capes", t => t.includes("Shoulder")],
+  ["utility", "Belts & utility", t => t.includes("Utility")],
+  ["trinket", "Trinkets", t => t.includes("Trinket")],
+  ["tools", "Tools & torches", t => t.includes("Tool") || t.includes("Torch")],
+];
+const TYPE_LABEL = {OneHandedWeapon:"One-handed", TwoHandedWeapon:"Two-handed", TwoHandedWeaponLeft:"Two-handed", Bow:"Bows", Bows:"Bows", Crossbows:"Crossbows", Staff:"Staffs",
+  Shield:"Shields", Helmet:"Helmets", Chest:"Chest", Legs:"Legs", Shoulder:"Capes", Utility:"Belts", Trinket:"Trinkets", Tool:"Tools", Torch:"Torches"};
+const SKILL_LABEL = {Swords:"swords", Knives:"knives", Clubs:"clubs", Polearms:"atgeirs", Spears:"spears", Axes:"axes", Bows:"bows", Crossbows:"crossbows", Unarmed:"fists",
+  Pickaxes:"pickaxes", ElementalMagic:"elemental staffs", BloodMagic:"blood magic", Blocking:"shields", WoodCutting:"axes"};
+const SHARD_COLOR = {Red:"#d9534f", Yellow:"#e3c84b", Cyan:"#45c9d6", Orange:"#f0913a", Pink:"#ee7fb8", Black:"#2a2a2e", White:"#f2f2f2", Green:"#5fb760", Purple:"#9a6ad6",
+  Grey:"#9a9a9a", DarkRed:"#8b1e1e", DarkGreen:"#2f6b3a", DarkBlue:"#2a4a8b", DarkPurple:"#5b2e7a", Golden:"#d4a72c", LightBlue:"#8fd0f0", LightGreen:"#a5e08a", Peach:"#f3b58c"};
+const SHARD_SLOTS = ["MeleeWeapon","RangedWeapon","MagicWeapon","Shield","Head","Chest","Legs","Shoulders","Utility","Trinket"];
+function slotsOf(f){
+  const t = f.t || [];
+  if (!t.length) return ["any"];
+  return EL_SLOTS.filter(s => s[2](t)).map(s => s[0]);
+}
+function goesOn(f){
+  let out = f.t && f.t.length ? [...new Set(f.t.map(t => TYPE_LABEL[t] || prettify(t)))] : ["Any gear"];
+  if (f.only) out = f.only.map(iname);
+  return out;
+}
+function limitsOf(f){
+  const bits = [];
+  if (f.sk) bits.push("Only " + f.sk.map(s => SKILL_LABEL[s] || prettify(s)).join(", "));
+  if (f.xsk) bits.push("Not on " + f.xsk.map(s => SKILL_LABEL[s] || prettify(s)).join(", "));
+  if (f.xt) bits.push("Not on " + f.xt.map(t => TYPE_LABEL[t] || prettify(t)).join(", "));
+  if (f.ra) bits.push("Only " + f.ra.join(", ") + " rarity");
+  for (const n of f.need || []) bits.push("Needs: " + n);
+  if (f.must) bits.push("Needs the " + f.must.map(fxName).join(" or ") + " enchantment first");
+  return bits;
+}
+const fxName = t => (D.enchant && (D.enchant.names[t] || (D.enchant.fx[t] || {}).n)) || prettify(t);
+function rangeText(f, i){
+  if (!f.v) return i === 0 ? `<span class="dim">on/off</span>` : "";
+  const r = f.v[i];
+  if (!r || (f.ra && !f.ra.includes(RAR[i]))) return dash;
+  return `<span class="rv" style="color:var(${RARITY_VAR[i]})">${r[0] === r[1] ? fmt(r[0], 1) : fmt(r[0], 1) + "–" + fmt(r[1], 1)}</span>`;
+}
+const weightWord = w => w >= 10 ? "common" : w >= 5 ? "uncommon" : w >= 2 ? "rare" : "very rare";
+function fxFits(f, id, o){
+  const t = o.t, sk = o.skid || "";
+  if (!t || !ANY_GEAR.includes(t) && !(sk === "ElementalMagic" || sk === "BloodMagic")) return false;
+  const staff = sk === "ElementalMagic" || sk === "BloodMagic";
+  const types = f.t && f.t.length ? f.t : null;
+  if (types && !(types.includes(t) || (staff && types.includes("Staff")) || (sk === "Bows" && types.includes("Bows")) || (sk === "Crossbows" && types.includes("Crossbows")))) return false;
+  if (f.xt && f.xt.includes(t)) return false;
+  if (f.sk && !f.sk.includes(sk)) return false;
+  if (f.xsk && f.xsk.includes(sk)) return false;
+  if (f.only && !f.only.includes(id)) return false;
+  const q = o.q ? o.q[o.q.length - 1] : {}, x = o.x || {}, d = q.dmg || {};
+  for (const n of f.need || []){
+    if (n === "item has armor" && !q.arm) return false;
+    if (n === "item can block" && !q.blk) return false;
+    if (n === "weapon deals physical damage" && !(d.slash || d.pierce || d.blunt)) return false;
+    if (n === "weapon deals elemental damage" && !(d.fire || d.frost || d.lightning || d.poison || d.spirit)) return false;
+    if (n === "attacks cost eitr" && !(o.atk && o.atk.eitr)) return false;
+    if (n === "attacks cost health" && !(o.atk && (o.atk.hp || o.atk.hpPct))) return false;
+    if (n === "attacks cost stamina" && !(o.atk && o.atk.stam)) return false;
+    if (n === "item slows you down" && !(x.move < 0)) return false;
+    if (n === "item has durability" && !q.dur) return false;
+    if (n === "weapon deals chop damage" && !d.chop) return false;
+    if (n === "weapon has a backstab bonus" && !x.backstab) return false;
+    if (n === "item can parry" && !(x.parry > 1)) return false;
+    if (n === "item can't parry" && x.parry > 1) return false;
+  }
+  return true;
+}
+function slotOfItem(o){
+  const t = o.t, sk = o.skid || "";
+  if (sk === "ElementalMagic" || sk === "BloodMagic") return "staffs";
+  if (t === "Bow" || sk === "Bows" || sk === "Crossbows") return "bows";
+  if (["OneHandedWeapon","TwoHandedWeapon","TwoHandedWeaponLeft"].includes(t)) return "weapons";
+  return {Shield:"shields", Helmet:"helmet", Chest:"chest", Legs:"legs", Shoulder:"cape", Utility:"utility", Trinket:"trinket", Tool:"tools", Torch:"tools"}[t] || "";
+}
+function costFor(list, type, rar){
+  const row = (list || []).find(x => x.r === rar && (!type || x.t.includes(type)));
+  return row ? row.c : null;
+}
+function costChips(c){
+  if (!c || !c.length) return dash;
+  return `<div class="mats">${c.map(([it, a]) => `<button class="mat" data-go="item:${esc(it)}" title="${esc(iname(it))} × ${a}">${iicon(it, "s22")}<b>${a}</b></button>`).join("")}</div>`;
+}
+const rarHead = i => `<span class="rh" style="--c:var(${RARITY_VAR[i]})">${RAR[i]}</span>`;
+function chancesText(list){ return (list || []).map(([n, p]) => `${n} <span class="dim">(${fmt(p, 0)}%)</span>`).join(" · "); }
+
+function enchantView(){
+  const E = D.enchant;
+  if (!E) return pageHead({title:"Enchanting"}) + `<div class="empty">No Epic Loot data in this export.</div>`;
+  const tab = S.etab || "fx";
+  const tabs = [["fx", "Enchantments", Object.keys(E.fx).length], ["how", "How to enchant"], ["leg", "Legendary items", E.leg.length], ["shards", "Shardstones", E.shards.length]];
+  let h = pageHead({eyebrow:"Magic", title:"Enchanting", lede:"Epic Loot adds magic gear. At the Enchanting Table you turn loot and trophies into materials, then spend them to add random magic effects to your own gear.",
+    sub:`<div class="tabs" role="tablist">${tabs.map(([k, n, c]) => `<button class="tab" role="tab" data-etab="${k}" aria-selected="${tab === k}">${esc(n)}${c ? `<span class="ct">${c}</span>` : ""}</button>`).join("")}</div>`});
+  if (tab === "how") return h + enchantHow();
+  if (tab === "leg") return h + legendaryView();
+  if (tab === "shards") return h + shardView();
+  // enchantments list
+  const slot = S.eslot || "";
+  const ents = ENT.filter(e => e.k === "ench" && (!slot || slotsOf(e.o).includes(slot) || slotsOf(e.o).includes("any")));
+  const ex = costFor(E.cost.enchant, "OneHandedWeapon", "Magic"), ea = costFor(E.cost.enchant, "Chest", "Magic");
+  h += `<div class="callout">Each enchant adds random effects from the list below that fit the item. A Magic enchant on a weapon costs ${ex ? esc(ex.map(([i, a]) => a + " " + iname(i)).join(", ")) : "materials"}; armor uses reagent instead of essence${ea ? ` (${esc(ea.map(([i, a]) => a + " " + iname(i)).join(", "))})` : ""}. <button class="lnk" data-etab="how">How to enchant</button></div>`;
+  h += `<div class="tabs" role="tablist" aria-label="Gear slot" style="margin-bottom:14px"><button class="tab" data-eslot="" aria-selected="${!slot}">All gear</button>${EL_SLOTS.map(([k, n]) => `<button class="tab" data-eslot="${k}" aria-selected="${slot === k}">${esc(n)}</button>`).join("")}</div>`;
+  return h + sectionHTML("en:" + slot, slot ? (EL_SLOTS.find(s => s[0] === slot) || [0, "Enchantments"])[1] : "All enchantments", ents, "enchant", "Values are the range each rarity can roll.");
+}
+function enchantHow(){
+  const E = D.enchant, T = E.table && D.pieces[E.table];
+  const matTypes = [["Dust", "dust", "DustMagic"], ["Essence", "essence", "EssenceMagic"], ["Reagent", "reagent", "ReagentMagic"], ["Shard", "shard", "ShardMagic"], ["Runestone", "runestone", "RunestoneMagic"]];
+  const sacFor = prefix => E.sac.filter(s => s.out.some(([it]) => it.startsWith(prefix)));
+  let steps = [];
+  // 1. table
+  steps.push(["Build the Enchanting Table", `<p>It's on the Hammer. Everything below happens at this table.</p>${T ? `<div class="recipe-line"><button class="gi" data-go="piece:${esc(E.table)}">${icon(T.i, "s22", T.n)}${esc(T.n)}</button>${T.s ? `<span class="dim">near a ${esc(stName(T.s))}</span>` : ""}</div>${reqGrid(T.r)}` : ""}`]);
+  // 2. features
+  const feats = E.feat.map(f => {
+    const lvName = i => f.def < 0 ? (i === 0 ? "Unlock" : "Level " + i) : (i === 0 ? "Start" : "Level " + i);
+    const val = v => v ? esc(f.fmt.replace("$1", v[0]).replace("$2", v[1])) : "";
+    const first = f.lv.find(l => l.c);
+    const key = "feat:" + f.id, closed = S.collapsed[key] ?? true;
+    return `<div class="fold${closed ? " closed" : ""}" data-sec-key="${esc(key)}"><div class="fold-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}">${CHEV}${esc(f.n)}<span class="dim" style="font-weight:400;font-size:12px;margin-left:auto">${f.def < 0 ? "locked at first" : "available from the start"}</span></div>
+      <div class="fold-b"><p class="note" style="margin:0 0 8px;white-space:pre-line">${esc(f.info)}</p><div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Level</th><th>Cost</th><th>Gives</th></tr></thead><tbody>${f.lv.map((l, i) => `<tr><td>${lvName(i)}</td><td>${l.c ? costChips(l.c) : `<span class="dim">free</span>`}</td><td>${val(l.v)}</td></tr>`).join("")}</tbody></table></div></div></div>`;
+  }).join("");
+  steps.push(["Unlock its features", `<p>Sacrifice works right away. Enchant, Augment, Disenchant, Convert and Runes are locked until you pay their unlock cost at the table; each later level makes the feature stronger.</p>${feats}`]);
+  // 3. materials
+  const cards = matTypes.map(([n, k, sample]) => {
+    const rows = sacFor(n === "Shard" ? "Shard" : n === "Runestone" ? "Runestone" : n);
+    let how = "";
+    if (n === "Runestone"){
+      how = rows.filter(s => s.from.length).map(s => `<div class="grid-items" style="margin-top:4px">${s.from.slice(0, 2).map(p => `<button class="gi" data-go="item:${esc(p)}">${iicon(p, "s22")}${esc(iname(p))}</button>`).join("")}<span class="dim">→</span>${s.out.map(([it, a]) => `<button class="gi" data-go="item:${esc(it)}">${iicon(it, "s22")}${a > 1 ? a + "× " : ""}${esc(iname(it))}</button>`).join("")}</div>`).join("");
+    } else if (n === "Shard"){
+      how = rows.filter(s => s.from.length).map(s => `<p style="margin:4px 0 0">${s.out.map(([it]) => `<button class="lnk" data-go="item:${esc(it)}">${esc(iname(it))}</button>`).join("")}: ${esc(s.from.slice(0, 4).map(iname).join(", "))}${s.from.length > 4 ? ` <span class="dim">+${s.from.length - 4} more</span>` : ""}</p>`).join("");
+    }
+    return `<div class="mcard"><div class="nm">${iicon(sample, "s36")}<div><b>${esc(n)}</b><small>Magic → Ancient</small></div></div><p>${esc(E.intro[k] || "")}</p>${how}</div>`;
+  }).join("");
+  steps.push(["Collect enchanting materials", `<p>Sacrifice magic gear you find for dust plus essence (weapons and tools) or reagent (armor, shields, accessories), trophies for shards, and boss trophies for runestones. Each rarity has its own tier of material, and five of one tier convert up to one of the next once Convert materials is unlocked.</p><div class="mat-cards">${cards}</div>`]);
+  // 4. enchant
+  const cRow = (list, i) => `<tr><td>${rarHead(i)}</td><td>${costChips(costFor(list, "OneHandedWeapon", RAR[i]))}</td><td>${costChips(costFor(list, "Chest", RAR[i]))}</td></tr>`;
+  steps.push(["Enchant", `<p>Pick a normal item and a rarity. The item gets that many random effects from the enchantments that fit it, and may roll shard slots.</p>
+    <div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Rarity</th><th>Weapons & tools</th><th>Armor, shields & accessories</th></tr></thead><tbody>${RAR.map((r, i) => cRow(E.cost.enchant, i)).join("")}</tbody></table></div>
+    <div style="overflow-x:auto;margin-top:10px"><table class="wtable"><thead><tr><th>Rarity</th><th>Effects rolled</th><th>Shard slots</th></tr></thead><tbody>${RAR.map((r, i) => `<tr><td>${rarHead(i)}</td><td>${chancesText(E.count[r])}</td><td>${chancesText(E.sockets[r])}</td></tr>`).join("")}</tbody></table></div>`]);
+  // 5. augment
+  steps.push(["Augment", `<p>Reroll one effect on a magic item and choose from a few options. Once one effect is augmented, the others on that item are locked. Rerolling the same item again costs coins.</p>
+    <div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Rarity</th><th>Weapons & tools</th><th>Armor, shields & accessories</th></tr></thead><tbody>${RAR.map((r, i) => cRow(E.cost.augment, i)).join("")}</tbody></table></div>
+    ${E.cost.reaugment.length ? `<p class="note">Rerolling again: ${E.cost.reaugment.slice(0, 6).map(([it, a], i) => `${i + 2}${["nd","rd","th","th","th","th"][i]} time ${a.toLocaleString()} ${esc(iname(it).toLowerCase())}`).join(", ")}, and so on.</p>` : ""}`]);
+  // 6. disenchant & runes
+  steps.push(["Disenchant, extract and etch", `<p>Disenchanting strips a magic item back to normal so it can be enchanted again. Runes carry one enchantment from item to item: extract it into a runestone, or etch a runestone to hold one.</p>
+    <div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Rarity</th><th>Disenchant</th><th>Extract a rune</th><th>Etch a rune</th></tr></thead><tbody>${RAR.map((r, i) => `<tr><td>${rarHead(i)}</td><td>${costChips(E.cost.disenchant[r])}</td><td>${costChips(costFor(E.cost.extract, null, r))}</td><td>${costChips(costFor(E.cost.etch, null, r))}</td></tr>`).join("")}</tbody></table></div>`]);
+  // conversions
+  const up = E.conv.filter(c => c.k === "Upgrade"), cv = E.conv.filter(c => c.k === "Convert"), junk = E.conv.filter(c => c.k === "Junk");
+  const convRow = c => `<tr><td>${costChips(c.in)}</td><td class="dim">→</td><td>${costChips([c.out])}</td></tr>`;
+  const key = "feat:convlist", closed = S.collapsed[key] ?? true;
+  steps.push(["Convert materials", `<p>Upgrade five of one rarity into one of the next, turn shards into dust, essence or reagent, and rebuild trophies from their drops.</p>
+    <div class="fold${closed ? " closed" : ""}" data-sec-key="${key}"><div class="fold-h" data-toggle="${key}" role="button" tabindex="0" aria-expanded="${!closed}">${CHEV}All ${E.conv.length} conversions</div><div class="fold-b">
+    ${[["Upgrades", up], ["Shards to materials", cv], ["Rebuild trophies and runestones", junk]].filter(x => x[1].length).map(([n, l]) => `<div class="lvlhead">${n}</div><div style="overflow-x:auto"><table class="wtable"><tbody>${l.map(convRow).join("")}</tbody></table></div>`).join("")}</div></div>`]);
+  return `<div class="panel"><div class="steps">${steps.map(([t, b], i) => `<div class="step"><span class="n">${i + 1}</span><div><h3>${esc(t)}</h3>${b}</div></div>`).join("")}</div></div>`;
+}
+function legendaryView(){
+  const E = D.enchant;
+  const setById = Object.fromEntries(E.sets.map(s => [s.id, s]));
+  const cards = E.leg.map(l => `<div class="legcard${l.k === "Mythic" ? " mythic" : ""}"><h3>${esc(l.n)}</h3><div class="pillset">${(l.only ? l.only.map(iname) : (l.sk.length ? l.sk.map(s => SKILL_LABEL[s] || s) : l.t.map(t => TYPE_LABEL[t] || t))).map(x => `<span class="pill">${esc(x)}</span>`).join("")}${l.set ? `<span class="pill good">${esc(setById[l.set] ? setById[l.set].n : l.set)} set</span>` : ""}</div>
+    ${l.d ? `<p>${esc(l.d)}</p>` : ""}${l.fx.length ? `<div class="lvlhead" style="margin-top:4px">Always has</div><div class="grid-items">${l.fx.map(t => D.enchant.fx[t] ? `<button class="gi" data-go="ench:${esc(t)}">${esc(fxName(t))}</button>` : `<span class="gi" style="cursor:default">${esc(fxName(t))}</span>`).join("")}</div>` : ""}</div>`).join("");
+  const sets = E.sets.map(s => `<div class="panel"><h2>${esc(s.n)} set</h2><p class="tip">${esc(s.items.map(id => (E.leg.find(l => l.id === id) || {}).n || id).join(", "))}</p><ul class="effects">${s.bonus.map(b => `<li><b>${b.n} pieces:</b> ${esc(fxName(b.fx))}${b.v ? " " + fmt(b.v, 0) : ""}</li>`).join("")}</ul></div>`).join("");
+  return `<p class="note" style="margin:0 0 12px">Legendary items are named uniques that drop or come out of an enchant at Legendary rarity, always with the effects listed. ${E.sets.length ? "Pieces of a set add bonuses when worn together." : ""}</p><div class="grid3">${cards}</div>${sets ? `<div class="headrow" style="margin-top:20px"><h2>Sets</h2></div><div class="grid2">${sets}</div>` : ""}`;
+}
+function shardView(){
+  const E = D.enchant, slotLab = k => E.slots[k.toLowerCase()] || prettify(k);
+  const core = E.shards.filter(s => Object.keys(s.fx).length), other = E.shards.filter(s => !Object.keys(s.fx).length);
+  const cell = (s, slot) => {
+    const e = s.fx[slot];
+    if (!e) return `<td>${dash}</td>`;
+    const [t, vals] = e;
+    const nums = (vals || []).filter(v => v != null);
+    const range = nums.length && typeof nums[0] === "number" ? fmt(nums[0], 1) + (nums.length > 1 ? "–" + fmt(nums[nums.length - 1], 1) : "") : "";
+    const tip = (E.descs[t] || (E.fx[t] || {}).d || "").replace(/\{0\}/g, "X");
+    return `<td title="${esc(tip)}">${E.fx[t] ? `<button class="lnk" data-go="ench:${esc(t)}">${esc(fxName(t))}</button>` : esc(fxName(t))}${range ? `<div class="rv dim">${range}</div>` : ""}</td>`;
+  };
+  return `<p class="note" style="margin:0 0 12px">Shardstones go into shard slots on magic gear. Each color gives a different effect depending on the slot it's in; the numbers run from Magic to Ancient quality. Hover an effect for its description.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Shardstone</th>${SHARD_SLOTS.map(k => `<th style="cursor:default">${esc(slotLab(k))}</th>`).join("")}</tr></thead><tbody>${core.map(s => `<tr style="cursor:default"><td><span class="swatch" style="background:${SHARD_COLOR[s.c] || "var(--surface-3)"}"></span><b>${esc(prettify(s.c))}</b><div class="dim" style="font-size:11px">${esc(s.cat)}</div></td>${SHARD_SLOTS.map(k => cell(s, k)).join("")}</tr>`).join("")}</tbody></table></div>
+    ${other.length ? `<p class="note">Boss and unique shardstones: ${esc(other.map(s => prettify(s.c) + " (" + s.ra[0] + "+)").join(", "))}.</p>` : ""}`;
+}
+function enchantDetail(id){
+  const E = D.enchant, f = E && E.fx[id];
+  if (!f) return `<div class="inner"><p style="padding:20px">Unknown enchantment.</p></div>`;
+  let h = `<div class="inner">` + dhead(-6, f.n, goesOn(f).map(x => tag(x)), f.d, "Enchantment");
+  if (f.v){
+    h += `<div class="card"><h3>Values by rarity <span class="aside">${esc(f.f.replace(/\{\d\}/g, "X"))}</span></h3><div style="overflow-x:auto"><table class="wtable"><tbody>${RAR.map((r, i) => `<tr><td>${rarHead(i)}</td><td class="num">${rangeText(f, i)}</td></tr>`).join("")}</tbody></table></div></div>`;
+  }
+  const lim = limitsOf(f);
+  h += `<div class="card"><h3>Goes on</h3><div class="pillset">${goesOn(f).map(x => `<span class="pill">${esc(x)}</span>`).join("")}</div>${lim.length ? `<ul class="effects">${lim.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    <p class="note">Rolls ${esc(weightWord(f.w || 1))} (weight ${f.w || 1}; most common effects have 10).</p></div>`;
+  if (f.ex) h += `<div class="card"><h3>Can't roll together with</h3><div class="grid-items">${f.ex.map(t => E.fx[t] ? `<button class="gi" data-go="ench:${esc(t)}">${esc(fxName(t))}</button>` : `<span class="gi" style="cursor:default">${esc(fxName(t))}</span>`).join("")}</div></div>`;
+  const legs = E.leg.filter(l => l.fx.includes(id));
+  if (legs.length) h += `<div class="card"><h3>Always on these legendaries</h3><div class="grid-items">${legs.map(l => `<span class="gi" style="cursor:default">${esc(l.n)}</span>`).join("")}</div></div>`;
+  const shards = [];
+  for (const s of E.shards) for (const [slot, e] of Object.entries(s.fx)) if (e[0] === id) shards.push(`${prettify(s.c)} in ${(E.slots[slot.toLowerCase()] || prettify(slot)).toLowerCase()}`);
+  if (shards.length) h += `<div class="card"><h3>Also from shardstones</h3><p style="margin:0">${esc(shards.join(", "))}</p></div>`;
+  const now = worldStage();
+  const ex = Object.entries(D.items).filter(([iid, o]) => o.tier != null && o.tier <= now && !o.ns && RBI[iid] && fxFits(f, iid, o)).sort((a, b) => b[1].tier - a[1].tier || keyStat(b[1]) - keyStat(a[1])).slice(0, 8);
+  if (ex.length) h += `<div class="card"><h3>Gear you can make now that takes it</h3><div class="grid-items">${ex.map(([iid, o]) => `<button class="gi" data-go="item:${esc(iid)}">${icon(o.i, "s22", o.n)}${esc(o.n)}</button>`).join("")}</div></div>`;
+  return h + `</div>`;
+}
+function enchantCard(id, o){
+  const E = D.enchant;
+  if (!E) return "";
+  const fits = Object.entries(E.fx).filter(([k, f]) => fxFits(f, id, o)).sort((a, b) => (b[1].w || 1) - (a[1].w || 1) || a[1].n.localeCompare(b[1].n));
+  if (!fits.length) return "";
+  const slot = slotOfItem(o);
+  const key = "ench:" + id, lim = S.open[key] ? 1e9 : 16;
+  const type = o.t === "Bow" || ["OneHandedWeapon","TwoHandedWeapon","TwoHandedWeaponLeft","Tool","Torch"].includes(o.t) || (o.skid === "ElementalMagic" || o.skid === "BloodMagic") ? "OneHandedWeapon" : "Chest";
+  return `<div class="card"><h3>Enchanting <span class="aside">${fits.length} effects can roll on it</span></h3>
+    <div class="grid-items">${fits.slice(0, lim).map(([k, f]) => `<button class="gi" data-go="ench:${esc(k)}">${esc(f.n)}</button>`).join("")}${fits.length > lim ? `<button class="gi" data-more="${esc(key)}">+${fits.length - lim} more</button>` : ""}</div>
+    <div style="overflow-x:auto;margin-top:10px"><table class="wtable"><tbody>${[0, 1, 2].map(i => `<tr><td>${rarHead(i)}</td><td>${costChips(costFor(E.cost.enchant, type, RAR[i]))}</td></tr>`).join("")}</tbody></table></div>
+    <p class="note">Enchanting cost at the Enchanting Table (higher rarities follow the same pattern). <button class="lnk" data-view="enchant" data-eslot="${esc(slot)}">All enchantments for this slot</button></p></div>`;
+}
+
+// ---------- detail router
 function helpDetail(){
   const n = Object.keys(D.items).length;
-  return `<div class="inner help"><div class="dhead"><span></span><div><h2>How to read the atlas</h2></div><div class="ctl"><button class="iconbtn sheet-close" data-close aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>
-    <p>Search for a weapon type, an item, a material, a station or a creature. <b>Greatsword</b> lists every greatsword side by side. <b>Iron</b> shows iron and everything named after it. Click any row or material icon to open it here.</p>
-    <p><b>Stations and levels.</b> A crafting station starts at level 1. Each different upgrade you build within range adds a level. The level badge next to a station is what you need to craft the item.</p>
-    <p><b>Item levels (★).</b> ★1 is the crafted item. Each upgrade costs the materials shown and needs the station one level higher. The upgrade table shows how damage, armor, block and durability grow at each step.</p>
-    <p><b>Damage</b> is the weapon's base damage added up across types (slash, pierce, fire and so on). Your skill in that weapon decides how much of it lands.</p>
-    <p><b>World tabs.</b> Bosses shows how to summon each one, where its altar is and what beating it changes. Raids lists every raid with the progress that unlocks it. Locations and Biomes cover spawners, dungeon rooms, chest loot, weather and star chances. World &amp; difficulty lets you try other world settings; health, damage, drop amounts and raid timing across the atlas follow what you pick.</p>
-    <p><b>Where to get it</b> covers smelting and cooking, creature drops with drop chances, mining and chopping (including which tool you need), chests and traders.</p>
-    <p class="dim">${n.toLocaleString()} items across ${D.modsUsed.length} sources, including vanilla Valheim.</p></div>`;
+  return `<div class="inner help">${dhead(-5, "How to read the atlas", [], "", "Guide")}<div class="card">
+    <p>Search for a weapon type, an item, a material, a station, a creature or an enchantment. <b>Greatsword</b> lists every greatsword side by side. <b>Iron</b> shows iron and everything named after it. Click any row or icon to open it here.</p>
+    <p><b>Tiers</b> place everything in the boss order, from Meadows to Deep North. A material's tier is the earliest biome you can gather it in with a tool you can make; crafted things take their latest ingredient, station and station upgrade. Use the tier filter to see only what you can make now.</p>
+    <p><b>Stations and levels.</b> A crafting station starts at level 1. Each different upgrade you build in range adds a level. The level badge is what you need to craft the item.</p>
+    <p><b>Item levels (★).</b> ★1 is the crafted item. Each upgrade costs the materials shown and needs a higher station level. The upgrade table shows the tier each star becomes reachable.</p>
+    <p><b>Damage</b> is the weapon's base damage added up across types. Your skill in that weapon decides how much of it lands.</p>
+    <p><b>Journey</b> walks the boss order for your class. <b>Enchanting</b> covers Epic Loot. <b>World settings</b> lets you try other world options; health, damage, drops and raid timing across the atlas follow what you pick.</p>
+    <p class="dim">${n.toLocaleString()} items across ${D.modsUsed.length} sources, including vanilla Valheim.</p></div></div>`;
 }
 function renderDetail(){
   const s = S.sel;
   let h;
-  if (!s) h = helpDetail();
+  if (!s || s.k === "help") h = helpDetail();
   else if (s.k === "item") h = itemDetail(s.id);
   else if (s.k === "piece") h = pieceDetail(s.id);
   else if (s.k === "station") h = stationDetail(s.id);
@@ -1898,7 +2445,13 @@ function renderDetail(){
   else if (s.k === "event") h = eventDetail(s.id);
   else if (s.k === "loc") h = locationDetail(s.id);
   else if (s.k === "biome") h = biomeDetail(s.id);
+  else if (s.k === "ench") h = enchantDetail(s.id);
   else h = helpDetail();
+  // Jump links for long pages: one per card heading.
+  let n = 0;
+  const labels = [];
+  h = h.replace(/<div class="card"><h3>([^<]*)/g, (m, t) => { const id = "dc" + (n++); labels.push([id, t.trim()]); return `<div class="card" id="${id}"><h3>${t}`; });
+  h = h.replace("<!--DNAV-->", labels.length >= 4 ? `<nav class="dnav" aria-label="Sections">${labels.map(([id, t]) => `<button data-jump="${id}">${t}</button>`).join("")}</nav>` : "");
   const d = $("#detail");
   d.innerHTML = h;
   d.scrollTop = 0;
@@ -1913,8 +2466,8 @@ function wire(){
     t = setTimeout(() => {
       const had = !!S.q;
       S.q = q.value.trim();
-      if (S.q && !had){ S.group = "all"; S.cls = null; }
-      if (!S.q && had){ S.group = store("atlas.group") || "weapons"; S.cls = null; }
+      if (S.q && !had){ S.prevView = S.view; S.view = "search"; S.cls = null; window.scrollTo(0, 0); }
+      if (!S.q && had){ if (S.view === "search") S.view = S.prevView || "home"; S.cls = null; }
       S.open = {};
       render();
     }, 110);
@@ -1923,26 +2476,60 @@ function wire(){
     if (e.key === "/" && document.activeElement !== q && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){ e.preventDefault(); q.focus(); q.select(); }
     if (e.key === "Escape"){
       if (document.activeElement === q && q.value){ q.value = ""; q.dispatchEvent(new Event("input")); }
-      else if (!$(".layout").classList.contains("nodetail")) closeDetail();
+      else if ($("#nav").classList.contains("open")) closeNav();
+      else if (S.sel) closeDetail();
     }
     if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[role=button][data-go]")){ e.preventDefault(); e.target.click(); }
+    const h = e.target.closest && e.target.closest("[data-toggle]");
+    if (h && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); toggleSection(h.dataset.toggle); }
   });
-  $("#mod").addEventListener("change", e => { S.mod = e.target.value; render(); });
-  $("#nosrc").addEventListener("change", e => { S.nosrc = e.target.checked; render(); });
+  document.addEventListener("change", e => {
+    const id = e.target.id;
+    if (id === "f-tier"){ S.tier = e.target.value; render(); return; }
+    if (id === "f-mod"){ S.mod = e.target.value; render(); return; }
+    if (id === "f-nosrc"){ S.nosrc = e.target.checked; render(); return; }
+    if (id === "f-sub"){ S.cls = e.target.value || null; S.open = {}; render(); return; }
+    if (e.target.matches && e.target.matches("[data-comfort],[data-comfort-u],#comfort-roof")) updateComfort();
+  });
+  document.addEventListener("input", e => {
+    if (e.target.id === "w-players"){ W.players = +e.target.value; store("atlas.players", String(W.players)); worldChanged(); }
+  });
   document.addEventListener("click", e => {
-    const el = e.target.closest("[data-go],[data-group],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night],[data-help],[data-comfort-view]");
+    const el = e.target.closest("[data-go],[data-view],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night],[data-help],[data-comfort-view],[data-journey],[data-klass],[data-etab],[data-eslot],[data-jump],[data-navtoggle],[data-tier-clear],[data-filters-clear]");
     if (!el) return;
+    if (el.hasAttribute("data-navtoggle")){ $("#nav").classList.contains("open") ? closeNav() : openNav(); return; }
     if (el.dataset.toggle){ toggleSection(el.dataset.toggle); return; }
+    if (el.dataset.jump){ const c = document.getElementById(el.dataset.jump); if (c) c.scrollIntoView({block:"start", behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); return; }
     if (el.dataset.collapse){
       const on = el.dataset.collapse === "1";
-      document.querySelectorAll("#results .sec[data-sec-key]").forEach(sec => { S.collapsed[sec.dataset.secKey] = on; sec.classList.toggle("closed", on); sec.querySelector(".sec-h").setAttribute("aria-expanded", String(!on)); });
+      document.querySelectorAll("#results [data-sec-key]").forEach(sec => { S.collapsed[sec.dataset.secKey] = on; sec.classList.toggle("closed", on); const hh = sec.querySelector("[data-toggle]"); if (hh) hh.setAttribute("aria-expanded", String(!on)); });
       saveCollapsed(); return;
     }
     if (el.dataset.wMod){ W.opt[el.dataset.wMod] = el.dataset.wOpt; worldChanged(); return; }
     if (el.hasAttribute("data-w-reset")){ Object.assign(W.opt, W.base); worldChanged(); return; }
     if (el.dataset.wNight){ W.night = el.dataset.wNight === "1"; worldChanged(); return; }
-    if (el.dataset.group){ S.group = el.dataset.group; S.cls = null; S.open = {}; if (S.group !== "all") store("atlas.group", S.group); closeDetail(); render(); return; }
-    if (el.dataset.cls !== undefined){ S.cls = el.dataset.cls || null; S.open = {}; closeDetail(); render(); return; }
+    if (el.hasAttribute("data-tier-clear")){ S.tier = "all"; render(); return; }
+    if (el.hasAttribute("data-filters-clear")){ S.tier = "all"; S.mod = ""; render(); return; }
+    if (el.dataset.klass !== undefined){ S.klass = el.dataset.klass || null; store("atlas.class", S.klass || ""); if (S.view !== "journey" && S.view !== "home") S.view = "journey"; if (S.view === "journey") window.scrollTo(0, 0); render(); return; }
+    if (el.dataset.journey !== undefined){
+      const t = +el.dataset.journey;
+      go("journey");
+      if (S.klass){ const key = "stage:" + S.klass + ":" + t; S.collapsed[key] = false; render(); }
+      const st = document.getElementById("stage-" + t);
+      if (st) st.scrollIntoView({block:"start"});
+      return;
+    }
+    if (el.dataset.etab){ S.etab = el.dataset.etab; if (S.view !== "enchant") go("enchant"); else { render(); } return; }
+    if (el.dataset.eslot !== undefined && !el.dataset.view){ S.eslot = el.dataset.eslot; render(); return; }
+    if (el.dataset.view){
+      const v = el.dataset.view;
+      if (v === "search" && !S.q) return;
+      if (el.dataset.eslot !== undefined){ S.eslot = el.dataset.eslot; S.etab = "fx"; }
+      if (el.closest("#detail") && matchMedia("(max-width:1279px)").matches) closeDetail();
+      go(v, el.dataset.tier !== undefined ? {tier:el.dataset.tier} : {});
+      return;
+    }
+    if (el.dataset.cls !== undefined){ S.cls = el.dataset.cls || null; S.open = {}; render(); return; }
     if (el.dataset.sort){
       const key = el.dataset.sec, c = el.dataset.sort;
       const g = key.split(":")[1];
@@ -1951,43 +2538,31 @@ function wire(){
       S.sort[key] = [c, dir]; S.sort[g] = [c, dir];
       render(); return;
     }
-    if (el.dataset.more){ S.open[el.dataset.more] = true; if (el.closest("#detail")) renderDetail(); else render(); return; }
+    if (el.dataset.more){ S.open[el.dataset.more] = true; if (el.closest("#detail")) { const sc = $("#detail").scrollTop; renderDetail(); $("#detail").scrollTop = sc; } else render(); return; }
     if (el.dataset.lvl){ S.lvl = +el.dataset.lvl; const sc = $("#detail").scrollTop; renderDetail(); $("#detail").scrollTop = sc; return; }
     if (el.hasAttribute("data-back")){ const p = S.hist.pop(); if (p) select(p.k, p.id, "back"); return; }
     if (el.hasAttribute("data-close")){ closeDetail(); return; }
     if (el.hasAttribute("data-help")){ showHelp(); return; }
-    if (el.hasAttribute("data-comfort-view")){ S.group = "building"; S.cls = "b|comfort"; S.q = ""; $("#q").value = ""; closeDetail(); render(); window.scrollTo(0, 0); return; }
+    if (el.hasAttribute("data-comfort-view")){ if (matchMedia("(max-width:1279px)").matches) closeDetail(); go("comfort"); return; }
     if (el.dataset.go){
       e.preventDefault();
       const i = el.dataset.go.indexOf(":");
       select(el.dataset.go.slice(0, i), el.dataset.go.slice(i + 1), el.closest("#detail") ? "link" : "fresh");
     }
   });
-  window.addEventListener("hashchange", fromHash);
-  document.addEventListener("change", e => {
-    if (e.target.matches && e.target.matches("[data-comfort],[data-comfort-u],#comfort-roof")) updateComfort();
-  });
-  document.addEventListener("input", e => {
-    if (e.target.id === "w-players"){ W.players = +e.target.value; store("atlas.players", String(W.players)); worldChanged(); }
-  });
-  document.addEventListener("keydown", e => {
-    const h = e.target.closest && e.target.closest("[data-toggle]");
-    if (h && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); toggleSection(h.dataset.toggle); }
-  });
-  try{ S.collapsed = JSON.parse(store("atlas.collapsed") || "{}") || {}; }catch(err){ S.collapsed = {}; }
+  window.addEventListener("hashchange", () => { fromHash(); if (S.sel) renderDetail(); });
 }
 function saveCollapsed(){ store("atlas.collapsed", JSON.stringify(S.collapsed)); }
 function toggleSection(key){
-  const secEl = [...document.querySelectorAll("#results [data-sec-key]")].find(x => x.dataset.secKey === key);
-  const wasClosed = secEl ? secEl.classList.contains("closed") : !!S.collapsed[key];
-  S.collapsed[key] = !wasClosed;
   const sec = [...document.querySelectorAll("#results [data-sec-key]")].find(x => x.dataset.secKey === key);
-  if (sec){ sec.classList.toggle("closed", !!S.collapsed[key]); sec.querySelector(".sec-h").setAttribute("aria-expanded", String(!S.collapsed[key])); }
+  const wasClosed = sec ? sec.classList.contains("closed") : !!S.collapsed[key];
+  S.collapsed[key] = !wasClosed;
+  if (sec){ sec.classList.toggle("closed", !!S.collapsed[key]); const hh = sec.querySelector("[data-toggle]"); if (hh) hh.setAttribute("aria-expanded", String(!S.collapsed[key])); }
   saveCollapsed();
 }
 function worldChanged(){
   const sy = window.scrollY, dy = $("#detail").scrollTop;
-  renderWorldNow();
+  renderWorldBtn();
   render();
   if (S.sel) renderDetail();
   window.scrollTo(0, sy);
