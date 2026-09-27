@@ -71,7 +71,7 @@ a{color:var(--link)}
 .brand svg{color:var(--accent); flex:none}
 .brand b{font-family:var(--display); font-weight:600; font-size:22px; letter-spacing:.01em; line-height:1}
 .brand small{display:block; font-size:11px; color:var(--faint); letter-spacing:.04em; margin-top:2px}
-.search{flex:1; max-width:640px; margin-inline:auto; position:relative; display:flex; align-items:center; gap:8px; height:40px; padding-inline:12px;
+.search{flex:1; min-width:0; max-width:640px; margin-inline:auto; position:relative; display:flex; align-items:center; gap:8px; height:40px; padding-inline:12px;
   background:var(--surface); border:1px solid var(--line); border-radius:10px}
 .search:focus-within{border-color:var(--accent-line); box-shadow:0 0 0 3px var(--accent-soft)}
 .search svg{flex:none; color:var(--muted)}
@@ -323,6 +323,22 @@ td.num{font-size:12.5px}
 .blk p{margin:0 0 6px; font-size:13px}
 .blk .wtype{font-size:12px; color:var(--muted); margin:8px 0 4px}
 .blk .wtype:first-of-type{margin-top:0}
+.ctl.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:600}
+.ctl.primary:hover{filter:brightness(1.08)}
+.ctl.qty{width:74px; cursor:text}
+.lvsel{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+tr.got td{opacity:.45}
+tr.got td b{text-decoration:line-through}
+.steps-list{margin:0; padding-left:22px; display:grid; gap:4px; font-size:13px}
+.copybox{width:100%; min-height:160px; margin-top:4px; font-family:var(--mono); font-size:12px; background:var(--surface-2); color:var(--text); border:1px solid var(--line); border-radius:10px; padding:10px}
+.toast{position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom, 0px) + 20px); transform:translateX(-50%); z-index:50; background:var(--raise); color:var(--text); border:1px solid var(--accent-line); box-shadow:var(--shadow); border-radius:12px; padding:10px 16px; font-size:13px; max-width:calc(100vw - 32px)}
+.blk.wide{grid-column:1 / -1}
+.setgrid{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:10px}
+.setc{border:1px solid var(--line-soft); background:var(--surface-2); border-radius:12px; padding:10px 12px; display:grid; gap:6px; align-content:start}
+.setc-h{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.setc-h b{font-size:14px}
+.setc-h .x{margin-left:auto; font-family:var(--mono); font-size:12px; color:var(--accent)}
+.setc .note{margin:0}
 .whys{margin:8px 0 0; padding:0; list-style:none; font-size:12px; color:var(--muted); display:grid; gap:3px}
 .whys b{color:var(--text); font-weight:600}
 .ccard{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; gap:10px; align-content:start}
@@ -434,6 +450,8 @@ details.tip pre{white-space:pre-wrap; font-family:var(--sans); font-size:12.5px;
 }
 @media (max-width:560px){
   .brand b{display:none}
+  .worldbtn{padding:0 6px}
+  .search{padding-inline:10px}
   .ph h1{font-size:28px}
   .topbar{gap:8px}
 }
@@ -485,6 +503,7 @@ const RARITY_VAR = ["--r0","--r1","--r2","--r3","--r4","--r5"];
 const NAV = [
   {k:"home", n:"Overview", ic:"home"},
   {k:"journey", n:"Journey", ic:"route"},
+  {k:"list", n:"Shopping list", ic:"list"},
   {h:"Gear"}, {k:"weapons", ic:"sword"}, {k:"armor", ic:"helm"}, {k:"shields", ic:"shield"}, {k:"ammo", n:"Ammo", ic:"arrow"}, {k:"tools", ic:"pick"},
   {h:"Supplies"}, {k:"food", ic:"food"}, {k:"meads", ic:"flask"}, {k:"materials", ic:"ore"}, {k:"other", n:"Other items", ic:"bag"},
   {h:"Build & craft"}, {k:"building", n:"Building pieces", ic:"hammer"}, {k:"comfort", n:"Comfort", ic:"fire"}, {k:"stations", n:"Crafting stations", ic:"anvil"}, {k:"processing", ic:"pot"},
@@ -522,7 +541,7 @@ const pct = v => (v > 0 ? "+" : "") + Math.round(v * 100) + "%";
 function store(k, v){ try{ if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
 
 let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {}, TRADERS = {}, BOSS_BY_KEY = {};
-const S = {q:"", view:"home", prevView:"home", cls:null, mod:"", nosrc:false, tier:"all", sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}, klass:null, eslot:"", comfortPick:null, comfortRoof:true};
+const S = {q:"", view:"home", prevView:"home", cls:null, mod:"", nosrc:false, tier:"all", sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}, klass:null, eslot:"", comfortPick:null, comfortRoof:true, list:[], listRaw:false, listGot:{}};
 // World settings the numbers are shown under. Modifiers start at the server's values; progress (bosses
 // beaten) is set by each viewer in World settings. Both are remembered in this browser.
 const W = {opt:{}, base:{}, players:1, night:false, stage:0};
@@ -576,6 +595,7 @@ const GLYPH = {
   paw:'<circle cx="4.5" cy="6" r="1.3"/><circle cx="7" cy="3.8" r="1.3"/><circle cx="10" cy="4" r="1.3"/><circle cx="12" cy="6.6" r="1.3"/><path d="M8.3 7.5c2 0 3.7 2.5 3.4 4.5-.3 1.6-2 1.4-3.4.8-1.4.6-3.1.8-3.4-.8-.3-2 1.4-4.5 3.4-4.5z"/>',
   sliders:'<path d="M3 4.5h10M3 8h10M3 11.5h10"/><circle cx="6" cy="4.5" r="1.4"/><circle cx="10.5" cy="8" r="1.4"/><circle cx="5" cy="11.5" r="1.4"/>',
   star:'<path d="M8 2.5l1.7 3.5 3.8.5-2.8 2.6.7 3.8L8 11.1 4.6 12.9l.7-3.8L2.5 6.5l3.8-.5z"/>',
+  list:'<path d="M6 4.5h7.5M6 8h7.5M6 11.5h7.5M2.5 4.5l.8.8 1.4-1.6M2.5 8l.8.8 1.4-1.6M2.5 11.5l.8.8 1.4-1.6"/>',
 };
 function glyph(k, size = 22){
   if (typeof size === "string") size = {s18:18, s22:22, s36:36, s44:44, s56:56}[size] || 28;
@@ -793,6 +813,7 @@ async function boot(){
   const saved = store("atlas.view");
   if (saved && (NAV.some(n => n.k === saved))) S.view = saved;
   S.klass = store("atlas.class") || null;
+  loadList();
   try{ S.collapsed = JSON.parse(store("atlas.collapsed") || "{}") || {}; }catch(err){ S.collapsed = {}; }
   worldInit();
   wire();
@@ -1378,8 +1399,8 @@ function renderNav(ct){
     if (n.k === "enchant" && !D.enchant) continue;
     if (n.k === "world" && !D.world) continue;
     const label = n.n || (GRP[n.k] && GRP[n.k].n) || prettify(n.k);
-    const count = ["home","journey","world"].includes(n.k) ? null : (ct[n.k] || 0);
-    if (count === 0 && !S.q && !["enchant"].includes(n.k)) continue;
+    const count = ["home","journey","world"].includes(n.k) ? null : n.k === "list" ? (S.list.length || null) : (ct[n.k] || 0);
+    if (count === 0 && !S.q && !["enchant","list"].includes(n.k)) continue;
     h += `<button class="nav-i${S.q && count === 0 ? " zero" : ""}" data-view="${n.k}" aria-current="${S.view === n.k ? "page" : "false"}">${navIcon(n.ic)}<span>${esc(label)}</span>${count != null ? `<span class="ct">${count.toLocaleString()}</span>` : ""}</button>`;
   }
   h += `<p class="foot-note">Press <b>/</b> to search from anywhere. Click any row or icon to open its details.</p>`;
@@ -1394,6 +1415,7 @@ function render(){
   let html;
   if (v === "home") html = homeView();
   else if (v === "journey") html = journeyView();
+  else if (v === "list") html = shopView();
   else if (v === "world") html = worldView();
   else if (v === "enchant") html = enchantView();
   else html = listView(v);
@@ -1605,6 +1627,63 @@ function armorPlan(style, t, c){
   }
   return {list:ARMOR_SLOTS.map(sl => pick[sl]).filter(Boolean), notes, prof};
 }
+// Armor sets: named sets (with a set bonus) and families of pieces sharing a material name (Iron, Padded,
+// Troll leather) from the same mod. The strongest piece per slot stands in for the family.
+const SLOT_WORDS = new Set("helmet helm hood cap hat mask visage crown circlet coif tunic chest chestpiece cuirass breastplate robe mail chainmail scale armor armour harness harnesk jersey coat jacket vest shirt legs leggings greaves trousers pants striders boots skirt cape cloak mantle of the and s".split(" "));
+function familyKey(o){
+  const w = norm(o.n).split(" ").find(x => x.length >= 3 && !SLOT_WORDS.has(x));
+  return w ? w + "|" + o.m : null;
+}
+let SETS_ALL = null;
+function armorSets(){
+  if (SETS_ALL) return SETS_ALL;
+  const groups = {};
+  for (const [id, o] of Object.entries(D.items)){
+    if (!ARMOR_SLOTS.includes(o.c) || o.tier == null || o.ns || !RBI[id]) continue;
+    const key = o.set ? "set:" + o.set : familyKey(o);
+    if (key) (groups[key] ||= []).push([id, o]);
+  }
+  const out = [];
+  for (const [key, ms] of Object.entries(groups)){
+    const bySlot = {};
+    for (const m of ms){ const sl = m[1].c; if (!bySlot[sl] || keyStat(m[1]) > keyStat(bySlot[sl][1])) bySlot[sl] = m; }
+    const list = ARMOR_SLOTS.map(sl => bySlot[sl]).filter(Boolean);
+    if (list.filter(m => m[1].c !== "capes").length < 2) continue;
+    const named = key.startsWith("set:");
+    const se = named ? D.ses[list[0][1].setse] : null;
+    const word = key.split("|")[0];
+    // Untranslated set ids like "$set_spellslinger_BF_TW" become "Spellslinger".
+    const raw = prettify(key.slice(4).replace(/^\$?(set_)?/i, "").replace(/_(TW|BF|Swamp|Mountain|Plains|Mistlands|Ashlands|DeepNorth|Meadows)(?=_|$)/gi, "")).trim();
+    const nice = raw.charAt(0).toUpperCase() + raw.slice(1);
+    out.push({key, named, se, list, name:named ? (se && !/^\$/.test(se.n) ? se.n : nice) + " set" : word.charAt(0).toUpperCase() + word.slice(1) + " armor",
+      tier:Math.max(...list.map(m => m[1].tier)), mod:list[0][1].m});
+  }
+  return SETS_ALL = out;
+}
+function setInfo(set, t, style, c){
+  const prof = threatProfile(t), cov = {};
+  // Same rule as armorPlan: a bonus for this class's weapons counts most, one for other weapons barely.
+  const txt = set.se ? (set.se.n + " " + set.se.t).toLowerCase() : "";
+  const mine = c ? classSkills(c).flatMap(s => SKILL_WORDS[s] || [s.toLowerCase()]) : [];
+  const others = Object.entries(SKILL_WORDS).filter(([k]) => !(c ? classSkills(c) : []).includes(k)).flatMap(([, w]) => w);
+  let arm = 0, move = 0, eitr = 0;
+  let score = !set.se ? 0 : mine.some(w => txt.includes(w)) ? 20 : others.some(w => new RegExp("\\b" + w).test(txt)) ? 4 : 10;
+  const res = new Set(), weak = new Set();
+  for (const [id, o] of set.list){
+    score += armorEval(o, t, style, prof, cov).s;
+    coverAdd(cov, o);
+    arm += statAt(o, t);
+    const x = o.x || {};
+    move += x.move || 0; eitr += x.eitrRegen || 0;
+    for (const [ty, f] of resOf(o)) (f > 0 ? res : weak).add((DNAME[ty] || ty).toLowerCase());
+  }
+  const traits = [];
+  if (res.size) traits.push("resists " + [...res].join(", "));
+  if (weak.size) traits.push("weak to " + [...weak].join(", "));
+  if (move) traits.push((move > 0 ? "+" : "−") + Math.abs(Math.round(move * 100)) + "% move speed");
+  if (eitr) traits.push("+" + Math.round(eitr * 100) + "% eitr regen");
+  return {arm, score, traits};
+}
 function trinketPicks(c, style, t){
   const skills = classSkills(c), types = classDmgTypes(c, t);
   const score = o => {
@@ -1681,7 +1760,18 @@ function classGuide(c){
     body += `<div class="blk"><h4>Armor${style === "caster" ? " · eitr regen first" : style === "light" ? " · light & fast" : ""}</h4><div class="grid-items">${plan.list.map(x => gearChip(x.c, t)).join("")}</div>
       ${whys.length ? `<ul class="whys">${whys.map(x => `<li><b>${esc(x.c[1].n)}</b> ${esc(x.ev.why.slice(0, 3).join(", "))}</li>`).join("")}</ul>` : ""}
       ${plan.notes.map(n => `<p class="note">${n}</p>`).join("")}
-      <p class="note">Weighed against what hits you here: ${esc(profileText(plan.prof))}.</p></div>`;
+      <p class="note">Weighed against what hits you here: ${esc(profileText(plan.prof))}.</p>
+      <button class="lnk" data-add="${esc(plan.list.map(x => x.c[0] + "@" + reachQ(x.c[1], t)).join(","))}">Add this armor to the shopping list</button></div>`;
+    // optional sets that open up at this stage
+    const sets = armorSets().filter(s => s.tier === t).map(s => ({...s, info:setInfo(s, t, style, c)})).sort((a, b) => b.info.score - a.info.score);
+    if (sets.length){
+      const key2 = "sets:" + c.id + ":" + t, showAll = S.open[key2];
+      body += `<div class="blk wide"><h4>Armor sets you can make here</h4><div class="setgrid">${sets.slice(0, showAll ? 99 : 4).map(s => `<div class="setc"><div class="setc-h"><b>${esc(s.name)}</b>${s.named ? `<span class="tag ok">set bonus</span>` : ""}${s.mod !== "Valheim" ? `<span class="tag mod">${esc(s.mod)}</span>` : ""}<span class="x">${fmt(s.info.arm, 0)} armor</span></div>
+        <div class="grid-items">${s.list.map(x => gearChip(x, t, false)).join("")}</div>
+        ${s.named && s.se ? `<p class="note"><b>${esc(s.se.n)}:</b> ${esc(firstLine(s.se.t))}</p>` : ""}${s.info.traits.length ? `<p class="note">${esc(s.info.traits.join(", "))}</p>` : ""}
+        <button class="lnk" data-add="${esc(s.list.map(([id, o]) => id + "@" + reachQ(o, t)).join(","))}">Add set to the shopping list</button></div>`).join("")}</div>
+        ${sets.length > 4 && !showAll ? `<button class="lnk" data-more="${esc(key2)}">Show all ${sets.length} sets</button>` : ""}</div>`;
+    }
     // trinket
     const trs = trinketPicks(c, style, t);
     const firstTr = Math.min(...Object.values(D.items).filter(o => o.adr && o.tier != null).map(o => o.tier));
@@ -1797,6 +1887,7 @@ function itemDetail(id){
   const cl = CLS[o.c];
   const recs = RBI[id] || [];
   let h = `<div class="inner">` + dhead(o.i, o.n, [o.tier != null ? tierPill(o.tier) : "", o.m !== "Valheim" ? tag(o.m, "mod") : tag("Vanilla"), o.sk && cl && ["weapons","tools","ammo","shields"].includes(cl.g) ? tag(o.sk + " skill") : "", o.nt ? tag("Not teleportable", "warn") : ""], o.d, cl ? cl.n : "Item");
+  h += listCard("item", id, o);
 
   // how to craft
   if (recs.length){
@@ -1960,6 +2051,7 @@ function pieceDetail(id){
   const p = D.pieces[id];
   if (!p) return `<div class="inner">Unknown piece.</div>`;
   let h = `<div class="inner">` + dhead(p.i, p.n, [p.tier != null ? tierPill(p.tier) : "", p.tool ? tag(iname(p.tool)) : "", tag(p.cat), p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla")], p.d, p.cf ? "Building piece · comfort" : "Building piece");
+  h += listCard("piece", id, p);
   h += `<div class="card"><h3>Build cost</h3>${reqGrid(p.r)}${p.s ? `<div class="recipe-line" style="margin:10px 0 0"><span class="dim">Must be in range of</span><button class="gi" data-go="station:${esc(p.s)}">${stIcon(p.s)}${esc(stName(p.s))}</button></div>` : ""}</div>`;
   const kv = [];
   if (p.cf) kv.push(`<div style="grid-column:span 2"><span>Comfort</span><b>+${p.cf}</b> <small class="dim">${p.cfg ? "only your best " + esc((COMFORT_NAMES[p.cfg] || p.cfg).toLowerCase()) + " piece within 10 m counts" : "counts once, on top of every group"}</small> <button class="lnk" data-comfort-view>Comfort planner</button></div>`);
@@ -1988,6 +2080,7 @@ function stationDetail(id){
   if (!st) return `<div class="inner">Unknown station.</div>`;
   const p = D.pieces[id];
   let h = `<div class="inner">` + dhead(st.i, st.n, [tag("Crafting station"), p && p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla"), st.roof ? tag("Needs roof") : "", st.fire ? tag("Needs fire") : ""], p && p.d);
+  if (p) h += listCard("piece", id, p);
   if (p) h += `<div class="card"><h3>Build cost</h3>${reqGrid(p.r)}${p.s ? `<div class="recipe-line" style="margin:10px 0 0"><span class="dim">Must be in range of</span><button class="gi" data-go="station:${esc(p.s)}">${stIcon(p.s)}${esc(stName(p.s))}</button></div>` : ""}</div>`;
   const ext = st.ext || [];
   if (ext.length){
@@ -2381,6 +2474,164 @@ function updateComfort(){
   $("#comfort-time").textContent = dur(R.base + (total - 1) * R.per);
 }
 
+// ---------- shopping list
+// Entries: {k:"item"|"piece", id, from (0 = not made yet, else current ★), to (target ★), n (how many)}.
+// Saved in this browser only.
+function saveList(){ store("atlas.list", JSON.stringify(S.list)); store("atlas.listopt", JSON.stringify({raw:S.listRaw, got:S.listGot})); }
+function loadList(){
+  try{ S.list = (JSON.parse(store("atlas.list") || "[]") || []).filter(e => e && (e.k === "item" ? D.items[e.id] : D.pieces[e.id])); }catch(e){ S.list = []; }
+  try{ const o = JSON.parse(store("atlas.listopt") || "{}") || {}; S.listRaw = !!o.raw; S.listGot = o.got || {}; }catch(e){ S.listRaw = false; S.listGot = {}; }
+}
+const listName = e => e.k === "item" ? iname(e.id) : (D.pieces[e.id] || {}).n || prettify(e.id);
+function listAdd(k, id, to, n, quiet){
+  const o = k === "item" ? D.items[id] : D.pieces[id];
+  if (!o) return;
+  const mq = k === "item" ? maxQ(o) : 1;
+  to = Math.max(1, Math.min(+to || mq, mq));
+  n = Math.max(1, Math.round(+n || 1));
+  const cur = S.list.find(e => e.k === k && e.id === id);
+  if (cur){ cur.to = to; cur.n = n; cur.from = Math.min(cur.from || 0, to); }
+  else S.list.push({k, id, from:0, to, n});
+  saveList();
+  if (!quiet) toast(`${cur ? "Updated" : "Added"} ${listName({k, id})} ${cur ? "in" : "to"} your shopping list.`);
+}
+function listRemove(k, id){ S.list = S.list.filter(e => !(e.k === k && e.id === id)); saveList(); }
+let toastT;
+function toast(msg){
+  let el = $("#toast");
+  if (!el){ el = document.createElement("div"); el.id = "toast"; el.className = "toast"; el.setAttribute("role", "status"); document.body.appendChild(el); }
+  el.innerHTML = `${esc(msg)} <button class="lnk" data-view="list">View list</button>`;
+  el.hidden = false;
+  clearTimeout(toastT);
+  toastT = setTimeout(() => { el.hidden = true; }, 3200);
+}
+// What one entry costs: crafting it (if not made yet) plus every upgrade up to the target level.
+function entryCost(e){
+  const mats = {}, st = [];
+  const add = (it, a) => { if (a > 0) mats[it] = (mats[it] || 0) + a; };
+  if (e.k === "piece"){
+    const p = D.pieces[e.id];
+    if (!p) return {mats, st};
+    for (const [it, a] of p.r) add(it, a * e.n);
+    if (p.s) st.push([p.s, 1]);
+    return {mats, st};
+  }
+  const o = D.items[e.id], r = (RBI[e.id] || [])[0];
+  if (!o || !r) return {mats, st, none:true};
+  const mq = maxQ(o), to = Math.min(e.to || 1, mq), from = Math.min(e.from || 0, to);
+  const crafts = Math.ceil(e.n / (r.a || 1));
+  for (let q = Math.max(1, from + 1); q <= to; q++){
+    for (const req of r.r){ const a = recipeAmount(r, req, q); if (a) add(req[0], a * (q === 1 ? crafts : e.n)); }
+  }
+  if (r.s && to > from) st.push([r.s, stationLevel(r, to)]);
+  return {mats, st};
+}
+// Gathered things stay raw; anything crafted, smelted or brewed breaks down into what goes in. Loot from
+// breaking pots and props doesn't count as a way to gather (bars turn up there, but rarely).
+const GATHER = new Set(["mine","chop","pick","drop","fish"]);
+function makePlan(id){
+  if ((D.sources[id] || []).some(s => GATHER.has(s.k))) return null;
+  const r = (RBI[id] || [])[0];
+  if (r) return {k:"craft", st:r.s, out:r.a || 1, ins:r.r.map(q => [q[0], recipeAmount(r, q, 1)]).filter(x => x[1] > 0)};
+  const convs = (PROD[id] || []).filter(c => !["plant","incinerator","incineratorDefault"].includes(c.k) && c.in.length);
+  if (!convs.length) return null;
+  const rank = c => Math.max(...c.in.map(x => (D.items[x[0]] || {}).tier ?? 9));
+  const c = convs.slice().sort((a, b) => rank(a) - rank(b))[0];
+  const ins = c.in.map(x => [x[0], x[1]]);
+  if (c.fuel) ins.push([c.fuel, c.fp || 1]);
+  return {k:c.k, st:c.st, out:(c.out.find(x => x[0] === id) || [id, 1])[1] || 1, ins};
+}
+function breakdown(mats){
+  let need = {...mats};
+  const steps = [], done = new Set();
+  for (let pass = 0; pass < 8; pass++){
+    const exp = Object.keys(need).filter(id => !done.has(id) && makePlan(id));
+    if (!exp.length) break;
+    const next = {};
+    for (const [id, a] of Object.entries(need)) if (!exp.includes(id)) next[id] = (next[id] || 0) + a;
+    for (const id of exp){
+      const p = makePlan(id), runs = Math.ceil(need[id] / p.out);
+      done.add(id);
+      steps.push({id, n:runs * p.out, runs, k:p.k, st:p.st, pass});
+      for (const [x, q] of p.ins) next[x] = (next[x] || 0) + q * runs;
+    }
+    need = next;
+  }
+  return {raw:need, steps};
+}
+const VERB = {craft:"Craft", smelter:"Smelt", cooking:"Cook", fermenter:"Ferment", sap:"Collect", beehive:"Collect"};
+function listTotals(){
+  const mats = {}, st = {};
+  for (const e of S.list){
+    const c = entryCost(e);
+    for (const [it, a] of Object.entries(c.mats)) mats[it] = (mats[it] || 0) + a;
+    for (const [s, l] of c.st) st[s] = Math.max(st[s] || 0, l);
+  }
+  let steps = [];
+  let out = mats;
+  if (S.listRaw){ const b = breakdown(mats); out = b.raw; steps = b.steps; for (const s of steps) if (s.st) st[s.st] = Math.max(st[s.st] || 0, 1); }
+  return {mats:out, st, steps};
+}
+function shopView(){
+  const head = pageHead({eyebrow:"Plan", title:"Shopping list", count:S.list.length || null,
+    lede:"Add items and building pieces from their pages, pick the level you want, and see everything it costs. Upgrades count from the level you already have. Saved in this browser."});
+  if (!S.list.length){
+    return head + `<div class="empty"><b>Your list is empty.</b><br>Open any item or building piece and choose <b>Add to list</b>, or add a whole armor set from the <button class="lnk" data-view="journey">Journey</button>.</div>`;
+  }
+  const rows = S.list.map((e, i) => {
+    const o = e.k === "item" ? D.items[e.id] : D.pieces[e.id];
+    const mq = e.k === "item" ? maxQ(o) : 1, c = entryCost(e);
+    const r = e.k === "item" ? (RBI[e.id] || [])[0] : null;
+    const lv = mq > 1 ? `<select class="ctl" data-lf="${i}" aria-label="Level you have"><option value="0">Not made</option>${Array.from({length:mq - 1}, (_, q) => `<option value="${q + 1}"${e.from === q + 1 ? " selected" : ""}>Have ★${q + 1}</option>`).join("")}</select>
+      <span class="dim">→</span><select class="ctl" data-lt="${i}" aria-label="Target level">${Array.from({length:mq}, (_, q) => `<option value="${q + 1}"${e.to === q + 1 ? " selected" : ""}>★${q + 1}</option>`).join("")}</select>` : `<span class="dim">${r && r.a > 1 ? "makes " + r.a + " per craft" : e.k === "piece" ? "building piece" : ""}</span>`;
+    return `<tr style="cursor:default"><td><button class="lnk nm" data-go="${e.k}:${esc(e.id)}" style="min-width:0">${e.k === "item" ? iicon(e.id, "s22") : icon(o.i, "s22", o.n)}<span><b>${esc(listName(e))}</b></span></button></td>
+      <td><div class="lvsel">${lv}</div></td>
+      <td><input class="ctl qty" type="number" min="1" value="${e.n}" data-ln="${i}" aria-label="How many"></td>
+      <td>${c.none ? `<span class="dim">Can't be crafted</span>` : matsCell(Object.entries(c.mats))}</td>
+      <td class="num"><button class="iconbtn" data-lrm="${i}" title="Remove" aria-label="Remove ${esc(listName(e))}"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6 6 18"/></svg></button></td></tr>`;
+  }).join("");
+  const T = listTotals();
+  const mats = Object.entries(T.mats).sort((a, b) => ((D.items[a[0]] || {}).tier ?? 9) - ((D.items[b[0]] || {}).tier ?? 9) || iname(a[0]).localeCompare(iname(b[0])));
+  const got = mats.filter(([id]) => S.listGot[id]).length;
+  const matRows = mats.map(([id, a]) => `<tr class="${S.listGot[id] ? "got" : ""}" style="cursor:default"><td><input type="checkbox" data-got="${esc(id)}"${S.listGot[id] ? " checked" : ""} aria-label="Got ${esc(iname(id))}"></td>
+    <td><button class="lnk nm" data-go="item:${esc(id)}" style="min-width:0">${iicon(id, "s22")}<span><b>${esc(iname(id))}</b></span></button></td><td class="num"><b class="mono">${a.toLocaleString()}</b></td><td>${tierPill((D.items[id] || {}).tier)}</td><td>${srcSummary(id)}</td></tr>`).join("");
+  const stations = Object.entries(T.st).map(([s, l]) => `<button class="gi" data-go="station:${esc(s)}">${stIcon(s)}${esc(stName(s))}${D.stations[s] && D.stations[s].max > 1 ? `<span class="x">Lv ${l}</span>` : ""}</button>`).join("");
+  const steps = T.steps.slice().sort((a, b) => b.pass - a.pass).map(s => `<li>${esc(VERB[s.k] || "Make")} <b>${s.n.toLocaleString()}</b> <button class="lnk" data-go="item:${esc(s.id)}">${esc(iname(s.id))}</button>${s.st ? ` at the <button class="lnk" data-go="station:${esc(s.st)}">${esc(stName(s.st))}</button>` : ""}</li>`).join("");
+  return head + `<div class="stack">
+    <div class="panel"><div class="headrow" style="margin-top:0"><h2>Items</h2><span class="tools" style="margin:0"><button class="ctl" data-copylist>Copy as text</button><button class="ctl" data-clearlist>Clear list</button></span></div>
+      <div class="tbl-wrap"><table><thead><tr><th style="cursor:default">Item</th><th style="cursor:default">Level</th><th style="cursor:default">How many</th><th style="cursor:default">Cost</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>
+    <div class="panel"><div class="headrow" style="margin-top:0"><h2>Materials</h2><span class="tools" style="margin:0"><label class="toggle"><input type="checkbox" id="l-raw"${S.listRaw ? " checked" : ""}> Break down into raw materials</label><span class="muted" style="font-size:12.5px">${got} of ${mats.length} gathered</span></span></div>
+      <div class="tbl-wrap"><table><thead><tr><th style="cursor:default">Got</th><th style="cursor:default">Material</th><th class="num" style="cursor:default">Need</th><th style="cursor:default">Tier</th><th style="cursor:default">How to get</th></tr></thead><tbody>${matRows}</tbody></table></div>
+      ${S.listRaw && steps ? `<div class="lvlhead">Crafting steps, in order</div><ol class="steps-list">${steps}</ol>` : ""}
+      ${S.listRaw ? `<p class="note">Smelting fuel is included. Amounts round up to whole batches.</p>` : `<p class="note">Turn on the breakdown to turn bars, thread, nails and other crafted parts into the ore and raw materials behind them.</p>`}</div>
+    ${stations ? `<div class="panel"><h2>Stations you'll need</h2><p class="tip">The highest level each station has to reach for this list. Every upgrade built in range adds a level.</p><div class="grid-items">${stations}</div></div>` : ""}
+    <textarea id="l-text" class="copybox" readonly hidden aria-label="Shopping list as text"></textarea></div>`;
+}
+function listText(){
+  const T = listTotals();
+  const lines = ["Shopping list"];
+  for (const e of S.list){
+    const mq = e.k === "item" ? maxQ(D.items[e.id]) : 1;
+    lines.push(`- ${e.n > 1 ? e.n + " × " : ""}${listName(e)}${mq > 1 ? ` ${e.from ? "★" + e.from + " → " : ""}★${e.to}` : ""}`);
+  }
+  lines.push("", S.listRaw ? "Raw materials" : "Materials");
+  for (const [id, a] of Object.entries(T.mats).sort((x, y) => iname(x[0]).localeCompare(iname(y[0])))) lines.push(`- ${a.toLocaleString()} ${iname(id)}${S.listGot[id] ? " (got)" : ""}`);
+  return lines.join("\n");
+}
+// "Add to list" controls on item and building piece pages.
+function listCard(k, id, o){
+  if (k === "item" && !RBI[id]) return "";
+  const mq = k === "item" ? maxQ(o) : 1;
+  const cur = S.list.find(e => e.k === k && e.id === id);
+  const r = k === "item" ? RBI[id][0] : null;
+  const defN = cur ? cur.n : (mq === 1 && r && r.a > 1 ? r.a : 1);
+  return `<div class="card"><h3>Shopping list${cur ? `<span class="aside">in your list</span>` : ""}</h3><div class="tools" style="margin:0">
+    ${mq > 1 ? `<label class="toggle">Level <select class="ctl" id="al-to">${Array.from({length:mq}, (_, q) => `<option value="${q + 1}"${(cur ? cur.to : mq) === q + 1 ? " selected" : ""}>★${q + 1}${q + 1 === mq ? " (max)" : ""}</option>`).join("")}</select></label>` : ""}
+    <label class="toggle">How many <input class="ctl qty" type="number" min="1" id="al-n" value="${defN}"></label>
+    <button class="ctl primary" data-addlist="${k}:${esc(id)}">${cur ? "Update list" : "Add to list"}</button>
+    ${cur ? `<button class="lnk" data-rmlist="${k}:${esc(id)}">Remove</button><button class="lnk" data-view="list">View list</button>` : ""}</div></div>`;
+}
+
 // ---------- world settings view
 function worldView(){
   return pageHead({eyebrow:"World", title:"World settings", lede:"Set how far you've gotten and how your world is tuned. Modifiers start at the server's settings (marked). Your choices are saved in this browser, and creature health and damage, drop amounts, tiers and raid timing across the atlas follow them."}) + worldPanel();
@@ -2678,14 +2929,55 @@ function wire(){
     if (id === "f-mod"){ S.mod = e.target.value; render(); return; }
     if (id === "f-nosrc"){ S.nosrc = e.target.checked; render(); return; }
     if (id === "f-sub"){ S.cls = e.target.value || null; S.open = {}; render(); return; }
+    if (id === "l-raw"){ S.listRaw = e.target.checked; saveList(); render(); return; }
+    const t = e.target.dataset || {};
+    if (t.got !== undefined){ if (e.target.checked) S.listGot[t.got] = 1; else delete S.listGot[t.got]; saveList(); e.target.closest("tr").classList.toggle("got", e.target.checked); return; }
+    if (t.lf !== undefined || t.lt !== undefined || t.ln !== undefined){
+      const en = S.list[+(t.lf ?? t.lt ?? t.ln)];
+      if (!en) return;
+      if (t.lf !== undefined){ en.from = +e.target.value; if (en.to <= en.from) en.to = Math.min(en.from + 1, maxQ(D.items[en.id])); }
+      if (t.lt !== undefined){ en.to = +e.target.value; if (en.from >= en.to) en.from = en.to - 1; }
+      if (t.ln !== undefined) en.n = Math.max(1, Math.round(+e.target.value || 1));
+      saveList(); const sy = window.scrollY; render(); window.scrollTo(0, sy); return;
+    }
     if (e.target.matches && e.target.matches("[data-comfort],[data-comfort-u],#comfort-roof")) updateComfort();
   });
   document.addEventListener("input", e => {
     if (e.target.id === "w-players"){ W.players = +e.target.value; store("atlas.players", String(W.players)); worldChanged(); }
   });
   document.addEventListener("click", e => {
-    const el = e.target.closest("[data-go],[data-view],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-progress],[data-w-night],[data-help],[data-comfort-view],[data-journey],[data-klass],[data-etab],[data-eslot],[data-jump],[data-navtoggle],[data-tier-clear],[data-filters-clear]");
+    const el = e.target.closest("[data-go],[data-view],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-progress],[data-w-night],[data-help],[data-comfort-view],[data-journey],[data-klass],[data-etab],[data-eslot],[data-jump],[data-navtoggle],[data-tier-clear],[data-filters-clear],[data-addlist],[data-rmlist],[data-lrm],[data-add],[data-copylist],[data-clearlist]");
     if (!el) return;
+    if (el.dataset.addlist){
+      const i = el.dataset.addlist.indexOf(":");
+      listAdd(el.dataset.addlist.slice(0, i), el.dataset.addlist.slice(i + 1), ($("#al-to") || {}).value, ($("#al-n") || {}).value);
+      const sc = $("#detail").scrollTop; renderDetail(); $("#detail").scrollTop = sc; renderNav(navCounts()); if (S.view === "list") render();
+      return;
+    }
+    if (el.dataset.rmlist){
+      const i = el.dataset.rmlist.indexOf(":");
+      listRemove(el.dataset.rmlist.slice(0, i), el.dataset.rmlist.slice(i + 1));
+      const sc = $("#detail").scrollTop; renderDetail(); $("#detail").scrollTop = sc; renderNav(navCounts()); if (S.view === "list") render();
+      return;
+    }
+    if (el.dataset.add){
+      const parts = el.dataset.add.split(",").filter(Boolean);
+      for (const p of parts){ const [id, q] = p.split("@"); listAdd("item", id, +q || undefined, 1, true); }
+      toast(`Added ${parts.length} item${parts.length > 1 ? "s" : ""} to your shopping list.`);
+      renderNav(navCounts());
+      return;
+    }
+    if (el.dataset.lrm !== undefined){ S.list.splice(+el.dataset.lrm, 1); saveList(); render(); return; }
+    if (el.hasAttribute("data-clearlist")){
+      if (el.dataset.confirm !== "1"){ el.dataset.confirm = "1"; el.textContent = "Click again to clear"; setTimeout(() => { if (el.isConnected){ el.dataset.confirm = ""; el.textContent = "Clear list"; } }, 3000); return; }
+      S.list = []; S.listGot = {}; saveList(); render(); return;
+    }
+    if (el.hasAttribute("data-copylist")){
+      const text = listText(), box = $("#l-text");
+      const fallback = () => { if (box){ box.hidden = false; box.value = text; box.focus(); box.select(); } };
+      try{ navigator.clipboard.writeText(text).then(() => toast("Copied your shopping list."), fallback); }catch(err){ fallback(); }
+      return;
+    }
     if (el.hasAttribute("data-navtoggle")){ $("#nav").classList.contains("open") ? closeNav() : openNav(); return; }
     if (el.dataset.toggle){ toggleSection(el.dataset.toggle); return; }
     if (el.dataset.jump){ const c = document.getElementById(el.dataset.jump); if (c) c.scrollIntoView({block:"start", behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); return; }
