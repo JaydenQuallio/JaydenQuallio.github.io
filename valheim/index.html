@@ -489,7 +489,7 @@ const STATION_ORDER = ["piece_workbench","forge","piece_cauldron","piece_stonecu
 const BIOME = {Meadows:"Meadows",BlackForest:"Black Forest",Swamp:"Swamp",Mountain:"Mountains",Plains:"Plains",Mistlands:"Mistlands",AshLands:"Ashlands",DeepNorth:"Deep North",Ocean:"Ocean"};
 const MODNAME = {VeryWeak:"Very weak",Weak:"Weak",SlightlyWeak:"Slightly weak",SlightlyResistant:"Slightly resistant",Resistant:"Resistant",VeryResistant:"Very resistant",Immune:"Immune",Ignore:"Immune"};
 const BOSSKEY = {defeated_eikthyr:"Eikthyr",defeated_gdking:"The Elder",defeated_bonemass:"Bonemass",defeated_dragon:"Moder",defeated_goblinking:"Yagluth",defeated_queen:"The Queen",defeated_fader:"Fader"};
-const SRCK = {drop:"Dropped by",mine:"Mined from",chop:"Chopped from",break:"Found by breaking",chest:"Found in",pick:"Picked from",fish:"Caught",trade:"Sold by",sacrifice:"Sacrifice at the Enchanting Table",convert:"Convert at the Enchanting Table",other:"From"};
+const SRCK = {drop:"Dropped by",mine:"Mined from",chop:"Chopped from",break:"Found by breaking",chest:"Found in",pick:"Picked from",fish:"Caught",trade:"Sold by",sacrifice:"Sacrifice at the Enchanting Table",feast:"Set down as a feast from",convert:"Convert at the Enchanting Table",other:"From"};
 const CONVK = {smelter:"Smelted",cooking:"Cooked",fermenter:"Fermented",incinerator:"Obliterated",incineratorDefault:"Obliterated",beehive:"Produced",sap:"Collected",plant:"Grown"};
 const CAT_ORDER = ["Misc","Crafting","Building","Heavy building","Furniture"];
 const COMFORT_NAMES = {Fire:"Fires", Bed:"Beds", Chair:"Seating", Table:"Tables", Banner:"Banners", Carpet:"Rugs & carpets", Lantern:"Lanterns", Garland:"Garlands", Decor:"Decor", Display:"Displays", Leisure:"Leisure", None:"Unique pieces"};
@@ -940,7 +940,8 @@ function tierOk(e){
 }
 function visible(e){
   if (S.mod && e.mod && e.mod !== S.mod) return false;
-  if (!S.nosrc && e.ns) return false;
+  // Foods always show, even ones nothing in your config makes yet (they're tagged "no known source").
+  if (!S.nosrc && e.ns && e.c !== "food") return false;
   return tierOk(e);
 }
 function score(e, qN, qC, toks){
@@ -1084,7 +1085,7 @@ const col = {
   cst: {h:"Station", cell:e => `<span class="st">${stIcon(e.o.st)}${esc(e.st)}</span>`, sv:e => e.st},
   cflow: {h:"Recipe", cell:e => convFlow(e.o), sv:e => e.name},
   ctime: {h:"Time", n:1, cell:e => e.o.t ? dur(e.o.t) + (e.o.t2 && e.o.t2 !== e.o.t ? "–" + dur(e.o.t2) : "") : `<span class="dim">—</span>`, sv:e => e.o.t || 0},
-  cfuel: {h:"Fuel", cell:e => e.o.fuel ? `<span class="mats">${matsCell([[e.o.fuel, e.o.fp || 1]])}</span>` : `<span class="dim">—</span>`, sv:e => e.o.fuel || ""},
+  cfuel: {h:"Fuel", cell:e => e.o.fuel ? `<span class="mats">${matsCell((e.o.fuels || [e.o.fuel]).map(f => [f, e.o.fp || 1]))}</span>${e.o.fuels && e.o.fuels.length > 1 ? `<small class="dim">any one</small>` : ""}` : `<span class="dim">—</span>`, sv:e => e.o.fuel || ""},
   creature: {h:"Creature", cell:e => nameCell(e, esc(biomes(e.o.b))), sv:e => e.name},
   chp: {h:"Health", n:1, cell:e => fmt(e.o.hp, 0), sv:e => e.o.hp || 0},
   weak: {h:"Weak to", cell:e => modPills(e.o.wk, true), sv:e => Object.values(e.o.wk || {}).filter(v => /Weak/.test(v)).length},
@@ -2005,14 +2006,14 @@ function itemDetail(id){
   if (prod.length || srcs.length){
     let s = "";
     if (prod.length){
-      s += `<div class="k">Processing</div>` + prod.map(c => `<div class="it" data-go="station:${esc(c.st)}" role="button" tabindex="0">${stIcon(c.st)}<span class="t">${esc((CONVK[c.k] || "Made") + " in " + stName(c.st))}<small>${c.in.length ? esc(c.in.map(x => (x[1] > 1 ? x[1] + "× " : "") + iname(x[0])).join(" + ")) : ""}${c.out[0][1] > 1 ? " → " + c.out[0][1] + "×" : ""}${c.fuel ? " · fuel: " + esc(iname(c.fuel)) : ""}${c.biome ? " · " + esc(biomes(String(c.biome).split(/, ?/))) : ""}</small></span><span class="r">${c.t ? dur(c.t) : ""}</span></div>`).join("");
+      s += `<div class="k">Processing</div>` + prod.map(c => `<div class="it" data-go="station:${esc(c.st)}" role="button" tabindex="0">${stIcon(c.st)}<span class="t">${esc((CONVK[c.k] || "Made") + " in " + stName(c.st))}<small>${c.in.length ? esc(c.in.map(x => (x[1] > 1 ? x[1] + "× " : "") + iname(x[0])).join(" + ")) : ""}${c.out[0][1] > 1 ? " → " + c.out[0][1] + "×" : ""}${c.fuel ? " · fuel: " + esc((c.fuels || [c.fuel]).map(iname).join(" or ")) : ""}${c.biome ? " · " + esc(biomes(String(c.biome).split(/, ?/))) : ""}</small></span><span class="r">${c.t ? dur(c.t) : ""}</span></div>`).join("");
     }
     const byK = {};
     for (const x of srcs) (byK[x.k] ||= []).push(x);
     for (const [k, arr] of Object.entries(byK)){
       arr.sort((a, b) => (b.p || 1) - (a.p || 1));
       s += `<div class="k">${esc(SRCK[k] || k)}</div>` + arr.slice(0, 14).map(x => {
-        const go = D.creatures[x.f] ? `creature:${x.f}` : D.pieces[x.f] ? `piece:${x.f}` : "";
+        const go = D.creatures[x.f] ? `creature:${x.f}` : D.pieces[x.f] ? `piece:${x.f}` : D.items[x.f] && x.f !== id ? `item:${x.f}` : "";
         const amt = x.a ? scaleAmt(x.a, id, x.k) : "";
         const sub = [x.b ? biomes(x.b) : "", x.tier ? tierHint(x.tier, k) : "", x.price ? x.price + " coins" : "", x.key ? keyName(x.key) : ""].filter(Boolean).join(" · ");
         return `<div class="it"${go ? ` data-go="${esc(go)}" role="button" tabindex="0"` : ""}>${D.creatures[x.f] ? crIcon(x.f, "s22") : (D.pieces[x.f] || D.items[x.f]) ? iicon(x.f, "s22") : glyph(k)}<span class="t">${esc(x.fn)}${x.boss ? " " + tag("Boss", "boss") : ""}${sub ? `<small>${esc(sub)}</small>` : ""}</span><span class="r">${amt ? "×" + amt : ""}${x.p ? `<br>${fmt(x.p * 100, 1)}%` : ""}</span></div>`;
@@ -2073,7 +2074,7 @@ function pieceDetail(id){
 function convCard(st){
   const list = CBS[st] || [];
   return `<div class="card"><h3>Processing <span class="aside">${list.length} recipe${list.length > 1 ? "s" : ""}</span></h3><div class="src">${list.map(c =>
-    `<div class="it" style="cursor:default">${c.out[0] ? iicon(c.out[0][0], "s22") : ""}<span class="t">${convFlow(c)}${c.fuel || c.biome || c.oc ? `<small>${[c.fuel ? "Fuel: " + (c.fp > 1 ? c.fp + "× " : "") + iname(c.fuel) : "", c.oc ? "Burns into " + iname(c.oc) + " if left" : "", c.biome ? biomes(String(c.biome).split(/, ?/)) : ""].filter(Boolean).map(esc).join(" · ")}</small>` : ""}</span><span class="r">${c.t ? dur(c.t) : ""}</span></div>`).join("")}</div></div>`;
+    `<div class="it" style="cursor:default">${c.out[0] ? iicon(c.out[0][0], "s22") : ""}<span class="t">${convFlow(c)}${c.fuel || c.biome || c.oc ? `<small>${[c.fuel ? "Fuel: " + (c.fp > 1 ? c.fp + "× " : "") + (c.fuels || [c.fuel]).map(iname).join(" or ") : "", c.oc ? "Burns into " + iname(c.oc) + " if left" : "", c.biome ? biomes(String(c.biome).split(/, ?/)) : ""].filter(Boolean).map(esc).join(" · ")}</small>` : ""}</span><span class="r">${c.t ? dur(c.t) : ""}</span></div>`).join("")}</div></div>`;
 }
 function stationDetail(id){
   const st = D.stations[id];
