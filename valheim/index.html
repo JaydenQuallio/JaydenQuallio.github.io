@@ -323,6 +323,8 @@ td.num{font-size:12.5px}
 .blk p{margin:0 0 6px; font-size:13px}
 .blk .wtype{font-size:12px; color:var(--muted); margin:8px 0 4px}
 .blk .wtype:first-of-type{margin-top:0}
+.whys{margin:8px 0 0; padding:0; list-style:none; font-size:12px; color:var(--muted); display:grid; gap:3px}
+.whys b{color:var(--text); font-weight:600}
 .ccard{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; gap:10px; align-content:start}
 .ccard h2{font-family:var(--display); font-size:22px; font-weight:600; margin:0}
 .ccard .w{color:var(--muted); font-size:12.5px}
@@ -521,8 +523,9 @@ function store(k, v){ try{ if (v === undefined) return localStorage.getItem(k); 
 
 let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {}, TRADERS = {}, BOSS_BY_KEY = {};
 const S = {q:"", view:"home", prevView:"home", cls:null, mod:"", nosrc:false, tier:"all", sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}, klass:null, eslot:"", comfortPick:null, comfortRoof:true};
-// World settings the numbers are shown under. Starts as the exported world; World settings changes it.
-const W = {opt:{}, base:{}, players:1, night:false};
+// World settings the numbers are shown under. Modifiers start at the server's values; progress (bosses
+// beaten) is set by each viewer in World settings. Both are remembered in this browser.
+const W = {opt:{}, base:{}, players:1, night:false, stage:0};
 
 // ---------- icons
 function icon(i, size = "", name = ""){
@@ -590,16 +593,51 @@ const dash = `<span class="dim">—</span>`;
 
 // ---------- progression tiers (0 = Meadows ... 7 = Deep North)
 const tierName = t => t == null ? "" : (BIOME[(D.stages || {}).biomes[t]] || prettify((D.stages || {}).biomes[t]));
-function worldStage(){
-  const k = worldKeys();
-  let n = 0;
-  for (const key of PROGRESSION){ if (k.has(key)) n++; else break; }
-  return Math.min(n, 7);
+// Stage index for tiers: 0 = Meadows (no bosses beaten) ... 7 = Deep North.
+function worldStage(){ return Math.max(0, Math.min(W.stage, 7)); }
+const BIOME_STAGE = {Meadows:0, BlackForest:1, Swamp:2, Mountain:3, Plains:4, Mistlands:5, AshLands:6, DeepNorth:7, Ocean:2};
+// How many bosses must be down before a progress key is set. Non-boss keys ("a troll has been killed",
+// Hildir's quests) count as soon as you've reached the biome they belong to.
+function keyNeed(k){
+  k = String(k || "").toLowerCase();
+  const i = PROGRESSION.indexOf(k);
+  if (i >= 0) return i + 1;
+  if (k === "defeated_frozenking_p3") return PROGRESSION.length;
+  if (BOSS_BY_KEY[k]){
+    const b = D.bosses[BOSS_BY_KEY[k]] || {}, L = D.locations[(b.altars || b.lairs || [])[0]];
+    const s = L ? Math.min(...L.b.map(x => BIOME_STAGE[x] ?? 99)) : 99;
+    return s + 1;
+  }
+  const hq = /^hildir(\d)$/.exec(k);
+  if (hq) return {1:1, 2:3, 3:4}[hq[1]] ?? 99;
+  const m = /^killed_?(.+)$/.exec(k) || /^(.+?)_?killed$/.exec(k) || /^(.+?)_defeated$/.exec(k) || /^defeated_(.+)$/.exec(k);
+  if (m){
+    const x = m[1].replace(/_/g, "");
+    const hit = Object.entries(D.creatures).find(([p, c]) => p.toLowerCase() === x) || Object.entries(D.creatures).find(([p, c]) => p.toLowerCase().includes(x) || norm(c.n).replace(/ /g, "").includes(x));
+    if (hit){
+      const c = hit[1];
+      let s = Math.min(...(c.b || []).map(b => BIOME_STAGE[b] ?? 99), 99);
+      if (s === 99) for (const l of c.loc || []) for (const b of (D.locations[l] || {}).b || []) s = Math.min(s, BIOME_STAGE[b] ?? 99);
+      return s;
+    }
+  }
+  return 99;
+}
+let KEYS = null;
+function worldKeys(){
+  if (KEYS && KEYS.stage === W.stage) return KEYS.set;
+  const all = new Set(PROGRESSION.concat(["defeated_frozenking_p3"], Object.keys(BOSS_BY_KEY)));
+  for (const ev of D.events || []) for (const k of ev.req.concat(ev.notReq)) all.add(k.toLowerCase());
+  for (const c of Object.values(D.creatures)) for (const r of c.sp || []) if (r.key) all.add(String(r.key).toLowerCase());
+  for (const lst of Object.values(D.sources)) for (const s of lst) if (s.key) all.add(String(s.key).toLowerCase());
+  const set = new Set([...all].filter(k => W.stage >= keyNeed(k)));
+  KEYS = {stage:W.stage, set};
+  return set;
 }
 function tierPill(t){
   if (t == null) return dash;
   const now = worldStage();
-  return `<span class="tierp${t === now ? " now" : t < now ? " done" : ""}" title="${t === now ? "Your world is here" : t < now ? "Earlier than your world" : "Ahead of your world"}">${esc(tierName(t))}</span>`;
+  return `<span class="tierp${t === now ? " now" : t < now ? " done" : ""}" title="${t === now ? "You are here" : t < now ? "Behind your progress" : "Ahead of your progress"}">${esc(tierName(t))}</span>`;
 }
 // The number that ranks gear of one type: block for shields, armor for armor, summed damage for weapons.
 function statQ(o, q){
@@ -650,7 +688,6 @@ function keyText(k){
   if (/^\$se_(.+)_name$/.exec(k)) return "you've used " + prettify(/^\$se_(.+)_name$/.exec(k)[1]) + "'s forsaken power";
   return prettify(k);
 }
-function worldKeys(){ return new Set((D.world && D.world.keys || []).map(k => k.toLowerCase().split(" ")[0])); }
 function eventPossible(ev){
   const keys = worldKeys();
   return ev.req.every(k => keys.has(k.toLowerCase())) && !ev.notReq.some(k => keys.has(k.toLowerCase()));
@@ -764,24 +801,31 @@ async function boot(){
   if (S.sel) renderDetail();
 }
 function worldInit(){
+  const sg = store("atlas.progress");
+  if (sg !== null && sg !== "" && !isNaN(+sg)) W.stage = Math.max(0, Math.min(+sg, PROGRESSION.length));
   if (!D.world) return;
   const have = new Set((D.world.keys || []).map(k => k.toLowerCase()));
+  let saved = {};
+  try{ saved = JSON.parse(store("atlas.world") || "{}") || {}; }catch(e){ saved = {}; }
   for (const m of D.world.modifiers){
     let pick = "Default", best = 0;
     for (const o of m.opts){ if (o.keys.length > best && o.keys.every(k => have.has(k.toLowerCase()))){ pick = o.v; best = o.keys.length; } }
-    W.opt[m.id] = pick; W.base[m.id] = pick;
+    W.base[m.id] = pick;
+    W.opt[m.id] = m.opts.some(o => o.v === saved[m.id]) ? saved[m.id] : pick;
   }
   const sp = +store("atlas.players");
   if (sp > 0) W.players = sp;
   renderWorldBtn();
 }
+function saveWorld(){ store("atlas.world", JSON.stringify(W.opt)); store("atlas.progress", String(W.stage)); }
+const bossesBeaten = () => D.stages.bosses.slice(0, Math.min(W.stage, PROGRESSION.length)).filter(Boolean).map(crName);
 function renderWorldBtn(){
   const el = $("#worldbtn");
   if (!el || !D.world) return;
   const pick = id => { const m = D.world.modifiers.find(x => x.id === id); const o = m && m.opts.find(x => x.v === W.opt[id]); return o ? o.n : ""; };
   const changed = Object.keys(W.opt).some(k => W.opt[k] !== W.base[k]);
   const r = rates();
-  el.innerHTML = `${tierPill(worldStage())}<span class="wtxt">${changed ? "What-if: " : ""}${esc(pick("Combat") || "Normal")} · ×${fmt(r.resourcerate / 100, 1)} resources${W.players > 1 ? " · " + W.players + " players" : ""}</span>`;
+  el.innerHTML = `${tierPill(worldStage())}<span class="wtxt">${esc(pick("Combat") || "Normal")} · ×${fmt(r.resourcerate / 100, 1)} resources${W.players > 1 ? " · " + W.players + " players" : ""}</span>`;
   el.title = "World settings: " + D.world.modifiers.map(m => m.n + " " + pick(m.id)).join(", ");
 }
 function index(){
@@ -1088,7 +1132,7 @@ col.bhp = {h:"Health", n:1, cell:e => fmt(e.o.hp * hpScale(), 0), sv:e => e.o.hp
 col.power = {h:"Forsaken power", cell:e => e.b.power && D.ses[e.b.power] ? `<span class="st">${icon(D.ses[e.b.power].i, "s18")}${esc(D.ses[e.b.power].n)}</span>` : dash, sv:e => e.b.power || ""};
 col.bdrops = {h:"Drops", cell:e => matsCell((e.o.dr || []).map(d => [d[0], scaleAmt([d[1], d[2]], d[0])])), sv:e => (e.o.dr || []).length};
 col.evn = {h:"Raid", cell:e => `<div class="nm">${glyph("raid")}<div><b>${esc(e.o.n)}</b><small>${esc(e.o.msg || "")}</small></div></div>`, sv:e => evRank(e.o) * 100 + e.name.charCodeAt(0) / 1000};
-col.evwhen = {h:"When it can happen", cell:e => `<span class="${eventPossible(e.o) ? "ok" : ""}">${evWhen(e.o, true)}</span>${eventPossible(e.o) ? `<br><small class="ok">Possible in your world now</small>` : ""}`, sv:e => evRank(e.o)};
+col.evwhen = {h:"When it can happen", cell:e => `<span class="${eventPossible(e.o) ? "ok" : ""}">${evWhen(e.o, true)}</span>${eventPossible(e.o) ? `<br><small class="ok">Possible at your progress</small>` : ""}`, sv:e => evRank(e.o)};
 col.evwhere = {h:"Biomes", cell:e => esc(biomes(e.o.b)), sv:e => e.o.b.join()};
 col.evdur = {h:"Lasts", n:1, cell:e => dur(e.o.dur), sv:e => e.o.dur || 0};
 col.evspawn = {h:"Attackers (max alive)", cell:e => crCell(e.o.spawns.map(x => [x.p, x.max])), sv:e => e.o.spawns.reduce((t, x) => t + (x.max || 0), 0)};
@@ -1140,6 +1184,7 @@ function effectsCell(o){
   const bits = [];
   if (o.set) bits.push(`<span class="pill">${esc(setLabel(o))}</span>`);
   if (o.eq && D.ses[o.eq]) bits.push(`<span class="pill">${esc(D.ses[o.eq].n)}</span>`);
+  if (o.adr && D.ses[o.adr.se]) bits.push(`<span class="pill" title="${esc(firstLine(D.ses[o.adr.se].t))}">At full adrenaline: ${esc(D.ses[o.adr.se].n)}</span>`);
   if (o.res && o.res.length) bits.push(`<span class="pill">${o.res.length} resist${o.res.length > 1 ? "s" : ""}</span>`);
   return bits.length ? `<div class="pillset">${bits.join("")}</div>` : `<span class="dim">—</span>`;
 }
@@ -1379,7 +1424,7 @@ function homeView(){
   }).join("");
   let h = `<div class="stack">`;
   h += `<section class="hero"><div><div class="eyebrow">Your world</div><h2>${bc ? `You're in the ${esc(tierName(now))}. ${esc(bc.n)} is next.` : `You're in the ${esc(tierName(now))}.`}</h2>
-    <p class="sub">${done.length ? esc(done.join(", ")) + " defeated." : "No bosses defeated yet."} Tiers below come from where each material can be gathered; your world's progress decides which stage is highlighted.</p></div>
+    <p class="sub">${done.length ? esc(done.join(", ")) + " defeated." : "No bosses defeated yet."} Tiers come from where each material can be gathered. <button class="lnk" data-view="world">Change your progress</button></p>${store("atlas.progress") === null ? `<p class="callout" style="margin:10px 0 0">This starts at the beginning of the game. Set the last boss you've beaten in World settings and the whole atlas follows it.</p>` : ""}</div>
     <div class="rail" role="list">${rail}</div></section>`;
   // next boss / world / class
   let nb = "";
@@ -1437,12 +1482,143 @@ function bestHTML(label, b, t){
   if (b.keep) h += `<p class="note" style="margin-top:4px">Your <button class="lnk" data-go="item:${esc(b.keep[0])}">${esc(b.keep[1].n)}</button> still hits harder here (${fmt(statAt(b.keep[1], t), 0)} vs ${fmt(statAt(b.list[0][1], t), 0)}).</p>`;
   return h;
 }
-function armorPick(style, slot, t){
-  const score = ([id, o]) => { const arm = statAt(o, t), x = o.x || {}; return style === "caster" ? (x.eitrRegen || 0) * 1000 + arm : style === "light" ? arm + (x.move || 0) * 300 : arm; };
-  const cand = Object.entries(D.items).filter(([id, o]) => o.c === slot && o.tier != null && o.tier <= t && !o.ns && RBI[id]);
-  if (!cand.length) return null;
-  const top = Math.max(...cand.map(x => x[1].tier));
-  return cand.filter(x => x[1].tier === top).sort((a, b) => score(b) - score(a))[0];
+// ---------- armor & trinkets for the journey
+// Damage taken multiplier per resistance, as a fraction of damage removed (Weak adds 50%).
+const MODF = {Immune:1, Ignore:1, VeryResistant:0.75, Resistant:0.5, SlightlyResistant:0.25, SlightlyWeak:-0.25, Weak:-0.5, VeryWeak:-1};
+const ARMOR_SLOTS = ["helmets","chest","legs","capes"];
+const PROFILE_CACHE = {};
+// What a stage's creatures (and, weighted up, its boss) hit with, and how hard a typical hit lands
+// on the chosen difficulty.
+function threatProfile(t){
+  const key = t + ":" + dmgScale().toFixed(3);
+  if (PROFILE_CACHE[key]) return PROFILE_CACHE[key];
+  const biome = D.stages.biomes[t], boss = D.stages.bosses[t];
+  const share = {}, hits = [];
+  let tot = 0;
+  const add = (c, w, keep) => { for (const a of c.atk || []){ if (!a[1] || !COMBAT.includes(a[2])) continue; share[a[2]] = (share[a[2]] || 0) + a[1] * w; tot += a[1] * w; if (keep) hits.push(a[1]); } };
+  for (const c of Object.values(D.creatures)) if (!c.boss && (c.b || []).includes(biome)) add(c, 1, true);
+  if (boss && D.creatures[boss]) add(D.creatures[boss], 3, false);
+  for (const k in share) share[k] /= tot || 1;
+  hits.sort((a, b) => a - b);
+  const H = (hits.length ? hits[Math.floor(hits.length / 2)] : 30) * dmgScale();
+  return PROFILE_CACHE[key] = {share, H, cold:biome === "Mountain" || biome === "DeepNorth", hot:biome === "AshLands"};
+}
+const profileText = p => Object.entries(p.share).sort((a, b) => b[1] - a[1]).filter(x => x[1] >= 0.05).slice(0, 4).map(([k, v]) => `${(DNAME[k] || k).toLowerCase()} ${Math.round(v * 100)}%`).join(", ");
+const resOf = o => (o.res || []).map(([ty, m]) => [String(ty).toLowerCase(), MODF[m] ?? 0]);
+function coverAdd(cov, o){ for (const [ty, f] of resOf(o)) cov[ty] = f > 0 ? Math.max(cov[ty] || 0, f) : (cov[ty] ?? f); }
+// Armor worth in "armor points": the piece's armor at the upgrade reachable now, plus resistances valued as
+// the damage they'd save on a typical hit (share of that damage type × reduction × hit size), plus the
+// class's priorities (speed for light fighters, eitr regen for casters, stamina costs for melee).
+function armorEval(o, t, style, prof, cov){
+  let s = statAt(o, t);
+  const why = [];
+  for (const [ty, f] of resOf(o)){
+    const have = cov[ty] || 0;
+    const gain = f > 0 ? Math.max(0, f - Math.max(0, have)) : (have > 0 ? 0 : f);
+    s += (prof.share[ty] || 0) * gain * prof.H;
+    why.push((f > 0 ? "resists " : "weak to ") + (DNAME[ty] || ty).toLowerCase());
+  }
+  const x = o.x || {};
+  if (x.move){ s += x.move * 100 * (style === "light" ? 1.5 : style === "caster" ? 1 : 0.5); why.push((x.move > 0 ? "+" : "−") + Math.abs(Math.round(x.move * 100)) + "% move speed"); }
+  if (x.eitrRegen){ s += x.eitrRegen * 100 * (style === "caster" ? 1.2 : -0.05); why.push("+" + Math.round(x.eitrRegen * 100) + "% eitr regen"); }
+  const st = (x.atkStam || 0) + (x.blkStam || 0) + (x.dodgeStam || 0) + (x.runStam || 0) + (x.jumpStam || 0);
+  if (st){ if (style !== "caster") s -= st * 100 * 0.3; why.push((st < 0 ? "−" : "+") + Math.abs(Math.round(st * 100)) + "% stamina costs"); }
+  if (x.heat){ if (prof.hot) s += x.heat * 100 * 0.3; why.push("heat resistance"); }
+  if (o.eq && D.ses[o.eq] && !/^bmr |[_$]/i.test(D.ses[o.eq].n)) why.push(D.ses[o.eq].n);
+  return {s, why};
+}
+function classSkills(c){
+  if (!c) return [];
+  const s = new Set();
+  for (const k of c.classes) for (const [id, o] of progressionOf(k)) if (o.skid) s.add(o.skid);
+  if (c.id === "Bulwark") s.add("Blocking");
+  return [...s];
+}
+// The damage type a class mostly deals (shield bashes and staff knockback don't count).
+function classDmgTypes(c, t){
+  const sum = {};
+  let tot = 0;
+  for (const k of c.classes){
+    if (SHIELD_CLS.has(k)) continue;
+    for (const [id, o] of progressionOf(k)) if (o.tier <= t){ const d = (o.q && o.q[o.q.length - 1].dmg) || {}; for (const ty of COMBAT) if (d[ty]){ sum[ty] = (sum[ty] || 0) + d[ty]; tot += d[ty]; } }
+  }
+  const top = Object.entries(sum).sort((a, b) => b[1] - a[1])[0];
+  return top && top[1] >= tot * 0.4 ? [top[0]] : [];
+}
+// Words a set or trinket bonus uses for each weapon skill.
+const SKILL_WORDS = {Swords:["sword"], Axes:["axe"], Clubs:["club","mace"], Knives:["knife","knives","dagger"], Spears:["spear"], Polearms:["polearm","atgeir"],
+  Bows:["bow"], Crossbows:["crossbow"], Unarmed:["unarmed","fist"], ElementalMagic:["elemental"], BloodMagic:["blood magic"], Blocking:["block"]};
+function armorPlan(style, t, c){
+  const prof = threatProfile(t);
+  const cands = {};
+  for (const sl of ARMOR_SLOTS) cands[sl] = Object.entries(D.items).filter(([id, o]) => o.c === sl && o.tier != null && o.tier <= t && !o.ns && RBI[id]);
+  // Chest and legs first: they carry most armor, so later slots only add resistances not yet covered.
+  let pick = {};
+  const cov = {};
+  for (const sl of ["chest","legs","helmets","capes"]){
+    let best = null;
+    for (const cd of cands[sl]){ const ev = armorEval(cd[1], t, style, prof, cov); if (!best || ev.s > best.ev.s) best = {c:cd, ev}; }
+    if (best){ pick[sl] = best; coverAdd(cov, best.c[1]); }
+  }
+  const notes = [];
+  // Mountains and the Deep North: one frost-resistant piece stops freezing; otherwise bring a mead.
+  if (prof.cold && !((cov.frost || 0) >= 0.5)){
+    let swap = null;
+    for (const sl of ARMOR_SLOTS) for (const cd of cands[sl]){
+      if (!resOf(cd[1]).some(([ty, f]) => ty === "frost" && f >= 0.5)) continue;
+      const ev = armorEval(cd[1], t, style, prof, {});
+      const loss = (pick[sl] ? pick[sl].ev.s : 0) - ev.s;
+      if (!swap || loss < swap.loss) swap = {sl, c:cd, ev, loss};
+    }
+    if (swap) pick[swap.sl] = {c:swap.c, ev:swap.ev};
+  }
+  const frostPiece = p => ARMOR_SLOTS.map(sl => p[sl]).find(x => x && resOf(x.c[1]).some(([ty, f]) => ty === "frost" && f >= 0.5));
+  const mix = ARMOR_SLOTS.reduce((a, sl) => a + (pick[sl] ? pick[sl].ev.s : 0), 0);
+  // Full sets: worth wearing when the set bonus makes up for weaker pieces. Bonuses that raise the
+  // class's own weapon skill count for more.
+  const mine = classSkills(c).flatMap(s => SKILL_WORDS[s] || [s.toLowerCase()]);
+  const others = Object.entries(SKILL_WORDS).filter(([k]) => !classSkills(c).includes(k)).flatMap(([, w]) => w);
+  let bestSet = null;
+  for (const [name, members] of Object.entries(D.sets || {})){
+    const ms = members.map(id => [id, D.items[id]]).filter(([id, o]) => o && ARMOR_SLOTS.includes(o.c));
+    if (ms.length < 2 || ms.some(([id, o]) => o.tier == null || o.tier > t || o.ns || !RBI[id])) continue;
+    const se = D.ses[ms[0][1].setse];
+    const txt = se ? (se.n + " " + se.t).toLowerCase() : "";
+    // A bonus for this class's weapons is worth a lot, one for another weapon very little.
+    const bonus = !se ? 0 : mine.some(w => txt.includes(w)) ? 20 : others.some(w => new RegExp("\\b" + w).test(txt)) ? 4 : 10;
+    const cv = {}, sp = {...pick};
+    let s = bonus;
+    for (const [id, o] of ms){ const ev = armorEval(o, t, style, prof, cv); coverAdd(cv, o); sp[o.c] = {c:[id, o], ev}; s += ev.s; }
+    for (const sl of ARMOR_SLOTS) if (!ms.some(([id, o]) => o.c === sl) && pick[sl]) s += pick[sl].ev.s;
+    if (prof.cold && frostPiece(pick) && !frostPiece(sp)) s -= 25;
+    if (!bestSet || s > bestSet.s) bestSet = {name, ms, s, se, sp, bonus};
+  }
+  // A set whose bonus only helps other weapons isn't worth a mention.
+  if (bestSet && bestSet.se && bestSet.bonus > 4){
+    const lab = `${esc(bestSet.se.n)} set`, what = esc(firstLine(bestSet.se.t));
+    if (bestSet.s > mix){ pick = bestSet.sp; notes.unshift(`Wear the full ${lab}: ${what}`); }
+    else if (bestSet.s >= mix * 0.9) notes.push(`The full ${lab} comes close (${bestSet.ms.map(([id, o]) => `<button class="lnk" data-go="item:${esc(id)}">${esc(o.n)}</button>`).join(", ")}) and adds: ${what}`);
+  }
+  if (prof.cold){
+    const fp = frostPiece(pick);
+    notes.push(fp ? `<button class="lnk" data-go="item:${esc(fp.c[0])}">${esc(fp.c[1].n)}</button> keeps you from freezing here.` : "Nothing you can craft yet stops freezing, so bring a Frost Resistance Mead.");
+  }
+  return {list:ARMOR_SLOTS.map(sl => pick[sl]).filter(Boolean), notes, prof};
+}
+function trinketPicks(c, style, t){
+  const skills = classSkills(c), types = classDmgTypes(c, t);
+  const score = o => {
+    let s = o.tier * 2;
+    for (const g of o.adr.tags || []){
+      if (g.startsWith("skill:")) s += skills.includes(g.slice(6)) ? 50 : (g === "skill:Dodge" && style === "light" ? 20 : 0);
+      else if (g.startsWith("dmg:")) s += types.includes(g.slice(4)) ? 25 : 0;
+      else s += ({eitr:style === "caster" ? 30 : 0, stamina:style === "caster" ? 5 : style === "light" ? 20 : 15, health:style === "heavy" ? 15 : 8,
+        block:c.id === "Bulwark" ? 40 : 3, resist:style === "heavy" ? 15 : 6, armor:style === "heavy" ? 12 : 6, move:style === "light" ? 12 : 4, swim:1})[g] || 0;
+    }
+    return s;
+  };
+  return Object.entries(D.items).filter(([id, o]) => o.adr && o.tier != null && o.tier <= t && !o.ns && RBI[id])
+    .sort((a, b) => score(b[1]) - score(a[1])).slice(0, 2);
 }
 function foodPicks(t, caster){
   const foods = Object.entries(D.items).filter(([id, o]) => o.c === "food" && o.food && o.tier != null && o.tier <= t && !o.ns && (RBI[id] || PROD[id]));
@@ -1500,11 +1676,16 @@ function classGuide(c){
     if (!wpn) wpn = `<p class="dim">No ${esc(c.w.toLowerCase())} to craft yet. Level another weapon until the next stage.</p>`;
     body += `<div class="blk"><h4>${c.id === "Bulwark" ? "Shields & weapon" : "Weapons"}</h4>${wpn}</div>`;
     // armor
-    const arm = ["helmets","chest","legs","capes"].map(sl => armorPick(style, sl, t)).filter(Boolean);
-    const sets = {};
-    for (const [id, o] of arm) if (o.set) sets[o.set] = (sets[o.set] || 0) + 1;
-    const setNote = Object.entries(sets).filter(([k, n]) => n >= 2).map(([k]) => setLabel(arm.find(x => x[1].set === k)[1]));
-    body += `<div class="blk"><h4>Armor${style === "caster" ? " · eitr regen first" : style === "light" ? " · light & fast" : ""}</h4><div class="grid-items">${arm.map(x => gearChip(x, t)).join("")}</div>${setNote.length ? `<p class="note">${esc(setNote.join(", "))} bonus with these pieces.</p>` : ""}</div>`;
+    const plan = armorPlan(style, t, c);
+    const whys = plan.list.filter(x => x.ev.why.length);
+    body += `<div class="blk"><h4>Armor${style === "caster" ? " · eitr regen first" : style === "light" ? " · light & fast" : ""}</h4><div class="grid-items">${plan.list.map(x => gearChip(x.c, t)).join("")}</div>
+      ${whys.length ? `<ul class="whys">${whys.map(x => `<li><b>${esc(x.c[1].n)}</b> ${esc(x.ev.why.slice(0, 3).join(", "))}</li>`).join("")}</ul>` : ""}
+      ${plan.notes.map(n => `<p class="note">${n}</p>`).join("")}
+      <p class="note">Weighed against what hits you here: ${esc(profileText(plan.prof))}.</p></div>`;
+    // trinket
+    const trs = trinketPicks(c, style, t);
+    const firstTr = Math.min(...Object.values(D.items).filter(o => o.adr && o.tier != null).map(o => o.tier));
+    body += `<div class="blk"><h4>Trinket</h4>${trs.length ? trs.map((x, i) => { const se = D.ses[x[1].adr.se]; return `${i ? `<div class="wtype">Or</div>` : ""}<div class="grid-items">${gearChip(x, t, false)}</div><p class="note" style="margin:3px 0 4px">At ${fmt(x[1].adr.max, 0)} adrenaline: <b>${esc(se ? se.n : "")}</b>${se ? ". " + esc(firstLine(se.t)) : ""}</p>`; }).join("") : `<p class="dim">Trinkets start in the ${esc(tierName(firstTr))} stage.</p>`}</div>`;
     // food
     const foods = foodPicks(t, style === "caster");
     if (foods.length) body += `<div class="blk"><h4>Food · one of each</h4>${foods.map(([lab, [id, o]]) => `<div class="wtype">${esc(lab)}</div><div class="grid-items"><button class="gi" data-go="item:${esc(id)}">${icon(o.i, "s22", o.n)}${esc(o.n)}<span class="x">${fmt(o.food.hp || 0, 0)}/${fmt(o.food.stam || 0, 0)}${o.food.eitr ? "/" + fmt(o.food.eitr, 0) : ""}</span></button></div>`).join("")}<p class="note">Health / stamina${foods.some(f => f[1][1].food.eitr) ? " / eitr" : ""}.</p></div>`;
@@ -1526,7 +1707,7 @@ function classGuide(c){
       if (rewards.length) body += `<div class="blk"><h4>What it unlocks</h4><div class="grid-items">${rewards.slice(0, 3).map(x => `<button class="gi" data-go="item:${esc(x)}">${iicon(x, "s22")}${esc(iname(x))}</button>`).join("")}</div>${unlocks.length ? `<p class="note">Used to craft ${unlocks.map(x => `<button class="lnk" data-go="item:${esc(x)}">${esc(iname(x))}</button>`).join(", ")}.</p>` : ""}${t + 1 < stages.biomes.length ? `<p class="note">Then head to the ${esc(tierName(t + 1))}.</p>` : ""}</div>`;
     }
     const state = t < now ? "done" : t === now ? "now" : "future";
-    h += `<section class="stage ${state}${closed ? " closed" : ""}" id="stage-${t}" data-sec-key="${esc(key)}"><div class="num"><span>${t + 1}</span></div><div class="stage-card"><div class="stage-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}">${CHEV}<h3>${esc(tierName(t))}${bc ? " → " + esc(bc.n) : ""}</h3>${t < now ? `<span class="when">Done in your world</span>` : t === now ? `<span class="when now">You are here</span>` : ""}</div><div class="stage-b">${body}</div></div></section>`;
+    h += `<section class="stage ${state}${closed ? " closed" : ""}" id="stage-${t}" data-sec-key="${esc(key)}"><div class="num"><span>${t + 1}</span></div><div class="stage-card"><div class="stage-h" data-toggle="${esc(key)}" role="button" tabindex="0" aria-expanded="${!closed}">${CHEV}<h3>${esc(tierName(t))}${bc ? " → " + esc(bc.n) : ""}</h3>${t < now ? `<span class="when">Done</span>` : t === now ? `<span class="when now">You are here</span>` : ""}</div><div class="stage-b">${body}</div></div></section>`;
   }
   return h + `</div>`;
 }
@@ -1615,7 +1796,7 @@ function itemDetail(id){
   if (!o) return `<div class="inner"><p>Unknown item ${esc(id)}.</p></div>`;
   const cl = CLS[o.c];
   const recs = RBI[id] || [];
-  let h = `<div class="inner">` + dhead(o.i, o.n, [o.tier != null ? tierPill(o.tier) : "", o.m !== "Valheim" ? tag(o.m, "mod") : tag("Vanilla"), o.sk ? tag(o.sk + " skill") : "", o.nt ? tag("Not teleportable", "warn") : ""], o.d, cl ? cl.n : "Item");
+  let h = `<div class="inner">` + dhead(o.i, o.n, [o.tier != null ? tierPill(o.tier) : "", o.m !== "Valheim" ? tag(o.m, "mod") : tag("Vanilla"), o.sk && cl && ["weapons","tools","ammo","shields"].includes(cl.g) ? tag(o.sk + " skill") : "", o.nt ? tag("Not teleportable", "warn") : ""], o.d, cl ? cl.n : "Item");
 
   // how to craft
   if (recs.length){
@@ -1707,6 +1888,10 @@ function itemDetail(id){
     kv.push(`<div><span>Weight</span><b>${fmt(o.w)}</b></div>`);
     h += `<div class="card"><h3>Food</h3><div class="kv">${kv.join("")}</div></div>`;
   }
+  if (o.adr && D.ses[o.adr.se]){
+    const s = D.ses[o.adr.se];
+    h += `<div class="card"><h3>Adrenaline<span class="aside">fills at ${fmt(o.adr.max, 0)}</span></h3><p class="note" style="margin:0 0 8px">Fighting, blocking and parrying fill adrenaline. When it's full, the trinket triggers:</p><div class="se"><b>${esc(s.n)}</b>${esc(s.t)}</div></div>`;
+  }
   for (const [k, lab] of [["cons","When consumed"],["eq","While equipped"],["atkse","On hit"]]){
     const s = D.ses[o[k]];
     if (s) h += `<div class="card"><h3>${lab}${s.d ? `<span class="aside">${dur(s.d)}</span>` : ""}</h3><div class="se"><b>${esc(s.n)}</b>${esc(s.t)}</div></div>`;
@@ -1762,7 +1947,7 @@ function itemDetail(id){
     const tooMany = Math.max(rec.length, pcs.length, cv.length) > lim;
     h += `<div class="card"><h3>Used in <span class="aside">${used.length} recipe${used.length > 1 ? "s" : ""}</span></h3>${u}${tooMany ? `<button class="more" style="border-radius:8px;margin-top:8px" data-more="${esc(key)}">Show all</button>` : ""}</div>`;
   }
-  if (o.tip) h += `<div class="card"><details class="tip"><summary>In-game tooltip${mq > 1 ? " (max level)" : ""}</summary><pre>${esc(o.tip)}</pre></details></div>`;
+  if (o.tip && !o.adr) h += `<div class="card"><details class="tip"><summary>In-game tooltip${mq > 1 ? " (max level)" : ""}</summary><pre>${esc(o.tip)}</pre></details></div>`;
   return h + `</div>`;
 }
 function tierHint(t, k){
@@ -1835,7 +2020,7 @@ function gateOf(r){
   if (r.pev) return {kind:"event", rank:2, active:false, html:`<span class="cond">Only during the ${esc(PEV_NAMES[r.pev] || prettify(r.pev))} world event</span>`};
   if (r.key){
     const on = worldKeys().has(String(r.key).toLowerCase());
-    return {kind:"progress", rank:1, active:on, html:`<span class="cond">Only after ${esc(keyText(r.key))} · <span class="${on ? "ok" : ""}">${on ? "active in your world" : "not in your world yet"}</span></span>`};
+    return {kind:"progress", rank:1, active:on, html:`<span class="cond">Only after ${esc(keyText(r.key))} · <span class="${on ? "ok" : ""}">${on ? "active at your progress" : "not yet at your progress"}</span></span>`};
   }
   return {kind:"natural", rank:0, active:true, html:""};
 }
@@ -1892,13 +2077,13 @@ function creatureDetail(id){
   if (c.wk) h += `<div class="card"><h3>Damage taken</h3><div class="pillset">${Object.entries(c.wk).map(([k, v]) => `<span class="pill ${/Weak/.test(v) ? "good" : "bad"}">${esc(DNAME[k] || prettify(k))}: ${esc(MODNAME[v] || v)}</span>`).join("")}</div><p class="dim" style="font-size:12px;margin:8px 0 0">Green means it takes extra damage from that type.</p></div>`;
   if (c.atk && c.atk.length){
     const ds = dmgScale();
-    h += `<div class="card"><h3>Attacks${ds !== 1 ? `<span class="aside">×${fmt(ds, 2)} for your world</span>` : ""}</h3><div class="src">${c.atk.map(a => `<div class="it" style="cursor:default"><span class="dt" style="--c:var(--d-${a[2]})"></span><span class="t">${esc(atkName(a[0]))}<small>${esc(DNAME[a[2]] || a[2])}</small></span><span class="r">${fmt(a[1] * ds, 0)}${ds !== 1 ? `<br><span class="dim">base ${fmt(a[1], 0)}</span>` : ""}</span></div>`).join("")}</div></div>`;
+    h += `<div class="card"><h3>Attacks${ds !== 1 ? `<span class="aside">×${fmt(ds, 2)} for your settings</span>` : ""}</h3><div class="src">${c.atk.map(a => `<div class="it" style="cursor:default"><span class="dt" style="--c:var(--d-${a[2]})"></span><span class="t">${esc(atkName(a[0]))}<small>${esc(DNAME[a[2]] || a[2])}</small></span><span class="r">${fmt(a[1] * ds, 0)}${ds !== 1 ? `<br><span class="dim">base ${fmt(a[1], 0)}</span>` : ""}</span></div>`).join("")}</div></div>`;
   }
   if (c.sp && c.sp.length){
     const sp = c.sp.slice().sort((a, b) => gateOf(a).rank - gateOf(b).rank);
     const natural = sp.filter(r => gateOf(r).kind === "natural").length;
     h += `<div class="card"><h3>Where it spawns <span class="aside">world spawner</span></h3>${natural ? "" : `<p class="callout">It has no normal home biome. Every entry below needs a boss kill or a world event first.</p>`}<div style="overflow-x:auto"><table class="wtable"><thead><tr><th>Biome</th><th>When</th><th class="num">Chance</th><th class="num">Max</th><th>Group & conditions</th></tr></thead><tbody>${sp.map(spawnRow).join("")}</tbody></table></div>
-      <p class="note">Every interval, each spawner rolls its chance near players until the max are alive. Grey rows aren't happening in your world yet.${D.sls && D.sls.spawnRate && D.sls.spawnRate !== 1 ? ` StarLevelSystem multiplies spawns ×${D.sls.spawnRate}.` : ""}${c.ev && c.ev.length ? " Raids are separate; see Also appears." : ""}</p></div>`;
+      <p class="note">Every interval, each spawner rolls its chance near players until the max are alive. Grey rows don't happen yet at your progress.${D.sls && D.sls.spawnRate && D.sls.spawnRate !== 1 ? ` StarLevelSystem multiplies spawns ×${D.sls.spawnRate}.` : ""}${c.ev && c.ev.length ? " Raids are separate; see Also appears." : ""}</p></div>`;
   }
   if ((c.loc && c.loc.length) || (c.ev && c.ev.length)){
     h += `<div class="card"><h3>Also appears</h3>${c.loc ? `<div class="lvlhead">At locations · ${c.loc.length}</div><div class="grid-items">${c.loc.slice(0, 24).map(l => D.locations[l] ? `<button class="gi" data-go="loc:${esc(l)}">${locIcon(D.locations[l], "s22")}${esc(D.locations[l].n)}</button>` : "").join("")}</div>` : ""}
@@ -2056,7 +2241,7 @@ function biomeDetail(id){
     }).join("")}</tbody></table></div>`;
   const nat = all.filter(x => x[2].kind === "natural"), prog = all.filter(x => x[2].kind === "progress"), evs = all.filter(x => x[2].kind === "event");
   if (nat.length) h += `<div class="card"><h3>Spawn table <span class="aside">${nat.length} normal entries</span></h3>${spawnTable(nat)}</div>`;
-  if (prog.length) h += `<div class="card"><h3>Unlocked by boss kills <span class="aside">${prog.filter(x => x[2].active).length} of ${prog.length} active in your world</span></h3><p class="note" style="margin:0 0 8px">Vanilla night spawns that only start once a boss is dead. They aren't raids and they aren't from a mod.</p>${spawnTable(prog, true)}</div>`;
+  if (prog.length) h += `<div class="card"><h3>Unlocked by boss kills <span class="aside">${prog.filter(x => x[2].active).length} of ${prog.length} active at your progress</span></h3><p class="note" style="margin:0 0 8px">Vanilla night spawns that only start once a boss is dead. They aren't raids and they aren't from a mod.</p>${spawnTable(prog, true)}</div>`;
   if (evs.length) h += `<div class="card"><h3>During world events</h3><p class="note" style="margin:0 0 8px">These only spawn while a world event is running, not as normal residents.</p>${spawnTable(evs, true)}</div>`;
   if (b.resources.length) h += `<div class="card"><h3>Resources in the wild</h3><div class="grid-items">${b.resources.map(x => `<button class="gi" data-go="item:${esc(x)}">${iicon(x, "s22")}${esc(iname(x))}</button>`).join("")}</div></div>`;
   if (b.locations.length) h += `<div class="card"><h3>Locations · ${b.locations.length}</h3><div class="grid-items">${b.locations.map(l => `<button class="gi" data-go="loc:${esc(l)}">${locIcon(D.locations[l], "s22")}${esc(D.locations[l].n)}</button>`).join("")}</div></div>`;
@@ -2089,14 +2274,18 @@ function worldPanel(){
   const r = rates();
   const have = new Set((D.world.keys || []).map(k => k.toLowerCase().split(" ")[0]));
   const changed = Object.keys(W.opt).some(k => W.opt[k] !== W.base[k]);
-  let h = `<div class="stack"><div class="panel"><h2>Players nearby</h2>
-    ${changed ? `<div class="callout">Showing a what-if world. <button class="lnk" data-w-reset>Back to your world</button></div>` : ""}
+  const names = ["No bosses yet"].concat(D.stages.bosses.map(b => b ? crName(b) : "?"));
+  let h = `<div class="stack"><div class="panel"><h2>Your progress</h2><p class="tip">Pick the last boss you've beaten. The highlighted stage, the Overview, the Journey, the "up to my tier" filter and which raids and spawns count as active all follow this. It's saved in this browser only.</p>
+    <div class="seg" role="group" aria-label="Last boss beaten">${names.map((n, i) => `<button data-progress="${i}" aria-pressed="${W.stage === i}">${esc(n)}</button>`).join("")}</div>
+    <p class="note">You're in the <b>${esc(tierName(worldStage()))}</b> stage${W.stage ? ", with " + esc(bossesBeaten().join(", ")) + " down" : ""}.</p></div>
+    <div class="panel"><h2>Players nearby</h2>
+    ${changed ? `<div class="callout">Some settings differ from the server's. <button class="lnk" data-w-reset>Reset to the server's settings</button></div>` : ""}
     <div class="range"><label for="w-players"><b>Players nearby</b></label><input type="range" id="w-players" min="1" max="10" value="${W.players}"><span class="mono">${W.players}</span>
       <span class="dim">Creatures get +${fmt(D.world.scale.hpPerPlayer * 100, 0)}% health and +${fmt(D.world.scale.dmgPerPlayer * 100, 0)}% damage per extra player within ${fmt(D.world.scale.range, 0)} m, up to ${D.world.scale.maxPlayers}.</span></div></div>
     <div class="grid2">`;
   for (const m of D.world.modifiers){
     const cur = W.opt[m.id], opt = m.opts.find(o => o.v === cur);
-    h += `<div class="panel"><h2>${esc(m.n)}</h2><p class="tip">${esc(m.tip || "")}</p><div class="seg" role="group" aria-label="${esc(m.n)}">${m.opts.map(o => `<button data-w-mod="${esc(m.id)}" data-w-opt="${esc(o.v)}" aria-pressed="${o.v === cur}">${esc(o.n)}${o.v === W.base[m.id] ? `<span class="yours">your world</span>` : ""}</button>`).join("")}</div>
+    h += `<div class="panel"><h2>${esc(m.n)}</h2><p class="tip">${esc(m.tip || "")}</p><div class="seg" role="group" aria-label="${esc(m.n)}">${m.opts.map(o => `<button data-w-mod="${esc(m.id)}" data-w-opt="${esc(o.v)}" aria-pressed="${o.v === cur}">${esc(o.n)}${o.v === W.base[m.id] ? `<span class="yours">server</span>` : ""}</button>`).join("")}</div>
       <ul class="effects">${opt && opt.keys.length ? opt.keys.map(k => `<li>${esc(keyEffect(k))}</li>`).join("") : `<li>Vanilla behaviour</li>`}${opt && opt.tip ? `<li class="dim">${esc(opt.tip)}</li>` : ""}</ul></div>`;
   }
   h += `</div>`;
@@ -2106,7 +2295,7 @@ function worldPanel(){
     <div><span>Enemy speed & size</span><b>${r.enemyspeedsize}%</b></div><div><span>Skill loss on death</span><b>${r.skillreductionrate}%</b></div></div>
     <p class="note">${raidNote()}</p></div>`;
   const possible = (D.events || []).filter(eventPossible);
-  h += `<div class="panel"><h2>Raids that can hit you now</h2><p class="tip">Based on your world's progress: ${esc([...have].filter(k => /defeated|killed/.test(k)).map(keyText).join(", ") || "no bosses yet")}.</p>
+  h += `<div class="panel"><h2>Raids that can hit you now</h2><p class="tip">Based on your progress: ${esc(bossesBeaten().join(", ") || "no bosses yet")}${W.stage ? " defeated" : ""}.</p>
     <div class="grid-items">${possible.map(e => `<button class="gi" data-go="event:${esc(e.id)}">${glyph("raid", 22)}${esc(e.n)}<span class="x">${dur(e.dur)}</span></button>`).join("") || `<span class="dim">None yet</span>`}</div></div>`;
   if (D.world.toggles.length){
     h += `<div class="panel"><h2>Other world options</h2><div style="overflow-x:auto"><table class="wtable"><tbody>${D.world.toggles.map(t => `<tr><td><b>${esc(t.n)}</b><div class="cond">${esc(t.tip || "")}</div></td><td class="num">${have.has((t.key || "").toLowerCase()) ? `<span class="ok">On</span>` : `<span class="dim">Off</span>`}</td></tr>`).join("")}</tbody></table></div></div>`;
@@ -2128,7 +2317,7 @@ function worldPanel(){
     <li>Resources above ×1 roll world loot tables (rocks, trees, chests) that many times; creature drops are multiplied directly.</li>
     <li>Health and damage from nearby players stack with the Combat setting and with stars.</li>
     <li>Raids need a base: 3 or more of your structures near a player, in a biome the raid allows, with the right bosses killed.</li>
-    <li>World options are read from your world's save. Your server may use its own StarLevelSystem config; the one here is from your profile.</li></ul></div>`;
+    <li>Modifier defaults come from the server's world; your picks here and your progress are saved in this browser. Your server may use its own StarLevelSystem config; the one here is from your profile.</li></ul></div>`;
   return h + `</div>`;
 }
 function pathCard(id, o){
@@ -2194,7 +2383,7 @@ function updateComfort(){
 
 // ---------- world settings view
 function worldView(){
-  return pageHead({eyebrow:"World", title:"World settings", lede:"Valheim's world modifiers, with your world's choices marked. Pick another option to see a what-if world: creature health and damage, drop amounts and raid timing across the atlas follow what you pick."}) + worldPanel();
+  return pageHead({eyebrow:"World", title:"World settings", lede:"Set how far you've gotten and how your world is tuned. Modifiers start at the server's settings (marked). Your choices are saved in this browser, and creature health and damage, drop amounts, tiers and raid timing across the atlas follow them."}) + worldPanel();
 }
 
 // ---------- Epic Loot enchanting
@@ -2495,7 +2684,7 @@ function wire(){
     if (e.target.id === "w-players"){ W.players = +e.target.value; store("atlas.players", String(W.players)); worldChanged(); }
   });
   document.addEventListener("click", e => {
-    const el = e.target.closest("[data-go],[data-view],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-w-night],[data-help],[data-comfort-view],[data-journey],[data-klass],[data-etab],[data-eslot],[data-jump],[data-navtoggle],[data-tier-clear],[data-filters-clear]");
+    const el = e.target.closest("[data-go],[data-view],[data-cls],[data-sort],[data-more],[data-lvl],[data-back],[data-close],[data-toggle],[data-collapse],[data-w-mod],[data-w-reset],[data-progress],[data-w-night],[data-help],[data-comfort-view],[data-journey],[data-klass],[data-etab],[data-eslot],[data-jump],[data-navtoggle],[data-tier-clear],[data-filters-clear]");
     if (!el) return;
     if (el.hasAttribute("data-navtoggle")){ $("#nav").classList.contains("open") ? closeNav() : openNav(); return; }
     if (el.dataset.toggle){ toggleSection(el.dataset.toggle); return; }
@@ -2505,6 +2694,7 @@ function wire(){
       document.querySelectorAll("#results [data-sec-key]").forEach(sec => { S.collapsed[sec.dataset.secKey] = on; sec.classList.toggle("closed", on); const hh = sec.querySelector("[data-toggle]"); if (hh) hh.setAttribute("aria-expanded", String(!on)); });
       saveCollapsed(); return;
     }
+    if (el.dataset.progress !== undefined){ W.stage = +el.dataset.progress; worldChanged(); return; }
     if (el.dataset.wMod){ W.opt[el.dataset.wMod] = el.dataset.wOpt; worldChanged(); return; }
     if (el.hasAttribute("data-w-reset")){ Object.assign(W.opt, W.base); worldChanged(); return; }
     if (el.dataset.wNight){ W.night = el.dataset.wNight === "1"; worldChanged(); return; }
@@ -2561,6 +2751,7 @@ function toggleSection(key){
   saveCollapsed();
 }
 function worldChanged(){
+  saveWorld();
   const sy = window.scrollY, dy = $("#detail").scrollTop;
   renderWorldBtn();
   render();
