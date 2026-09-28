@@ -1811,6 +1811,7 @@ function select(k, id, mode = "link"){
   else if (mode === "link" && S.sel && S.sel.k !== "help" && !(S.sel.k === k && S.sel.id === id)) S.hist.push(S.sel);
   if (k === "conv"){ const c = D.conversions[+id]; if (c && c.out[0]) { k = "item"; id = c.out[0][0]; } }
   if (k === "piece" && D.stations[id] && !D.pieces[id]) k = "station";
+  if (k === "station" && !D.stations[id] && D.pieces[id]) k = "piece";
   S.sel = {k, id};
   S.lvl = 1;
   renderDetail();
@@ -1857,7 +1858,8 @@ function fromHash(){
   if (v && NAV.some(n => n.k === v[1])){ S.view = v[1]; return; }
   const m = /^([ipscbelmx])\.(.+)$/.exec(h);
   if (!m) return;
-  const k = {i:"item", p:"piece", s:"station", c:"creature", b:"boss", e:"event", l:"loc", m:"biome", x:"ench"}[m[1]];
+  let k = {i:"item", p:"piece", s:"station", c:"creature", b:"boss", e:"event", l:"loc", m:"biome", x:"ench"}[m[1]];
+  if (k === "station" && !D.stations[m[2]] && D.pieces[m[2]]) k = "piece";
   const ok = (k === "item" && D.items[m[2]]) || (k === "piece" && D.pieces[m[2]]) || (k === "station" && D.stations[m[2]]) || (k === "creature" && D.creatures[m[2]])
     || (k === "boss" && D.bosses[m[2]]) || (k === "event" && evById(m[2])) || (k === "loc" && D.locations[m[2]]) || (k === "biome" && D.biomes[m[2]]) || (k === "ench" && D.enchant && D.enchant.fx[m[2]]);
   if (ok){ S.sel = {k, id:m[2]}; openDetail(); }
@@ -2077,7 +2079,7 @@ function tierHint(t, k){
 function pieceDetail(id){
   const p = D.pieces[id];
   if (!p) return `<div class="inner">Unknown piece.</div>`;
-  let h = `<div class="inner">` + dhead(p.i, p.n, [p.tier != null ? tierPill(p.tier) : "", p.tool ? tag(iname(p.tool)) : "", tag(p.cat), p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla")], p.d, p.cf ? "Building piece · comfort" : "Building piece");
+  let h = `<div class="inner">` + dhead(p.i, p.n, [p.tier != null ? tierPill(p.tier) : "", p.tool ? tag(iname(p.tool)) : "", tag(p.cat), p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla")], p.d, CBS[id] && !D.stations[id] ? "Processing station" : p.cf ? "Building piece · comfort" : "Building piece");
   h += listCard("piece", id, p);
   h += `<div class="card"><h3>Build cost</h3>${reqGrid(p.r)}${p.s ? `<div class="recipe-line" style="margin:10px 0 0"><span class="dim">Must be in range of</span><button class="gi" data-go="station:${esc(p.s)}">${stIcon(p.s)}${esc(stName(p.s))}</button></div>` : ""}</div>`;
   const kv = [];
@@ -2104,7 +2106,7 @@ function convCard(st){
 }
 function stationDetail(id){
   const st = D.stations[id];
-  if (!st) return `<div class="inner">Unknown station.</div>`;
+  if (!st) return `<div class="inner">` + dhead(-1, stName(id), [], "", "Processing station") + (CBS[id] ? convCard(id) : `<p class="dim">Nothing is recorded for this station.</p>`) + `</div>`;
   const p = D.pieces[id];
   let h = `<div class="inner">` + dhead(st.i, st.n, [tag("Crafting station"), p && p.m !== "Valheim" ? tag(p.m, "mod") : tag("Vanilla"), st.roof ? tag("Needs roof") : "", st.fire ? tag("Needs fire") : ""], p && p.d);
   if (p) h += listCard("piece", id, p);
