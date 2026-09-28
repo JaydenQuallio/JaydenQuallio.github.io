@@ -540,7 +540,7 @@ const fmt = (v, d = 1) => v == null || v === "" ? "" : (Math.round(v * 10 ** d) 
 const pct = v => (v > 0 ? "+" : "") + Math.round(v * 100) + "%";
 function store(k, v){ try{ if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } }
 
-let D, RBI = {}, USED = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {}, TRADERS = {}, BOSS_BY_KEY = {};
+let D, RBI = {}, USED = {}, FORGE = {}, PROD = {}, RBS = {}, CBS = {}, ENT = [], CLS = {}, GRP = {}, PIECE_EXT = {}, TRADERS = {}, BOSS_BY_KEY = {};
 const S = {q:"", view:"home", prevView:"home", cls:null, mod:"", nosrc:false, tier:"all", sel:null, hist:[], lvl:1, sort:{}, open:{}, collapsed:{}, klass:null, eslot:"", comfortPick:null, comfortRoof:true, list:[], listRaw:false, listGot:{}};
 // World settings the numbers are shown under. Modifiers start at the server's values; progress (bosses
 // beaten) is set by each viewer in World settings. Both are remembered in this browser.
@@ -855,6 +855,7 @@ function index(){
     (RBI[r.it] ||= []).push(r);
     (RBS[r.s || "_hand"] ||= []).push(r);
     for (const q of r.r) (USED[q[0]] ||= []).push({t:"recipe", r, a:q[1]});
+    for (const q of r.fg || []) (FORGE[q[0]] ||= []).push(r);
   });
   for (const [id, p] of Object.entries(D.pieces)){
     for (const q of p.r) (USED[q[0]] ||= []).push({t:"piece", id, a:q[1]});
@@ -1201,7 +1202,7 @@ const DEFAULT_SORT = {weapons:["tierc",1], ammo:["tierc",1], shields:["tierc",1]
 
 function firstLine(t){ return String(t || "").split("\n").map(s => s.trim()).filter(Boolean).slice(0, 2).join(" · "); }
 function dur(s){ s = Math.round(s); if (s >= 3600) return fmt(s / 3600, 1) + " h"; if (s >= 60) return fmt(s / 60, s % 60 ? 1 : 0) + " min"; return s + " s"; }
-function usedCount(id){ return (USED[id] || []).length; }
+function usedCount(id){ return (USED[id] || []).length + (FORGE[id] || []).length; }
 function effectsCell(o){
   const bits = [];
   if (o.set) bits.push(`<span class="pill">${esc(setLabel(o))}</span>`);
@@ -1923,6 +1924,7 @@ function itemDetail(id){
       h += `<div class="card"><h3>Upgrades <span class="aside">${r0 && r0.s ? "station level needed per item level" : ""}</span></h3>
         <div style="overflow-x:auto"><table class="dtable"><thead><tr><th>Item</th><th>Tier</th><th>Station</th><th>${r0 ? "Cost" : ""}</th>${hasD ? "<th class=num>Damage</th>" : ""}${hasT && !hasD ? "<th class=num>Chop/Pick</th>" : ""}${hasA ? "<th class=num>Armor</th>" : ""}${hasB ? "<th class=num>Block</th>" : ""}${hasU ? "<th class=num>Durability</th>" : ""}</tr></thead><tbody>${rows}</tbody></table></div></div>`;
     }
+    h += forgeCard(o, r0);
     // stats at level
     const lv = Math.min(S.lvl, mq), e = o.q[lv - 1] || {};
     const lvlBtns = mq > 1 ? `<span class="levels" role="group" aria-label="Item level">${Array.from({length:mq}, (_, i) => `<button data-lvl="${i + 1}" aria-pressed="${lv === i + 1}">★${i + 1}</button>`).join("")}</span>` : "";
@@ -2039,8 +2041,32 @@ function itemDetail(id){
     const tooMany = Math.max(rec.length, pcs.length, cv.length) > lim;
     h += `<div class="card"><h3>Used in <span class="aside">${used.length} recipe${used.length > 1 ? "s" : ""}</span></h3>${u}${tooMany ? `<button class="more" style="border-radius:8px;margin-top:8px" data-more="${esc(key)}">Show all</button>` : ""}</div>`;
   }
+  if (FORGE[id]){
+    const fr = FORGE[id], key = "forge:" + id, lim = S.open[key] ? 1e9 : 30;
+    h += `<div class="card"><h3>Upgrades at the ${esc(forgeName())} <span class="aside">${fr.length} item${fr.length > 1 ? "s" : ""}</span></h3>${forgeOdds(o.fgx)}
+      <div class="grid-items" style="margin-top:10px">${fr.slice(0, lim).map(r => `<button class="gi" data-go="item:${esc(r.it)}">${iicon(r.it, "s22")}${esc(iname(r.it))}</button>`).join("")}</div>${fr.length > lim ? `<button class="more" style="border-radius:8px;margin-top:8px" data-more="${esc(key)}">Show all</button>` : ""}</div>`;
+  }
   if (o.tip && !o.adr) h += `<div class="card"><details class="tip"><summary>In-game tooltip${mq > 1 ? " (max level)" : ""}</summary><pre>${esc(o.tip)}</pre></details></div>`;
   return h + `</div>`;
+}
+function forgeName(){ return (D.forge && D.forge.n) || "Forge of Potential"; }
+function forgeWhere(){
+  const F = D.forge || {}, L = F.loc && D.locations[F.loc];
+  return L ? ` <button class="lnk" data-go="loc:${esc(F.loc)}">${esc(L.n)}</button>${L.b ? " (" + esc(biomes(L.b)) + ")" : ""}` : "";
+}
+function forgeOdds(x){
+  x = x || {ok:0.65, brk:1, ret:0.35, st:1};
+  const pb = Math.max(0, 1 - Math.max(x.ok, 1 - x.brk)), pd = Math.max(0, 1 - x.ok - pb);
+  const kv = [`<div><span>Success · ${fmt(x.ok * 100, 0)}%</span><b style="font-family:var(--sans)">+${x.st || 1} level</b></div>`];
+  if (pb) kv.push(`<div><span>Breaks · ${fmt(pb * 100, 0)}%</span><b style="font-family:var(--sans)">item destroyed</b>${x.ret ? ` <small class="dim">about ${fmt(x.ret * 100, 0)}% of its materials back</small>` : ""}</div>`);
+  if (pd) kv.push(`<div><span>Fails · ${fmt(pd * 100, 0)}%</span><b style="font-family:var(--sans)">−1 level</b></div>`);
+  return `<p class="note" style="margin:0 0 8px">The ${esc(forgeName())} stands at${forgeWhere() || " special world locations"}. Each try uses up one idol whatever happens, costs no materials, and can even push gear past its normal max level.</p><div class="kv">${kv.join("")}</div>`;
+}
+function forgeCard(o, r){
+  const f = r && r.fg && r.fg[0];
+  if (!f || maxQ(o) < 2) return "";
+  return `<div class="card"><h3>${esc(forgeName())} <span class="aside">optional</span></h3>
+    <p class="note" style="margin:0 0 8px">The upgrades above don't need an idol. Instead of paying materials, you can gamble ${f[1] > 1 ? f[1] + "× " : "one "}<button class="lnk" data-go="item:${esc(f[0])}">${esc(iname(f[0]))}</button> per level at the ${esc(forgeName())}.</p>${forgeOdds((D.items[f[0]] || {}).fgx)}</div>`;
 }
 function tierHint(t, k){
   const cls = k === "chop" ? ["axes","battleaxes","dualaxes"] : ["pickaxes"];
